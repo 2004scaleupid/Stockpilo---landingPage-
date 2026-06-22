@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Stockpilo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #2d6be4;
+      --text:   #e8f0fe;
+      --sub:    #6b8cba;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #spiral-bg {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.28;
+      mask-image: radial-gradient(circle at center, rgba(255,255,255,1), rgba(255,255,255,0.1) 60%, transparent 75%);
+      -webkit-mask-image: radial-gradient(circle at center, rgba(255,255,255,1), rgba(255,255,255,0.1) 60%, transparent 75%);
+      mix-blend-mode: screen;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+
+    /* Nav */
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 56px;
+    }
+    .logo-wordmark {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.01em;
+      color: #fff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: flex-start;
+      user-select: none;
+    }
+    .logo-p { color: var(--accent); position: relative; }
+    .logo-p::before {
+      content: '';
+      position: absolute;
+      top: -3px; left: 2px;
+      width: 5px; height: 3px;
+      background: var(--accent);
+      border-radius: 1px;
+    }
+    .back-link {
+      font-size: 13px;
+      color: rgba(255,255,255,.4);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color .2s ease;
+    }
+    .back-link:hover { color: #fff; }
+
+    /* Header */
+    .pp-header {
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      padding-bottom: 28px;
+      margin-bottom: 36px;
+    }
+    .pp-header h1 {
+      font-size: clamp(40px, 8vw, 72px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .pp-header p { font-size: 14px; color: rgba(255,255,255,.4); }
+
+    /* Section cards — identical to terms.html */
+    .section-card {
+      position: relative;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 16px;
+      background: rgba(0,0,0,.4);
+      padding: 24px 24px 28px;
+      margin-bottom: 10px;
+      transition: border-color .2s ease;
+    }
+    .section-card:hover { border-color: rgba(255,255,255,.25); }
+
+    .section-num {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+      margin-bottom: 6px;
+    }
+    .section-card h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+    .section-card p {
+      font-size: 13px;
+      color: rgba(255,255,255,.6);
+      line-height: 1.72;
+      margin-bottom: 10px;
+    }
+    .section-card p:last-child { margin-bottom: 0; }
+
+    .section-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 8px;
+    }
+    .section-card ul li {
+      font-size: 13px;
+      color: rgba(255,255,255,.6);
+      padding-left: 16px;
+      position: relative;
+      line-height: 1.6;
+    }
+    .section-card ul li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: rgba(255,255,255,.25);
+    }
+
+    .callout {
+      background: rgba(45,107,228,.08);
+      border: 1px solid rgba(45,107,228,.18);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: rgba(255,255,255,.7);
+      line-height: 1.65;
+      margin-top: 12px;
+    }
+    .callout strong { color: #fff; }
+    .callout a { color: var(--accent); text-decoration: none; }
+    .callout a:hover { text-decoration: underline; }
+
+    /* Data table */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 13px;
+    }
+    .data-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+      padding: 0 12px 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .data-table th:first-child { padding-left: 0; }
+    .data-table td {
+      padding: 10px 12px;
+      color: rgba(255,255,255,.6);
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      vertical-align: top;
+      line-height: 1.55;
+    }
+    .data-table td:first-child { padding-left: 0; color: rgba(255,255,255,.85); font-weight: 500; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.45);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .data-table .badge-eu { background: rgba(16,185,129,.1); color: #10b981; border-color: rgba(16,185,129,.2); }
+    .data-table .badge-us { background: rgba(45,107,228,.1); color: #7aadff; border-color: rgba(45,107,228,.2); }
+
+    /* Footer */
+    .pp-footer {
+      margin-top: 48px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 24px;
+      font-size: 12px;
+      color: rgba(255,255,255,.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .pp-footer a { color: rgba(255,255,255,.3); text-decoration: none; transition: color .2s; }
+    .pp-footer a:hover { color: #fff; }
+    .pp-footer-links { display: flex; gap: 16px; }
+  </style>
+</head>
+<body>
+
+<div id="spiral-bg"></div>
+
+<div class="page">
+
+  <nav class="top-nav">
+    <a href="/" class="logo-wordmark">stock<span class="logo-p">p</span>ilo</a>
+    <a href="/" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12 7H2M2 7L6 3M2 7L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to home
+    </a>
+  </nav>
+
+  <header class="pp-header">
+    <h1>Privacy Policy</h1>
+    <p>Last updated: May 2026 &nbsp;·&nbsp; Applies to all users of the Stockpilo platform.</p>
+  </header>
+
+  <!-- 1 -->
+  <div class="section-card">
+    <div class="section-num">01</div>
+    <h2>Introduction</h2>
+    <p>Stockpilo is an AI-powered stock analysis platform that provides real-time market data, AI-generated insights, and portfolio tracking tools. This Privacy Policy explains what personal data we collect, how we use it, who we share it with, and what rights you have over your data.</p>
+    <p>By using Stockpilo, you agree to the practices described in this policy. If you do not agree, please discontinue use of the platform.</p>
+  </div>
+
+  <!-- 2 -->
+  <div class="section-card">
+    <div class="section-num">02</div>
+    <h2>Data Controller</h2>
+    <p>The data controller responsible for your personal data is:</p>
+    <div class="callout">
+      <strong>Vebify OÜ</strong><br>
+      Registry code: 17183973<br>
+      Address: Aaslina tn 5, Estonia<br>
+      Email: <a href="mailto:support@stockpilo.com">support@stockpilo.com</a>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="section-card">
+    <div class="section-num">03</div>
+    <h2>What Data We Collect</h2>
+    <ul>
+      <li><strong style="color:rgba(255,255,255,.85);">Account data:</strong> When you create an account, we collect your email address and a unique user identifier. After onboarding, you may optionally provide a username, full name, avatar image, investment experience level, and how you heard about Stockpilo.</li>
+      <li><strong style="color:rgba(255,255,255,.85);">Platform usage data:</strong> We store your watchlist, AI chat conversation history, in-app notifications, price and earnings alert settings, and portfolio analysis data. These records are created as a direct result of your use of the platform's features.</li>
+      <li><strong style="color:rgba(255,255,255,.85);">Subscription and billing data:</strong> If you subscribe to a paid plan, billing is handled by Stripe. We store your subscription status and plan type. Full payment details are processed and stored exclusively by Stripe and are never held by Stockpilo.</li>
+      <li><strong style="color:rgba(255,255,255,.85);">Technical data:</strong> Your session token is stored in your browser's localStorage. We store one cookie — <code style="font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:4px;">sidebar:state</code> — which remembers whether your UI sidebar is open or closed, expiring after 7 days. If you consent to reCAPTCHA, Google may set additional cookies on the authentication page.</li>
+    </ul>
+  </div>
+
+  <!-- 4 -->
+  <div class="section-card">
+    <div class="section-num">04</div>
+    <h2>Legal Basis for Processing (GDPR Article 6)</h2>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Legal Basis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Account creation and authentication</td><td>Contract performance (Art. 6(1)(b))</td></tr>
+        <tr><td>Watchlist, alerts, portfolio features</td><td>Contract performance (Art. 6(1)(b))</td></tr>
+        <tr><td>Transactional emails</td><td>Contract performance (Art. 6(1)(b))</td></tr>
+        <tr><td>Subscription and billing records</td><td>Legal obligation (Art. 6(1)(c))</td></tr>
+        <tr><td>reCAPTCHA bot protection</td><td>Legitimate interest — platform security (Art. 6(1)(f))</td></tr>
+        <tr><td>AI chat processing via OpenAI</td><td>Contract performance (Art. 6(1)(b))</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5 -->
+  <div class="section-card">
+    <div class="section-num">05</div>
+    <h2>Third-Party Services and Data Transfers</h2>
+    <p>We have Data Processing Agreements (DPA) in place with each processor where required under GDPR. For services located in the United States, data transfers are conducted under Standard Contractual Clauses (SCCs) in accordance with GDPR Chapter V.</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Purpose</th>
+          <th>Location</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Supabase</td><td>Database, authentication, file storage</td><td><span class="badge badge-eu">EU</span></td></tr>
+        <tr><td>Stripe</td><td>Subscription billing and payment processing</td><td><span class="badge badge-us">US</span></td></tr>
+        <tr><td>OpenAI</td><td>AI-generated analysis and chat responses</td><td><span class="badge badge-us">US</span></td></tr>
+        <tr><td>Resend</td><td>Transactional email delivery</td><td><span class="badge badge-us">US</span></td></tr>
+        <tr><td>Google reCAPTCHA v3</td><td>Bot protection on authentication forms</td><td><span class="badge badge-us">US</span></td></tr>
+        <tr><td>Financial Modeling Prep (FMP)</td><td>Market and stock data</td><td><span class="badge badge-us">US</span></td></tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:16px;">
+      <strong>Note — OpenAI:</strong> Your AI chat messages are sent to OpenAI to generate responses. We do not intentionally include personal information in these requests. However, if you type personal information into the AI chat, that content will be included in the request sent to OpenAI. OpenAI's privacy policy governs how they handle this data.
+    </div>
+    <div class="callout" style="margin-top:8px;">
+      <strong>Note — Google reCAPTCHA:</strong> If you consent to reCAPTCHA, Google's script processes your IP address and browser information to assess bot risk. This is governed by Google's Privacy Policy.
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="section-card">
+    <div class="section-num">06</div>
+    <h2>How We Use Your Data</h2>
+    <p>We use your data exclusively to:</p>
+    <ul>
+      <li>Create and manage your account.</li>
+      <li>Provide platform features including watchlists, alerts, AI analysis, and portfolio tracking.</li>
+      <li>Send transactional emails — email verification, password resets, earnings alerts, market event notifications, and subscription-related notices.</li>
+      <li>Process your subscription and payments through Stripe.</li>
+      <li>Protect the platform from automated abuse via reCAPTCHA.</li>
+      <li>Improve platform stability and resolve errors.</li>
+    </ul>
+    <div class="callout" style="margin-top:14px;">
+      We do <strong>not</strong> use your data for advertising. We do <strong>not</strong> sell your data to third parties. We do <strong>not</strong> use any third-party analytics tools to track your behaviour on the platform.
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="section-card">
+    <div class="section-num">07</div>
+    <h2>Data Retention</h2>
+    <ul>
+      <li>Account and profile data persists until you delete your account.</li>
+      <li>Watchlist, alert settings, and portfolio data persist until you remove them or delete your account.</li>
+      <li>AI chat conversation history is stored permanently unless you delete it or your account.</li>
+      <li>Subscription and billing records may be retained beyond account deletion to meet legal and financial obligations.</li>
+      <li>Email verification and password reset tokens expire automatically.</li>
+    </ul>
+  </div>
+
+  <!-- 8 -->
+  <div class="section-card">
+    <div class="section-num">08</div>
+    <h2>AI Chat History</h2>
+    <p>Your conversations with the Stockpilo AI assistant are stored in our database and associated with your account. This data is used solely to provide chat history within the platform.</p>
+    <p>If you delete your account, this data is deleted along with all other user data.</p>
+  </div>
+
+  <!-- 9 -->
+  <div class="section-card">
+    <div class="section-num">09</div>
+    <h2>Your Rights Under GDPR</h2>
+    <p>As a data subject under GDPR, you have the following rights:</p>
+    <ul>
+      <li><strong style="color:rgba(255,255,255,.85);">Right of access</strong> — request a copy of all personal data we hold about you.</li>
+      <li><strong style="color:rgba(255,255,255,.85);">Right to rectification</strong> — correct inaccurate or incomplete data.</li>
+      <li><strong style="color:rgba(255,255,255,.85);">Right to erasure</strong> — request deletion of your account and all associated data.</li>
+      <li><strong style="color:rgba(255,255,255,.85);">Right to restriction</strong> — request that we limit processing of your data.</li>
+      <li><strong style="color:rgba(255,255,255,.85);">Right to data portability</strong> — receive your data in a machine-readable format.</li>
+      <li><strong style="color:rgba(255,255,255,.85);">Right to object</strong> — object to processing based on legitimate interest.</li>
+    </ul>
+    <div class="callout" style="margin-top:14px;">
+      To exercise any of these rights, contact us at <a href="mailto:support@stockpilo.com">support@stockpilo.com</a>. We will respond within 30 days.
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="section-card">
+    <div class="section-num">10</div>
+    <h2>Supervisory Authority</h2>
+    <p>If you believe we have not handled your personal data in accordance with applicable law, you have the right to lodge a complaint with the Estonian Data Protection Inspectorate (Andmekaitse Inspektsioon).</p>
+    <div class="callout">
+      Website: <a href="https://www.aki.ee" target="_blank" rel="noopener">www.aki.ee</a> &nbsp;·&nbsp; Email: <a href="mailto:info@aki.ee">info@aki.ee</a>
+    </div>
+  </div>
+
+  <!-- 11 -->
+  <div class="section-card">
+    <div class="section-num">11</div>
+    <h2>Data Security</h2>
+    <p>We take reasonable technical and organisational measures to protect your data.</p>
+    <ul>
+      <li>Authentication is managed through Supabase with encrypted storage and secure token handling.</li>
+      <li>Passwords are never stored in plain text.</li>
+      <li>All data in transit is encrypted via HTTPS.</li>
+      <li>In the event of a data breach affecting your rights, we will notify you in accordance with applicable law.</li>
+    </ul>
+  </div>
+
+  <!-- 12 -->
+  <div class="section-card">
+    <div class="section-num">12</div>
+    <h2>Age Restriction</h2>
+    <p>Stockpilo is intended for users who are 18 years of age or older. We do not knowingly collect personal data from individuals under 18.</p>
+    <p>If you believe a minor has created an account, please contact us at <a href="mailto:support@stockpilo.com" style="color:var(--accent);text-decoration:none;">support@stockpilo.com</a> and we will delete the account promptly.</p>
+  </div>
+
+  <!-- 13 -->
+  <div class="section-card">
+    <div class="section-num">13</div>
+    <h2>Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. When we do, we will update the date at the top of this page. For significant changes, we will notify you by email.</p>
+    <p>Continued use of the platform after changes have been posted constitutes your acceptance of the updated policy.</p>
+  </div>
+
+  <!-- 14 -->
+  <div class="section-card">
+    <div class="section-num">14</div>
+    <h2>Contact</h2>
+    <div class="callout">
+      <strong>Vebify OÜ</strong><br>
+      Registry code: 17183973<br>
+      Aaslina tn 5, Estonia<br>
+      <a href="mailto:support@stockpilo.com">support@stockpilo.com</a>
+    </div>
+  </div>
+
+  <footer class="pp-footer">
+    <span>© 2026 Vebify OÜ. All rights reserved.</span>
+    <div class="pp-footer-links">
+      <a href="/terms.html">Terms of Service</a>
+      <a href="/faqs.html">FAQs</a>
+      <a href="/">Home</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function() {
+  const SIZE = 560, GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+  const N = 700, DOT = 1.8, CENTER = SIZE / 2, MAX_R = CENTER - 4 - DOT, DUR = 3.0;
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('width', String(SIZE)); svg.setAttribute('height', String(SIZE));
+  svg.setAttribute('viewBox', `0 0 ${SIZE} ${SIZE}`);
+  for (let i = 0; i < N; i++) {
+    const idx = i + 0.5, frac = idx / N;
+    const r = Math.sqrt(frac) * MAX_R, theta = idx * GOLDEN_ANGLE;
+    const x = CENTER + r * Math.cos(theta), y = CENTER + r * Math.sin(theta);
+    const c = document.createElementNS(svgNS, 'circle');
+    c.setAttribute('cx', x.toFixed(3)); c.setAttribute('cy', y.toFixed(3));
+    c.setAttribute('r', String(DOT)); c.setAttribute('fill', '#ffffff'); c.setAttribute('opacity', '0.6');
+    const begin = (frac * DUR).toFixed(3) + 's';
+    const aR = document.createElementNS(svgNS, 'animate');
+    aR.setAttribute('attributeName','r'); aR.setAttribute('values',`${DOT*.5};${DOT*1.4};${DOT*.5}`);
+    aR.setAttribute('dur',DUR+'s'); aR.setAttribute('begin',begin); aR.setAttribute('repeatCount','indefinite');
+    aR.setAttribute('calcMode','spline'); aR.setAttribute('keySplines','0.4 0 0.6 1;0.4 0 0.6 1'); c.appendChild(aR);
+    const aO = document.createElementNS(svgNS, 'animate');
+    aO.setAttribute('attributeName','opacity'); aO.setAttribute('values','0.25;0.9;0.25');
+    aO.setAttribute('dur',DUR+'s'); aO.setAttribute('begin',begin); aO.setAttribute('repeatCount','indefinite');
+    aO.setAttribute('calcMode','spline'); aO.setAttribute('keySplines','0.4 0 0.6 1;0.4 0 0.6 1'); c.appendChild(aO);
+    svg.appendChild(c);
+  }
+  document.getElementById('spiral-bg').appendChild(svg);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service — Stockpilo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #2d6be4;
+      --text:   #e8f0fe;
+      --sub:    #6b8cba;
+      --red:    #ef4444;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Spiral background ──────────────────────────── */
+    #spiral-bg {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.28;
+      mask-image: radial-gradient(circle at center, rgba(255,255,255,1), rgba(255,255,255,0.1) 60%, transparent 75%);
+      -webkit-mask-image: radial-gradient(circle at center, rgba(255,255,255,1), rgba(255,255,255,0.1) 60%, transparent 75%);
+      mix-blend-mode: screen;
+      z-index: 0;
+    }
+
+    /* ── Page layout ────────────────────────────────── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+
+    /* ── Top nav ────────────────────────────────────── */
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 56px;
+    }
+    .logo-wordmark {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.01em;
+      color: #fff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: flex-start;
+      user-select: none;
+    }
+    .logo-p { color: var(--accent); position: relative; }
+    .logo-p::before {
+      content: '';
+      position: absolute;
+      top: -3px; left: 2px;
+      width: 5px; height: 3px;
+      background: var(--accent);
+      border-radius: 1px;
+    }
+    .back-link {
+      font-size: 13px;
+      color: rgba(255,255,255,.4);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color .2s ease;
+    }
+    .back-link:hover { color: #fff; }
+
+    /* ── Header ─────────────────────────────────────── */
+    .tos-header {
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      padding-bottom: 28px;
+      margin-bottom: 36px;
+    }
+    .tos-header h1 {
+      font-size: clamp(40px, 8vw, 72px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .tos-header p {
+      font-size: 14px;
+      color: rgba(255,255,255,.4);
+    }
+
+    /* ── Disclaimer banner ──────────────────────────── */
+    .disclaimer {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: rgba(239,68,68,.07);
+      border: 1px solid rgba(239,68,68,.2);
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 36px;
+      font-size: 13px;
+      color: rgba(255,255,255,.65);
+      line-height: 1.65;
+    }
+    .disclaimer svg { flex-shrink: 0; margin-top: 1px; }
+    .disclaimer strong { color: #fff; }
+
+    /* ── Section cards ──────────────────────────────── */
+    .section-card {
+      position: relative;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 16px;
+      background: rgba(0,0,0,.4);
+      padding: 24px 24px 28px;
+      margin-bottom: 10px;
+      transition: border-color .2s ease;
+    }
+    .section-card:hover { border-color: rgba(255,255,255,.25); }
+
+    .section-num {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+      margin-bottom: 6px;
+    }
+    .section-card h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+    .section-card p {
+      font-size: 13px;
+      color: rgba(255,255,255,.6);
+      line-height: 1.72;
+      margin-bottom: 10px;
+    }
+    .section-card p:last-child { margin-bottom: 0; }
+
+    .section-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 8px;
+    }
+    .section-card ul li {
+      font-size: 13px;
+      color: rgba(255,255,255,.6);
+      padding-left: 16px;
+      position: relative;
+      line-height: 1.6;
+    }
+    .section-card ul li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: rgba(255,255,255,.25);
+    }
+
+    /* Callout inside card */
+    .callout {
+      background: rgba(45,107,228,.08);
+      border: 1px solid rgba(45,107,228,.18);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: rgba(255,255,255,.7);
+      line-height: 1.65;
+      margin-top: 12px;
+    }
+    .callout strong { color: #fff; }
+    .callout a { color: var(--accent); text-decoration: none; }
+    .callout a:hover { text-decoration: underline; }
+
+    .callout-warn {
+      background: rgba(239,68,68,.06);
+      border: 1px solid rgba(239,68,68,.18);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: rgba(255,255,255,.7);
+      line-height: 1.65;
+      margin-top: 12px;
+    }
+    .callout-warn strong { color: #fff; }
+
+    /* ── Footer ─────────────────────────────────────── */
+    .tos-footer {
+      margin-top: 48px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 24px;
+      font-size: 12px;
+      color: rgba(255,255,255,.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .tos-footer a {
+      color: rgba(255,255,255,.3);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .tos-footer a:hover { color: #fff; }
+    .tos-footer-links { display: flex; gap: 16px; }
+  </style>
+</head>
+<body>
+
+<div id="spiral-bg"></div>
+
+<div class="page">
+
+  <!-- Nav -->
+  <nav class="top-nav">
+    <a href="/" class="logo-wordmark">stock<span class="logo-p">p</span>ilo</a>
+    <a href="/" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12 7H2M2 7L6 3M2 7L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to home
+    </a>
+  </nav>
+
+  <!-- Header -->
+  <header class="tos-header">
+    <h1>Terms of Service</h1>
+    <p>Last updated: May 2026 &nbsp;·&nbsp; Effective immediately upon use of the platform.</p>
+  </header>
+
+  <!-- Disclaimer -->
+  <div class="disclaimer">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L14.5 13.5H1.5L8 1.5Z" stroke="#ef4444" stroke-width="1.4" stroke-linejoin="round"/><line x1="8" y1="6" x2="8" y2="9.5" stroke="#ef4444" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.75" fill="#ef4444"/></svg>
+    <span><strong>Important:</strong> Stockpilo is an informational platform only. Nothing on this platform constitutes financial advice. Always consult a qualified financial advisor before making investment decisions.</span>
+  </div>
+
+  <!-- Sections -->
+
+  <div class="section-card">
+    <div class="section-num">01</div>
+    <h2>Introduction</h2>
+    <p>Stockpilo is an AI-powered stock analysis platform that provides users with real-time market data, daily stock insights, and AI-generated analysis. Our goal is to make stock market information accessible, fast, and intelligent.</p>
+    <p>These Terms of Service govern your access to and use of the Stockpilo platform, including our website, dashboard, and all associated services. Please read them carefully before using Stockpilo.</p>
+  </div>
+
+  <div class="section-card">
+    <div class="section-num">02</div>
+    <h2>Acceptance of Terms</h2>
+    <p>By accessing or using Stockpilo, you confirm that you have read, understood, and agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree, you must not access or use the platform.</p>
+    <div class="callout">You must be at least 18 years old to use Stockpilo. By using the platform, you represent that you meet this requirement.</div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-num">03</div>
+    <h2>Nature of the Service</h2>
+    <div class="callout-warn">
+      <strong>Disclaimer — Please Read Carefully.</strong> Stockpilo provides financial data and AI-generated analysis for informational purposes only. Nothing on this platform constitutes financial advice, investment advice, or a recommendation to buy, sell, or hold any security.
+    </div>
+    <ul style="margin-top:14px;">
+      <li>Always consult a qualified financial advisor before making any investment decisions.</li>
+      <li>Past performance of any stock or market instrument is not indicative of future results.</li>
+      <li>Investing in securities involves risk, including the possible loss of principal.</li>
+      <li>Stockpilo does not execute trades and is not a brokerage or investment service.</li>
+    </ul>
+  </div>
+
+  <div class="section-card">
+    <div class="section-num">04</div>
+    <h2>Data Sources</h2>
+    <p>Market data displayed on Stockpilo is sourced from third-party providers including Financial Modeling Prep (FMP) and other licensed data vendors. While we strive for accuracy, Stockpilo does not guarantee the completeness, timeliness, or accuracy of any data displayed.</p>
+    <ul>
+      <li>Data may be delayed or temporarily unavailable due to third-party outages.</li>
+      <li>Stockpilo is not responsible for errors in data sourced from external providers.</li>
+      <li>Verify critical financial data through official exchange sources before relying on it.</li>
+    </ul>
+  </div>
+
+  <div class="section-card">
+    <div class="section-num">05</div>
+    <h2>AI-Generated Content</h2>
+    <p>Stockpilo uses large language models (including OpenAI's GPT models) to automatically generate stock analysis, market summaries, and portfolio insights displayed on the platform.</p>
+    <div class="callout"><strong>AI content is automatically generated and unverified.</strong> It may contain errors, omissions, or outdated information. It should never be relied upon as the sole basis for any financial decision.</div>
+    <ul style="margin-top:12px;">
+      <li>AI summaries may not reflect developments after the time of generation.</li>
+      <li>Stockpilo does not manually review AI-generated content before it is displayed.</li>
+      <li>The models used are general-purpose tools, not trained financial advisors.</li>
+    </ul>
+  </div>
+
+  <div class="section-card">
+    <div class="section-num">06</div>
+    <h2>User Accounts</h2>
+    <p>To access certain features of Stockpilo, you must create an account. You are responsible for maintaining the confidentiality of your credentials and all activity under your account.</p>
+    <ul>
+      <li>Do not share your account credentials with any third party.</li>
+      <li>Notify us immediately of any unauthorized use of your account.</li>
+      <li>Do not use the platform for any unlawful or unauthorized purpose.</li>
+      <li>Stockpilo reserves the right to suspend accounts that violate these Terms.</li>
+    </ul>
+  </div>
+
+  <div class="section-card">
+    <div class="section-num">07</div>
+    <h2>Intellectual Property</h2>
+    <p>All content, design, code, branding, and functionality on Stockpilo is the exclusive property of Stockpilo and its licensors. You may not reproduce, distribute, or create derivative works without prior written permission.</p>
+    <ul>
+      <li>You may not scrape or use automated means to extract data from the platform.</li>
+      <li>Personal, non-commercial use is permitted with attribution intact.</li>
+    </ul>
+  </div>
+
+  <div class="section-card">
+    <div class="section-num">08</div>
+    <h2>Limitation of Liability</h2>
+    <p>To the fullest extent permitted by law, Stockpilo shall not be liable for any financial losses, damages, or decisions made based on information provided by the platform.</p>
+    <div class="callout-warn">Use of Stockpilo is entirely at your own risk. The platform is provided "as is" without warranties of any kind, express or implied.</div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-num">09</div>
+    <h2>Changes to Terms</h2>
+    <p>Stockpilo reserves the right to update these Terms at any time. We will notify users of material changes by updating the date at the top of this page. Your continued use of the platform after any changes constitutes your acceptance of the revised Terms.</p>
+  </div>
+
+  <div class="section-card">
+    <div class="section-num">10</div>
+    <h2>Contact</h2>
+    <p>For questions or concerns regarding these Terms, please reach out:</p>
+    <div class="callout">
+      <strong>Legal:</strong> <a href="mailto:legal@stockpiloapp.com">legal@stockpiloapp.com</a><br>
+      <strong>Support:</strong> <a href="mailto:hello@stockpiloapp.com">hello@stockpiloapp.com</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="tos-footer">
+    <span>© 2026 Stockpilo. All rights reserved.</span>
+    <div class="tos-footer-links">
+      <a href="/faqs.html">FAQs</a>
+      <a href="/">Home</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+// Spiral background (same as faqs.html)
+(function() {
+  const SIZE = 560, GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+  const N = 700, DOT = 1.8, CENTER = SIZE / 2, MAX_R = CENTER - 4 - DOT, DUR = 3.0;
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('width', String(SIZE));
+  svg.setAttribute('height', String(SIZE));
+  svg.setAttribute('viewBox', `0 0 ${SIZE} ${SIZE}`);
+  for (let i = 0; i < N; i++) {
+    const idx = i + 0.5, frac = idx / N;
+    const r = Math.sqrt(frac) * MAX_R, theta = idx * GOLDEN_ANGLE;
+    const x = CENTER + r * Math.cos(theta), y = CENTER + r * Math.sin(theta);
+    const c = document.createElementNS(svgNS, 'circle');
+    c.setAttribute('cx', x.toFixed(3)); c.setAttribute('cy', y.toFixed(3));
+    c.setAttribute('r', String(DOT)); c.setAttribute('fill', '#ffffff'); c.setAttribute('opacity', '0.6');
+    const begin = (frac * DUR).toFixed(3) + 's';
+    const aR = document.createElementNS(svgNS, 'animate');
+    aR.setAttribute('attributeName','r'); aR.setAttribute('values',`${DOT*.5};${DOT*1.4};${DOT*.5}`);
+    aR.setAttribute('dur', DUR+'s'); aR.setAttribute('begin', begin);
+    aR.setAttribute('repeatCount','indefinite'); aR.setAttribute('calcMode','spline');
+    aR.setAttribute('keySplines','0.4 0 0.6 1;0.4 0 0.6 1'); c.appendChild(aR);
+    const aO = document.createElementNS(svgNS, 'animate');
+    aO.setAttribute('attributeName','opacity'); aO.setAttribute('values','0.25;0.9;0.25');
+    aO.setAttribute('dur', DUR+'s'); aO.setAttribute('begin', begin);
+    aO.setAttribute('repeatCount','indefinite'); aO.setAttribute('calcMode','spline');
+    aO.setAttribute('keySplines','0.4 0 0.6 1;0.4 0 0.6 1'); c.appendChild(aO);
+    svg.appendChild(c);
+  }
+  document.getElementById('spiral-bg').appendChild(svg);
+})();
+</script>
+</body>
+</html>

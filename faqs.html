@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQs — Stockpilo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #2d6be4;
+      --text:   #e8f0fe;
+      --sub:    #6b8cba;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Spiral background ────────────────────────── */
+    #spiral-bg {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.28;
+      mask-image: radial-gradient(circle at center, rgba(255,255,255,1), rgba(255,255,255,0.1) 60%, transparent 75%);
+      -webkit-mask-image: radial-gradient(circle at center, rgba(255,255,255,1), rgba(255,255,255,0.1) 60%, transparent 75%);
+      mix-blend-mode: screen;
+      z-index: 0;
+    }
+
+    /* ── Page layout ──────────────────────────────── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+
+    /* ── Top nav ──────────────────────────────────── */
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 56px;
+    }
+    .logo-wordmark {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.01em;
+      color: #fff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: flex-start;
+      user-select: none;
+    }
+    .logo-p { color: var(--accent); position: relative; }
+    .logo-p::before {
+      content: '';
+      position: absolute;
+      top: -3px; left: 2px;
+      width: 5px; height: 3px;
+      background: var(--accent);
+      border-radius: 1px;
+    }
+    .back-link {
+      font-size: 13px;
+      color: var(--sub);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+    }
+    .back-link:hover { color: #fff; }
+
+    /* ── Header ───────────────────────────────────── */
+    .faq-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      padding-bottom: 28px;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+    .faq-header h1 {
+      font-size: clamp(40px, 8vw, 72px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+    .faq-header p {
+      margin-top: 8px;
+      font-size: 15px;
+      color: rgba(255,255,255,.5);
+      line-height: 1.6;
+    }
+    .search-wrap input {
+      height: 40px;
+      width: 220px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.04);
+      padding: 0 14px;
+      font-size: 14px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .search-wrap input::placeholder { color: rgba(255,255,255,.3); }
+    .search-wrap input:focus { border-color: rgba(255,255,255,.4); }
+
+    /* ── FAQ grid ─────────────────────────────────── */
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 640px) {
+      .faq-grid { grid-template-columns: 1fr; }
+      .search-wrap input { width: 100%; }
+      .faq-header { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* ── FAQ item ─────────────────────────────────── */
+    .faq-item {
+      position: relative;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 16px;
+      background: rgba(0,0,0,.45);
+      padding: 20px;
+      overflow: hidden;
+      transition: border-color 0.2s ease;
+    }
+    .faq-item:hover { border-color: rgba(255,255,255,.3); }
+
+    .faq-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      width: 100%;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      text-align: left;
+      gap: 12px;
+      cursor: pointer;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+    .faq-btn-left { display: flex; align-items: baseline; gap: 10px; flex: 1; }
+    .faq-num {
+      font-size: 11px;
+      color: rgba(255,255,255,.3);
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+    }
+    .faq-q {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #fff;
+    }
+    .faq-toggle {
+      font-size: 18px;
+      color: rgba(255,255,255,.5);
+      flex-shrink: 0;
+      line-height: 1;
+      transition: color 0.2s ease;
+    }
+    .faq-item:hover .faq-toggle { color: #fff; }
+
+    .faq-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.28s cubic-bezier(.4,0,.2,1), margin-top 0.28s ease;
+    }
+    .faq-body.open {
+      grid-template-rows: 1fr;
+      margin-top: 12px;
+    }
+    .faq-body-inner {
+      overflow: hidden;
+      min-height: 0;
+    }
+    .faq-a {
+      font-size: 13px;
+      color: rgba(255,255,255,.6);
+      line-height: 1.7;
+    }
+
+    /* No results */
+    .faq-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 48px 0;
+      color: rgba(255,255,255,.3);
+      font-size: 14px;
+    }
+
+    /* ── Footer ───────────────────────────────────── */
+    .faq-footer {
+      margin-top: 64px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 24px;
+      font-size: 12px;
+      color: rgba(255,255,255,.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .faq-footer a {
+      color: rgba(255,255,255,.4);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .faq-footer a:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+<!-- Spiral background -->
+<div id="spiral-bg"></div>
+
+<div class="page">
+
+  <!-- Top nav -->
+  <nav class="top-nav">
+    <a href="/" class="logo-wordmark">stock<span class="logo-p">p</span>ilo</a>
+    <a href="/" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12 7H2M2 7L6 3M2 7L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to home
+    </a>
+  </nav>
+
+  <!-- Header -->
+  <header class="faq-header">
+    <div>
+      <h1>FAQ</h1>
+      <p>Everything you need to know about Stockpilo.</p>
+    </div>
+    <div class="search-wrap">
+      <input type="search" id="faq-search" placeholder="Search questions…" autocomplete="off">
+    </div>
+  </header>
+
+  <!-- FAQ grid -->
+  <section>
+    <div class="faq-grid" id="faq-grid">
+      <!-- populated by JS -->
+    </div>
+  </section>
+
+  <!-- Page footer -->
+  <footer class="faq-footer">
+    <span>© 2026 Stockpilo. All rights reserved.</span>
+    <span>Still have questions? <a href="mailto:hello@stockpiloapp.com">hello@stockpiloapp.com</a></span>
+  </footer>
+
+</div>
+
+<script>
+// ── Spiral background ────────────────────────────────
+(function() {
+  const SIZE         = 560;
+  const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+  const N            = 700;
+  const DOT          = 1.8;
+  const CENTER       = SIZE / 2;
+  const MAX_R        = CENTER - 4 - DOT;
+  const DUR          = 3.0;
+  const svgNS        = 'http://www.w3.org/2000/svg';
+
+  const svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('width',   String(SIZE));
+  svg.setAttribute('height',  String(SIZE));
+  svg.setAttribute('viewBox', `0 0 ${SIZE} ${SIZE}`);
+
+  for (let i = 0; i < N; i++) {
+    const idx  = i + 0.5;
+    const frac = idx / N;
+    const r    = Math.sqrt(frac) * MAX_R;
+    const theta = idx * GOLDEN_ANGLE;
+    const x    = CENTER + r * Math.cos(theta);
+    const y    = CENTER + r * Math.sin(theta);
+
+    const c = document.createElementNS(svgNS, 'circle');
+    c.setAttribute('cx',      x.toFixed(3));
+    c.setAttribute('cy',      y.toFixed(3));
+    c.setAttribute('r',       String(DOT));
+    c.setAttribute('fill',    '#ffffff');
+    c.setAttribute('opacity', '0.6');
+
+    const begin = (frac * DUR).toFixed(3) + 's';
+
+    const animR = document.createElementNS(svgNS, 'animate');
+    animR.setAttribute('attributeName', 'r');
+    animR.setAttribute('values',        `${DOT * 0.5};${DOT * 1.4};${DOT * 0.5}`);
+    animR.setAttribute('dur',           DUR + 's');
+    animR.setAttribute('begin',         begin);
+    animR.setAttribute('repeatCount',   'indefinite');
+    animR.setAttribute('calcMode',      'spline');
+    animR.setAttribute('keySplines',    '0.4 0 0.6 1;0.4 0 0.6 1');
+    c.appendChild(animR);
+
+    const animO = document.createElementNS(svgNS, 'animate');
+    animO.setAttribute('attributeName', 'opacity');
+    animO.setAttribute('values',        '0.25;0.9;0.25');
+    animO.setAttribute('dur',           DUR + 's');
+    animO.setAttribute('begin',         begin);
+    animO.setAttribute('repeatCount',   'indefinite');
+    animO.setAttribute('calcMode',      'spline');
+    animO.setAttribute('keySplines',    '0.4 0 0.6 1;0.4 0 0.6 1');
+    c.appendChild(animO);
+
+    svg.appendChild(c);
+  }
+
+  document.getElementById('spiral-bg').appendChild(svg);
+})();
+
+// ── FAQ data (Stockpilo-specific) ────────────────────
+const FAQS = [
+  {
+    q: 'What is Stockpilo?',
+    a: 'Stockpilo is an AI-powered stock market dashboard built for retail investors. It turns complex market data into clear, actionable insights — so you know why markets are moving, not just what moved.',
+  },
+  {
+    q: 'Is there a free trial?',
+    a: 'Yes. You get 7 days of full access — no credit card required. After the trial you can continue on the free Starter plan or upgrade to Pro for $9.99/month.',
+  },
+  {
+    q: "What's included in the Pro plan?",
+    a: 'Pro includes the full market suite, unlimited AI queries, Portfolio Tracker, Smart Alerts, priority support, and all future updates. Billed monthly at $9.99 or $6.99/mo on the annual plan.',
+  },
+  {
+    q: 'How does Stockpilo AI work?',
+    a: 'Ask anything about a stock, sector, or your portfolio in plain English. Stockpilo AI fetches real-time data and delivers a concise, jargon-free explanation — so you understand the "why" behind every move.',
+  },
+  {
+    q: 'Do I need to connect my broker?',
+    a: 'No broker connection needed. Add your holdings manually or import them via CSV. Stockpilo tracks everything in real time without requiring access to your brokerage account.',
+  },
+  {
+    q: 'How often is market data updated?',
+    a: 'Market data refreshes every 5 minutes during trading hours. The Morning Brief is generated each weekday at 6 AM ET before the US market opens.',
+  },
+  {
+    q: 'What markets does Stockpilo cover?',
+    a: 'Currently US equity markets (NYSE and NASDAQ). Coverage for additional exchanges — including European and Asian markets — is on the roadmap.',
+  },
+  {
+    q: 'Is my data secure?',
+    a: 'Yes. All data is encrypted in transit and at rest. We never store brokerage credentials and we do not sell your data to third parties.',
+  },
+  {
+    q: 'How is Stockpilo different from Robinhood or Trading212?',
+    a: "Stockpilo doesn't execute trades. We're a pure intelligence layer — we help you understand markets so you can make better decisions in whatever platform you already use.",
+  },
+  {
+    q: 'Can I cancel anytime?',
+    a: 'Absolutely. Cancel in one click from your account settings. No lock-ins, no cancellation fees. Your access continues until the end of the billing period.',
+  },
+];
+
+// ── Render FAQ items ─────────────────────────────────
+function renderFAQs(items) {
+  const grid = document.getElementById('faq-grid');
+  grid.innerHTML = '';
+
+  if (!items.length) {
+    grid.innerHTML = '<div class="faq-empty">No questions match your search.</div>';
+    return;
+  }
+
+  items.forEach((item, i) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'faq-item';
+
+    wrapper.innerHTML = `
+      <button class="faq-btn" aria-expanded="false">
+        <div class="faq-btn-left">
+          <span class="faq-num">${String(i + 1).padStart(2, '0')}</span>
+          <span class="faq-q">${item.q}</span>
+        </div>
+        <span class="faq-toggle">+</span>
+      </button>
+      <div class="faq-body">
+        <div class="faq-body-inner">
+          <p class="faq-a">${item.a}</p>
+        </div>
+      </div>
+    `;
+
+    const btn  = wrapper.querySelector('.faq-btn');
+    const body = wrapper.querySelector('.faq-body');
+    const tog  = wrapper.querySelector('.faq-toggle');
+
+    btn.addEventListener('click', () => {
+      const isOpen = body.classList.toggle('open');
+      tog.textContent = isOpen ? '–' : '+';
+      btn.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    grid.appendChild(wrapper);
+  });
+}
+
+renderFAQs(FAQS);
+
+// ── Search ───────────────────────────────────────────
+document.getElementById('faq-search').addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  const filtered = q
+    ? FAQS.filter(({ q: question, a }) => (question + a).toLowerCase().includes(q))
+    : FAQS;
+  renderFAQs(filtered);
+});
+</script>
+</body>
+</html>

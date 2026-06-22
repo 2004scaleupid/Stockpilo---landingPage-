@@ -1,0 +1,2798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stockpilo — Invest smarter. Know why before you buy.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #000000;
+      --card:   #0a1628;
+      --border: #1e3a5f;
+      --accent: #2d6be4;
+      --text:   #e8f0fe;
+      --sub:    #6b8cba;
+      --green:  #10b981;
+      --red:    #ef4444;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: transparent;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Grain */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Hero sparkle strip */
+    #sparkles-strip-wrap {
+      position: relative;
+      width: min(640px, 92vw);
+      height: 160px;
+      flex-shrink: 0;
+    }
+    #sparkles-strip {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* ── Shimmer text ───────────────────────────────── */
+    @keyframes shimmer-sweep {
+      0%   { background-position-x: -100%; }
+      50%  { background-position-x: 250%; }
+      100% { background-position-x: 250%; }
+    }
+    .shimmer-text {
+      -webkit-text-fill-color: transparent;
+      background: linear-gradient(to right,
+        #e8f0fe 0%,
+        rgba(255,255,255,1) 40%,
+        rgba(255,255,255,1) 60%,
+        #e8f0fe 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      background-repeat: no-repeat;
+      background-size: 50% 200%;
+      background-position-x: 250%;
+      animation: shimmer-sweep 3s linear 1.5s infinite;
+    }
+    /* Preserve colored spans inside shimmer parents */
+    .shimmer-text .hero-word,
+    .shimmer-text [style*="color:#2d6be4"],
+    .shimmer-text .about-word {
+      -webkit-text-fill-color: currentColor;
+      background: none;
+      -webkit-background-clip: unset;
+      background-clip: unset;
+    }
+
+    /* ── Stars background ───────────────────────────── */
+    #stars-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+      background: radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 80%);
+    }
+    #stars-parallax { width: 100%; height: 100%; }
+    .star-layer {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 2000px;
+    }
+    .star-dot {
+      position: absolute;
+      background: transparent;
+      border-radius: 50%;
+    }
+    @keyframes stars-s { from { transform: translateY(0); } to { transform: translateY(-2000px); } }
+    @keyframes stars-m { from { transform: translateY(0); } to { transform: translateY(-2000px); } }
+    @keyframes stars-l { from { transform: translateY(0); } to { transform: translateY(-2000px); } }
+
+    /* Make all sections transparent so stars show through */
+    section,
+    .fi-section,
+    .plan-section,
+    .swm-section {
+      background: transparent !important;
+    }
+
+    /* ── Logo wordmark ─────────────────────────────── */
+    .logo-wordmark {
+      font-family: 'Inter', sans-serif;
+      font-style: normal;
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      line-height: 1;
+      display: inline-flex;
+      align-items: flex-start;
+      text-decoration: none;
+      user-select: none;
+    }
+    .logo-p-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .logo-p-accent {
+      position: absolute;
+      top: -3px;
+      left: 2px;
+      width: 5px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 1px;
+    }
+    .logo-p {
+      color: var(--accent);
+    }
+
+    /* ── Glass ─────────────────────────────────────── */
+    .glass {
+      background: rgba(10, 22, 40, 0.55);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(30, 58, 95, 0.65);
+    }
+    .glass-pill {
+      background: rgba(45, 107, 228, 0.07);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(45, 107, 228, 0.18);
+      border-radius: 999px;
+    }
+    .glass-pill-neutral {
+      background: rgba(10, 22, 40, 0.5);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(30, 58, 95, 0.55);
+      border-radius: 999px;
+    }
+
+    /* ── Typography ────────────────────────────────── */
+    .display {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+    }
+    .label-caps {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-family: 'Inter', sans-serif;
+    }
+    .hero-headline {
+      font-family: 'Inter', sans-serif;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.06;
+      font-size: clamp(56px, 7.5vw, 96px);
+      text-align: center;
+    }
+    .hero-headline em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    /* ── Sparkles / particles ──────────────────────── */
+    #sparkles-hero {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    /* Everything in the hero sits above the particles */
+    #sparkles-hero ~ * {
+      position: relative;
+      z-index: 1;
+    }
+    /* Scroll transition: hero fade + next-section parallax */
+    #hero-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+      will-change: opacity, transform;
+    }
+    #scroll-next {
+      will-change: transform;
+    }
+    /* Gradient accent lines (from SparklesPreview demo) */
+    .sparkle-lines {
+      position: relative;
+      width: min(560px, 90vw);
+      height: 120px;
+      flex-shrink: 0;
+      pointer-events: none;
+    }
+    .sparkle-lines::before,
+    .sparkle-lines::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 0;
+    }
+    /* Radial mask fades the bottom edge of the sparkle lines container */
+    .sparkle-mask {
+      position: absolute;
+      inset: 0;
+      background: var(--bg);
+      -webkit-mask-image: radial-gradient(ellipse 70% 55% at 50% 0%, transparent 30%, #000 100%);
+      mask-image: radial-gradient(ellipse 70% 55% at 50% 0%, transparent 30%, #000 100%);
+      pointer-events: none;
+    }
+
+    /* ── Word cycle animation ──────────────────────── */
+    .hero-word {
+      color: var(--accent);
+      display: inline-block;
+      position: relative;
+    }
+    .hero-word.wc-exit {
+      animation: wcExit 0.32s cubic-bezier(.55,0,1,.45) forwards;
+    }
+    .hero-word.wc-enter {
+      animation: wcEnter 0.58s cubic-bezier(.34,1.56,.64,1) forwards;
+    }
+    @keyframes wcExit {
+      from { opacity: 1; transform: translateY(0); }
+      to   { opacity: 0; transform: translateY(-56px); }
+    }
+    @keyframes wcEnter {
+      from { opacity: 0; transform: translateY(64px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Buttons ───────────────────────────────────── */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: transparent;
+      color: var(--text);
+      font-weight: 500; font-size: 15px;
+      padding: 13px 28px; border-radius: 6px;
+      border: 1px solid rgba(45,107,228,.55);
+      cursor: pointer; text-decoration: none;
+      letter-spacing: 0.01em;
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, border-color 0.18s ease-out, color 0.18s ease-out;
+      box-shadow: 0 0 0 0 rgba(45,107,228,0);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      border-color: rgba(45,107,228,.9);
+      color: #fff;
+      box-shadow: 0 0 22px rgba(45,107,228,.28), 0 0 0 1px rgba(45,107,228,.4), inset 0 0 18px rgba(45,107,228,.06);
+    }
+    .btn-primary:active { transform: translateY(0); opacity: .9; }
+    .btn-primary:focus-visible { outline: 2px solid rgba(45,107,228,.7); outline-offset: 3px; }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--sub);
+      font-weight: 400; font-size: 15px;
+      padding: 13px 22px; border-radius: 6px;
+      border: 1px solid rgba(30,58,95,.6);
+      cursor: pointer; text-decoration: none;
+      letter-spacing: 0.01em;
+      transition: transform 0.15s ease-out, color 0.15s ease-out, border-color 0.15s ease-out;
+    }
+    .btn-ghost:hover  { transform: translateY(-1px); color: var(--text); border-color: rgba(30,58,95,.9); }
+    .btn-ghost:active { transform: translateY(0); }
+    .btn-ghost:focus-visible { outline: 2px solid rgba(45,107,228,.7); outline-offset: 3px; }
+
+    /* ── Nav links ─────────────────────────────────── */
+    .nav-link {
+      color: var(--sub); font-size: 14px; font-weight: 500;
+      text-decoration: none;
+      transition: color 0.12s ease-out;
+    }
+    .nav-link:hover { color: var(--text); }
+    .nav-link:focus-visible { outline: 2px solid rgba(45,107,228,.7); outline-offset: 4px; border-radius: 3px; }
+
+    /* ── Feature pills ─────────────────────────────── */
+    .feat-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 6px 14px;
+      font-size: 13px; color: var(--sub); font-weight: 500;
+    }
+    .feat-pill-dot {
+      width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+    }
+
+    /* ── Cards ─────────────────────────────────────── */
+    .card {
+      border-radius: 16px;
+      transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), border-color 0.2s ease-out;
+    }
+    .card:hover { transform: translateY(-5px); border-color: rgba(45,107,228,.45) !important; }
+
+    /* ── Animations ────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    @keyframes pulseDot {
+      0%, 100% { opacity: .35; transform: scale(1); }
+      50%       { opacity: 1;   transform: scale(1.18); }
+    }
+    @keyframes floatY {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-7px); }
+    }
+
+    .anim-up { animation: fadeUp 0.6s cubic-bezier(.16,1,.3,1) both; }
+    .d1 { animation-delay: 0.06s; }
+    .d2 { animation-delay: 0.14s; }
+    .d3 { animation-delay: 0.22s; }
+    .d4 { animation-delay: 0.32s; }
+    .d5 { animation-delay: 0.44s; }
+    .d6 { animation-delay: 0.56s; }
+
+    .ticker-track { animation: ticker 38s linear infinite; }
+    .pulse-dot    { animation: pulseDot 2.4s ease-in-out infinite; }
+    .float        { animation: floatY 4.5s ease-in-out infinite; }
+
+    /* ── Scroll reveal ─────────────────────────────── */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.65s cubic-bezier(.16,1,.3,1), transform 0.65s cubic-bezier(.16,1,.3,1);
+    }
+    .reveal.in          { opacity: 1; transform: translateY(0); }
+    .reveal.in.rd1 { transition-delay: 0.07s; }
+    .reveal.in.rd2 { transition-delay: 0.15s; }
+    .reveal.in.rd3 { transition-delay: 0.23s; }
+
+    /* ── Misc ──────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .tabnum { font-variant-numeric: tabular-nums; }
+    .mono { font-family: 'SF Mono', 'Fira Code', monospace; }
+
+    /* ── Tube-light navbar ─────────────────────────── */
+    .tube-wrap {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      pointer-events: none;
+    }
+    @media (min-width: 640px) {
+      .tube-wrap { top: 24px; bottom: auto; }
+    }
+    .tube-inner {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 4px;
+      border-radius: 999px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.55), 0 1px 0 rgba(255,255,255,.06) inset;
+      pointer-events: all;
+      white-space: nowrap;
+    }
+    .tube-tab {
+      position: relative;
+      z-index: 1;
+      padding: 8px 22px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(232,240,254,.45);
+      text-decoration: none;
+      transition: color 0.18s ease-out;
+      cursor: pointer;
+      letter-spacing: -0.01em;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 38px;
+    }
+    .tube-tab .t-icon { display: flex; }
+    .tube-tab .t-label { display: none; }
+    @media (min-width: 768px) {
+      .tube-tab .t-icon { display: none; }
+      .tube-tab .t-label { display: inline; }
+    }
+    .tube-tab:hover { color: rgba(232,240,254,.85); }
+    .tube-tab:focus-visible { outline: 2px solid rgba(45,107,228,.7); outline-offset: 2px; border-radius: 999px; }
+    .tube-tab.active { color: #e8f0fe; }
+
+    /* Moving lamp indicator */
+    #tube-lamp {
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      border-radius: 999px;
+      background: rgba(45,107,228,.1);
+      transition: left 0.38s cubic-bezier(.34,1.56,.64,1), width 0.38s cubic-bezier(.34,1.56,.64,1);
+      pointer-events: none;
+      z-index: 0;
+      will-change: left, width;
+      overflow: visible;
+    }
+    /* Tube bar at top of lamp */
+    .tube-bar {
+      position: absolute;
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 32px;
+      height: 4px;
+      background: #2d6be4;
+      border-radius: 0 0 4px 4px;
+    }
+    /* Glow halos */
+    .tube-h1 {
+      position: absolute;
+      top: -12px; left: 50%; transform: translateX(-50%);
+      width: 48px; height: 28px;
+      background: rgba(45,107,228,.35);
+      border-radius: 50%; filter: blur(9px);
+      pointer-events: none;
+    }
+    .tube-h2 {
+      position: absolute;
+      top: -9px; left: 50%; transform: translateX(-50%);
+      width: 32px; height: 22px;
+      background: rgba(45,107,228,.22);
+      border-radius: 50%; filter: blur(5px);
+      pointer-events: none;
+    }
+    .tube-h3 {
+      position: absolute;
+      top: -5px; left: 50%; transform: translateX(-50%);
+      width: 16px; height: 14px;
+      background: rgba(45,107,228,.18);
+      border-radius: 50%; filter: blur(3px);
+      pointer-events: none;
+    }
+
+    /* ── Floating Icons Section ────────────────────── */
+    .fi-section {
+      position: relative;
+      width: 100%;
+      min-height: 700px;
+      height: 100vh;
+      max-height: 900px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      z-index: 10;
+      background: #000;
+    }
+    .fi-icon {
+      position: absolute;
+      opacity: 0;
+      animation: fi-appear 0.6s cubic-bezier(.22,1,.36,1) forwards;
+      animation-delay: var(--fi-delay, 0s);
+      /* Use CSS `translate` (separate property) so it never conflicts with
+         the fi-appear animation's transform:scale() or fi-float transform */
+      transition: translate 0.4s cubic-bezier(.22,1,.36,1);
+    }
+    .fi-float {
+      animation: fi-float var(--fi-dur, 7s) ease-in-out infinite;
+      animation-delay: var(--fi-off, 0s);
+    }
+    /* Matches bg-card/80 backdrop-blur-md rounded-3xl from component */
+    .fi-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      padding: 12px;
+      border-radius: 24px;
+      background: rgba(255,255,255,.07);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.06);
+      box-shadow: 0 8px 32px rgba(0,0,0,.6), 0 2px 8px rgba(0,0,0,.4);
+    }
+    .fi-card svg { width: 36px; height: 36px; }
+    /* White pill button (matches Button asChild from component) */
+    .fi-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      color: #000;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 32px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      transition: transform 0.15s ease-out, background 0.15s ease-out;
+      box-shadow: 0 2px 12px rgba(0,0,0,.3);
+    }
+    .fi-btn:hover  { background: rgba(255,255,255,.9); transform: translateY(-1px); }
+    .fi-btn:active { transform: scale(0.975); }
+    .fi-btn:focus-visible { outline: 2px solid rgba(255,255,255,.5); outline-offset: 3px; }
+    /* Gradient title (bg-gradient-to-b from-foreground to-foreground/70) */
+    .fi-title {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      background: linear-gradient(to bottom, #fff 0%, rgba(255,255,255,.7) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    @keyframes fi-appear {
+      from { opacity: 0; transform: scale(0.5); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes fi-float {
+      0%   { transform: translate(0px,  0px) rotate( 0deg); }
+      25%  { transform: translate(6px, -8px) rotate( 5deg); }
+      50%  { transform: translate(0px,  0px) rotate( 0deg); }
+      75%  { transform: translate(-6px, 8px) rotate(-5deg); }
+      100% { transform: translate(0px,  0px) rotate( 0deg); }
+    }
+
+    /* ── HoverButton ───────────────────────────────── */
+    .hover-btn {
+      position: relative;
+      isolation: isolate;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 36px;
+      border-radius: 999px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: #e8f0fe;
+      letter-spacing: -0.01em;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: rgba(255,255,255,0.06);
+      cursor: pointer;
+      overflow: hidden;
+      border: none;
+      text-decoration: none;
+      transition: transform 0.12s ease-out;
+    }
+    .hover-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 1;
+      box-shadow:
+        inset 0 0 0 1px rgba(170,202,255,.22),
+        inset 0 0 18px 0 rgba(170,202,255,.1),
+        inset 0 -3px 12px 0 rgba(170,202,255,.14),
+        0 1px 3px 0 rgba(0,0,0,.55),
+        0 4px 14px 0 rgba(0,0,0,.5);
+      transition: transform 0.3s ease-out;
+    }
+    .hover-btn:active { transform: scale(0.975); }
+    .hover-btn:hover { color: #fff; background: rgba(45,107,228,0.18); }
+    .hover-btn:focus-visible {
+      outline: 2px solid rgba(45,107,228,.7);
+      outline-offset: 3px;
+    }
+    /* Floating gradient circles (mouse-trail effect) */
+    .hover-circle {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      filter: blur(9px);
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease-out;
+    }
+    .hover-circle.ci-in  { opacity: 0.75; }
+    .hover-circle.ci-out { opacity: 0; transition-duration: 1.2s; }
+
+    /* ── Pricing redesign ──────────────────────────── */
+    .pricing-grid-bg {
+      position: absolute;
+      inset: -80px;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(to right, rgba(30,58,95,.22) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30,58,95,.22) 1px, transparent 1px);
+      background-size: 32px 32px;
+      -webkit-mask-image: radial-gradient(ellipse 80% 80% at center, transparent 5%, #000 68%);
+      mask-image: radial-gradient(ellipse 80% 80% at center, transparent 5%, #000 68%);
+    }
+    .c-plus {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .disc-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      font-family: 'Inter', sans-serif;
+    }
+    .disc-badge-free { background: rgba(107,140,186,.14); color: var(--sub); border: 1px solid rgba(107,140,186,.22); }
+    .disc-badge-pro  { background: var(--accent); color: #fff; }
+    .disc-badge-pop  { background: rgba(45,107,228,.12); color: var(--accent); border: 1px solid rgba(45,107,228,.28); }
+
+    /* ── Globe background effect ───────────────────── */
+    .globe-wrap {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(980px, 100vw);
+      /* height clips the sphere — only the top CAP is visible, equator stays hidden */
+      height: 400px;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+    /* SVG anchored by top so sphere center stays BELOW the container */
+    .globe-svg {
+      position: absolute;
+      top: 6px;        /* sphere top rim appears at ~6px from section top */
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(900px, 98vw);
+      height: min(900px, 98vw);  /* square — center at top+450px = 456px, below 400px container */
+    }
+    /* Bright rim light at the very top of the sphere */
+    .globe-rim {
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 54%;
+      height: 3px;
+      background: linear-gradient(to right, transparent 0%, rgba(60,255,140,.96) 50%, transparent 100%);
+      filter: blur(1.5px);
+      box-shadow: 0 0 20px 5px rgba(40,220,110,.52);
+      z-index: 2;
+    }
+    /* Outer atmospheric halo */
+    .globe-halo {
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(ellipse at 50% 28%,
+        rgba(20,200,80,.26) 0%,
+        rgba(10,150,60,.1) 38%,
+        transparent 68%);
+      filter: blur(38px);
+      z-index: 1;
+    }
+
+    /* ── New pricing design (Planstaust style) ─────── */
+    .plan-section {
+      position: relative;
+      z-index: 10;
+      background: #000;
+      padding: 110px 48px 100px; /* globe rim peeks above the header at top */
+      overflow: hidden;
+    }
+    /* Monthly/Yearly toggle */
+    .plan-toggle {
+      display: inline-flex;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 999px;
+      padding: 4px;
+      gap: 2px;
+    }
+    .plan-toggle-opt {
+      padding: 8px 22px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,.45);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease-out, color 0.2s ease-out;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .plan-toggle-opt.active { background: rgba(255,255,255,.1); color: #fff; }
+    .plan-toggle-badge {
+      display: inline-flex; align-items: center;
+      padding: 2px 7px; background: #2d6be4; color: #fff;
+      border-radius: 999px; font-size: 10px; font-weight: 700;
+    }
+    /* Outer container: grid bg + corner markers */
+    .plan-outer {
+      position: relative;
+      z-index: 1;
+      max-width: 1060px;
+      margin: 0 auto;
+    }
+    /* Three-column card grid */
+    .plan-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 760px;
+      margin: 0 auto;
+      gap: 1px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .plan-card {
+      background: rgba(10,10,10,.95);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      transition: background 0.2s ease-out;
+    }
+    .plan-card:hover { background: rgba(20,20,20,.98); }
+    .plan-card-featured {
+      background: rgba(15,15,20,.98);
+      position: relative;
+    }
+    .plan-popular {
+      display: inline-flex; align-items: center;
+      padding: 3px 10px;
+      background: rgba(45,107,228,.15);
+      border: 1px solid rgba(45,107,228,.35);
+      border-radius: 999px;
+      font-size: 10px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--accent);
+      font-family: 'Inter', sans-serif;
+    }
+    .plan-name  { font-size: 16px; font-weight: 600; color: #fff; font-family: 'Inter', sans-serif; margin-bottom: 6px; }
+    .plan-desc  { font-size: 13px; color: rgba(255,255,255,.4); line-height: 1.6; font-family: 'Inter', sans-serif; margin-bottom: 28px; }
+    .plan-price {
+      font-size: clamp(28px, 4vw, 40px); font-weight: 800; color: #fff;
+      font-family: 'Inter', sans-serif; letter-spacing: -0.03em; line-height: 1;
+      margin-bottom: 28px;
+    }
+    .plan-price-sub { font-size: 15px; font-weight: 400; color: rgba(255,255,255,.4); letter-spacing: 0; }
+    .plan-divider { height: 1px; background: rgba(255,255,255,.07); margin: 0 0 20px; }
+    .plan-what   { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.3); margin-bottom: 14px; font-family: 'Inter', sans-serif; }
+    .plan-features { display: flex; flex-direction: column; gap: 10px; flex: 1; margin-bottom: 28px; }
+    .plan-feat {
+      display: flex; align-items: flex-start; gap: 9px;
+      font-size: 13.5px; color: rgba(255,255,255,.65); line-height: 1.45;
+      font-family: 'Inter', sans-serif;
+    }
+    .plan-feat-check {
+      flex-shrink: 0; margin-top: 1px;
+      color: #2d6be4;
+    }
+    /* CTA buttons matching the reference */
+    .plan-cta {
+      display: inline-flex; align-items: center; gap: 7px;
+      color: rgba(255,255,255,.7); font-size: 14px; font-weight: 500;
+      text-decoration: none; font-family: 'Inter', sans-serif;
+      transition: color 0.15s ease-out, gap 0.15s ease-out;
+      margin-top: auto;
+    }
+    .plan-cta:hover { color: #fff; gap: 11px; }
+    .plan-cta-featured {
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14);
+      color: #fff; font-size: 14px; font-weight: 600;
+      text-decoration: none; font-family: 'Inter', sans-serif;
+      padding: 12px 20px; border-radius: 8px; width: 100%;
+      transition: background 0.15s ease-out, transform 0.15s ease-out;
+      margin-top: auto;
+    }
+    .plan-cta-featured:hover { background: rgba(255,255,255,.13); transform: translateY(-1px); }
+
+    /* BorderTrail: rotating conic-gradient via @property */
+    @property --trail-a {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+    .pro-trail {
+      position: relative;
+    }
+    .pro-trail::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 1px;
+      background: conic-gradient(from var(--trail-a),
+        transparent 0%,
+        transparent 32%,
+        rgba(45,107,228,.4) 43%,
+        rgba(180,215,255,.96) 50%,
+        rgba(45,107,228,.4) 57%,
+        transparent 68%,
+        transparent 100%
+      );
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: spin-trail 4.5s linear infinite;
+      pointer-events: none;
+      z-index: 3;
+    }
+    @keyframes spin-trail {
+      to { --trail-a: 360deg; }
+    }
+    .pricing-btn-outline {
+      display: block; width: 100%; text-align: center;
+      padding: 11px 20px; border-radius: 6px;
+      font-size: 14px; font-weight: 600; text-decoration: none;
+      border: 1px solid rgba(45,107,228,.5); color: var(--text);
+      transition: border-color .15s ease-out, box-shadow .15s ease-out, transform .15s ease-out;
+    }
+    .pricing-btn-outline:hover {
+      border-color: rgba(45,107,228,.9);
+      box-shadow: 0 0 18px rgba(45,107,228,.22), inset 0 0 14px rgba(45,107,228,.05);
+      transform: translateY(-1px);
+    }
+    .pricing-btn-solid {
+      display: block; width: 100%; text-align: center;
+      padding: 11px 20px; border-radius: 6px;
+      font-size: 14px; font-weight: 600; text-decoration: none;
+      background: var(--accent); color: #fff; border: none;
+      box-shadow: 0 4px 18px rgba(45,107,228,.35);
+      transition: transform .15s ease-out, box-shadow .15s ease-out;
+    }
+    .pricing-btn-solid:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(45,107,228,.5);
+    }
+
+    /* ── SectionWithMockup ──────────────────────────── */
+    .swm-item {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    }
+    .swm-item:nth-child(2) { transition-delay: 0.2s; }
+    .swm-item.swm-in { opacity: 1; transform: translateY(0); }
+
+    .swm-bg1, .swm-bg2 { transition: transform 1.2s ease-out; }
+    .swm-card1, .swm-card2 { transition: transform 1.2s ease-out 0.1s; }
+    .swm-bg1.swm-in  { transform: translateY(-30px); }
+    .swm-card1.swm-in { transform: translateY(30px); }
+    .swm-bg2.swm-in  { transform: translateY(-30px); }
+    .swm-card2.swm-in { transform: translateY(30px); }
+
+    /* ── Mobile responsive ──────────────────────────── */
+    @media (max-width: 768px) {
+
+      /* SWM sections */
+      .swm-inner-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+      .swm-item { min-height: auto !important; }
+      .swm-bg1, .swm-bg2 { display: none; }
+      .swm-card1, .swm-card2 { height: auto !important; min-height: 400px; }
+
+      /* Hero */
+      section[style*="min-height:100vh"] {
+        padding: 120px 20px 80px !important;
+      }
+      .hero-headline { font-size: clamp(36px, 10vw, 64px) !important; }
+
+      /* Testimonials */
+      .tst-grid { grid-template-columns: 1fr !important; }
+      .tst-right { min-height: 340px !important; }
+      .tst-card { position: relative !important; transform: none !important;
+        opacity: 1 !important; display: none; }
+      .tst-card.tst-card-active { display: flex !important; }
+
+      /* Pricing grid */
+      .plan-grid {
+        grid-template-columns: 1fr !important;
+        max-width: 100% !important;
+      }
+      .plan-section { padding: 80px 20px 80px !important; }
+
+      /* About section */
+      #about-root { padding: 0 4px; }
+      #about-h2 { font-size: clamp(24px, 7vw, 40px) !important; }
+      #about-root > div:last-child { flex-direction: column !important; gap: 20px !important; }
+
+      /* Footer */
+      .footer-links-grid { grid-template-columns: repeat(2, 1fr) !important; margin-top: 20px !important; }
+      .footer-grid { grid-template-columns: 1fr !important; }
+      .footer-inner { padding: 40px 20px 48px !important; }
+
+      /* Floating icons section */
+      .fi-section { min-height: 600px !important; }
+      .fi-icon { display: none; }
+      .fi-icon:nth-child(-n+6) { display: block; }
+
+      /* Ticker */
+      #scroll-next { font-size: 11px; }
+
+      /* General section padding */
+      section { padding-left: 20px !important; padding-right: 20px !important; }
+
+      /* Plan cards */
+      .plan-card, .plan-card-featured { padding: 24px 20px !important; }
+
+      /* Mission about-btn */
+      .about-btn { font-size: 13px !important; padding: 10px 18px !important; }
+
+      /* Features card */
+      #features > div:last-child { padding: 80px 20px !important; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-headline { font-size: clamp(30px, 9vw, 48px) !important; }
+      .plan-toggle { flex-wrap: wrap; justify-content: center; }
+      .footer-links-grid { grid-template-columns: 1fr 1fr !important; }
+      #about-h2 { font-size: clamp(22px, 6vw, 32px) !important; }
+    }
+
+    /* ── Footer ──────────────────────────────────────── */
+    .footer-outer {
+      background: #000;
+      padding: 0 24px;
+    }
+    .footer-inner {
+      position: relative;
+      width: 100%;
+      max-width: 72rem;
+      margin: 0 auto;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-radius: 2rem 2rem 0 0;
+      background: radial-gradient(35% 128px at 50% 0%, rgba(255,255,255,0.08), transparent);
+      padding: 52px 24px 64px;
+      z-index: 10;
+    }
+    .footer-glow-line {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      width: 33%;
+      height: 1px;
+      background: rgba(232,240,254,0.25);
+      border-radius: 999px;
+      filter: blur(1px);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    @media (min-width: 1024px) {
+      .footer-grid { grid-template-columns: 1fr 2fr; gap: 32px; }
+    }
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .footer-tagline {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--sub);
+      margin-top: 16px;
+      line-height: 1.6;
+    }
+    .footer-links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      margin-top: 40px;
+    }
+    @media (min-width: 768px) {
+      .footer-links-grid { grid-template-columns: repeat(4, 1fr); margin-top: 0; }
+    }
+    .footer-section-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin: 0 0 16px;
+    }
+    .footer-link-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-link {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--sub);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.3s ease;
+    }
+    .footer-link:hover { color: var(--text); }
+    .footer-social-icon {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+    .footer-social-li {
+      transition: transform 0.4s cubic-bezier(.22,1,.36,1);
+      will-change: transform;
+      display: block;
+    }
+    .footer-anim {
+      opacity: 0;
+      filter: blur(4px);
+      transform: translateY(-8px);
+      transition: opacity 0.8s ease, filter 0.8s ease, transform 0.8s ease;
+    }
+    .footer-anim.footer-anim-in {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Stars background ─────────────────────────────── -->
+<div id="stars-bg">
+  <div id="stars-parallax">
+    <div class="star-layer" style="animation:stars-s 50s linear infinite;">
+      <div class="star-dot" id="sd-s1" style="width:1px;height:1px;top:0;left:0;"></div>
+      <div class="star-dot" id="sd-s2" style="width:1px;height:1px;top:2000px;left:0;"></div>
+    </div>
+    <div class="star-layer" style="animation:stars-m 100s linear infinite;">
+      <div class="star-dot" id="sd-m1" style="width:2px;height:2px;top:0;left:0;"></div>
+      <div class="star-dot" id="sd-m2" style="width:2px;height:2px;top:2000px;left:0;"></div>
+    </div>
+    <div class="star-layer" style="animation:stars-l 150s linear infinite;">
+      <div class="star-dot" id="sd-l1" style="width:3px;height:3px;top:0;left:0;"></div>
+      <div class="star-dot" id="sd-l2" style="width:3px;height:3px;top:2000px;left:0;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Ambient orbs only apply below the hero (navy sections) -->
+<div aria-hidden="true" style="position:fixed;top:100vh;left:0;right:0;bottom:0;pointer-events:none;z-index:0;overflow:hidden;">
+  <div style="position:absolute;top:0;left:5%;width:700px;height:700px;background:radial-gradient(circle,rgba(45,107,228,.09) 0%,transparent 68%);"></div>
+  <div style="position:absolute;top:40%;right:-8%;width:500px;height:500px;background:radial-gradient(circle,rgba(16,185,129,.045) 0%,transparent 68%);"></div>
+</div>
+
+<!-- ── TUBE-LIGHT NAVBAR ──────────────────────────────── -->
+<nav class="tube-wrap" aria-label="Main navigation">
+  <div class="tube-inner" id="tube-inner">
+
+    <!-- Sliding lamp indicator -->
+    <div id="tube-lamp" aria-hidden="true">
+      <div class="tube-h1"></div>
+      <div class="tube-h2"></div>
+      <div class="tube-h3"></div>
+      <div class="tube-bar"></div>
+    </div>
+
+    <!-- Features -->
+    <a class="tube-tab active" data-magnetic href="#features" data-section="">
+      <span class="t-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13L6 9L9 12L14 5"/><path d="M11 5H14V8"/></svg>
+      </span>
+      <span class="t-label">Features</span>
+    </a>
+
+
+    <!-- Pricing -->
+    <a class="tube-tab" data-magnetic href="#pricing" data-section="pricing">
+      <span class="t-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3H15L13 11H5L3 3Z"/><circle cx="6" cy="14.5" r="1"/><circle cx="12" cy="14.5" r="1"/></svg>
+      </span>
+      <span class="t-label">Pricing</span>
+    </a>
+
+    <!-- Mission -->
+    <a class="tube-tab" data-magnetic href="#about" data-section="about">
+      <span class="t-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="7"/><circle cx="9" cy="9" r="3"/><line x1="9" y1="2" x2="9" y2="1"/><line x1="9" y1="17" x2="9" y2="16"/><line x1="2" y1="9" x2="1" y2="9"/><line x1="17" y1="9" x2="16" y2="9"/></svg>
+      </span>
+      <span class="t-label">Mission</span>
+    </a>
+
+    <!-- Blog -->
+    <a class="tube-tab" data-magnetic href="/blog.html" data-section="">
+      <span class="t-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="12" height="14" rx="1"/><line x1="6" y1="6" x2="12" y2="6"/><line x1="6" y1="9" x2="12" y2="9"/><line x1="6" y1="12" x2="9" y2="12"/></svg>
+      </span>
+      <span class="t-label">Blog</span>
+    </a>
+
+  </div>
+
+
+</nav>
+
+<!-- SVG filter: removes pure black background from logo -->
+<svg width="0" height="0" style="position:absolute;pointer-events:none;" aria-hidden="true">
+  <defs>
+    <filter id="rm-black" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix"
+        values="1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                6 6 6 -5 -0.2"/>
+    </filter>
+  </defs>
+</svg>
+
+<!-- ── HERO ──────────────────────────────────────────── -->
+<section style="position:relative;z-index:10;background:#000;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:180px 24px 100px;text-align:center;overflow:hidden;">
+
+  <!-- Logo inside hero — scrolls away with page -->
+  <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"
+     style="position:absolute;top:82px;left:50%;transform:translateX(-50%);z-index:11;pointer-events:all;display:flex;justify-content:center;">
+    <img src="brand_assets/logo12-crop.png" alt="Stockpilo" style="height:41px;width:auto;filter:url(#rm-black);display:block;">
+  </a>
+
+
+  <!-- Hero content wrapper — fades + drifts up on scroll (heroContentRef) -->
+  <div id="hero-content">
+
+    <!-- Headline -->
+    <h1 class="hero-headline anim-up d1" style="margin-bottom:0;max-width:900px;color:#fff;" aria-label="Invest smarter. Know why before you buy.">
+      Invest <span class="hero-word" aria-live="polite">smarter</span>.<br>Know <span style="color:#2d6be4;">why</span> before you buy.
+    </h1>
+
+    <!-- Sparkle strip below headline -->
+    <div id="sparkles-strip-wrap" aria-hidden="true">
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:75%;height:2px;background:linear-gradient(to right,transparent,rgba(45,107,228,.85),transparent);filter:blur(3px);pointer-events:none;"></div>
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:75%;height:1px;background:linear-gradient(to right,transparent,rgba(45,107,228,.9),transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:25%;height:5px;background:linear-gradient(to right,transparent,rgba(96,165,250,.95),transparent);filter:blur(3px);pointer-events:none;"></div>
+      <div id="sparkles-strip"></div>
+    </div>
+
+    <!-- Subtext -->
+    <p class="anim-up d2" style="font-size:20px;color:rgba(255,255,255,.58);max-width:540px;line-height:1.74;margin-bottom:48px;font-family:'Inter',sans-serif;">
+      Investing is complex enough. Your tools shouldn't be. Track every stock you follow from one clean dashboard — powerful insights, zero noise.
+    </p>
+
+    <!-- CTA -->
+    <div class="anim-up d3" style="display:flex;align-items:center;gap:14px;margin-bottom:28px;flex-wrap:wrap;justify-content:center;">
+      <a href="#" class="hover-btn" id="hero-cta">7-Day Free Trial</a>
+    </div>
+
+    <!-- Avatar social proof -->
+    <div class="anim-up d3" style="display:flex;justify-content:center;">
+      <div style="display:inline-flex;align-items:center;border-radius:999px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);padding:5px 12px 5px 6px;gap:0;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);">
+        <div style="display:flex;margin-right:8px;">
+          <img src="https://i.pravatar.cc/40?img=11" width="24" height="24" alt="" style="border-radius:50%;outline:2px solid #000;margin-right:-7px;display:block;object-fit:cover;">
+          <img src="https://i.pravatar.cc/40?img=32" width="24" height="24" alt="" style="border-radius:50%;outline:2px solid #000;margin-right:-7px;display:block;object-fit:cover;">
+          <img src="https://i.pravatar.cc/40?img=47" width="24" height="24" alt="" style="border-radius:50%;outline:2px solid #000;margin-right:-7px;display:block;object-fit:cover;">
+          <img src="https://i.pravatar.cc/40?img=56" width="24" height="24" alt="" style="border-radius:50%;outline:2px solid #000;display:block;object-fit:cover;">
+        </div>
+        <p style="margin:0;font-size:12px;color:var(--sub);font-family:'Inter',sans-serif;white-space:nowrap;">Trusted by <strong style="font-weight:600;color:var(--text);">2K+</strong> investors.</p>
+      </div>
+    </div>
+
+  </div><!-- /#hero-content -->
+
+  <!-- ── TICKER TAPE — anchored to bottom of hero ── -->
+  <div id="scroll-next" style="position:absolute;bottom:0;left:0;width:100%;z-index:10;overflow:hidden;padding:11px 0;border-top:1px solid rgba(30,58,95,.15);border-bottom:1px solid rgba(30,58,95,.15);background:rgba(0,0,0,.2);backdrop-filter:blur(8px);">
+  <div class="ticker-track" style="display:flex;gap:56px;white-space:nowrap;width:max-content;">
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AAPL</span> <span style="color:var(--sub);opacity:.7;">$189.44</span> <span style="color:var(--green);font-weight:600;">▲ +2.3%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">TSLA</span> <span style="color:var(--sub);opacity:.7;">$173.12</span> <span style="color:var(--red);font-weight:600;">▼ −1.8%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">NVDA</span> <span style="color:var(--sub);opacity:.7;">$891.23</span> <span style="color:var(--green);font-weight:600;">▲ +8.2%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">META</span> <span style="color:var(--sub);opacity:.7;">$509.44</span> <span style="color:var(--red);font-weight:600;">▼ −0.6%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">MSFT</span> <span style="color:var(--sub);opacity:.7;">$415.80</span> <span style="color:var(--green);font-weight:600;">▲ +4.1%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMZN</span> <span style="color:var(--sub);opacity:.7;">$186.17</span> <span style="color:var(--green);font-weight:600;">▲ +1.9%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">GOOGL</span> <span style="color:var(--sub);opacity:.7;">$172.03</span> <span style="color:var(--red);font-weight:600;">▼ −0.3%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMD</span> <span style="color:var(--sub);opacity:.7;">$168.94</span> <span style="color:var(--green);font-weight:600;">▲ +3.7%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">SPY</span> <span style="color:var(--sub);opacity:.7;">$524.10</span> <span style="color:var(--green);font-weight:600;">▲ +1.1%</span></span>
+    <!-- duplicate for loop -->
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AAPL</span> <span style="color:var(--sub);opacity:.7;">$189.44</span> <span style="color:var(--green);font-weight:600;">▲ +2.3%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">TSLA</span> <span style="color:var(--sub);opacity:.7;">$173.12</span> <span style="color:var(--red);font-weight:600;">▼ −1.8%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">NVDA</span> <span style="color:var(--sub);opacity:.7;">$891.23</span> <span style="color:var(--green);font-weight:600;">▲ +8.2%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">META</span> <span style="color:var(--sub);opacity:.7;">$509.44</span> <span style="color:var(--red);font-weight:600;">▼ −0.6%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">MSFT</span> <span style="color:var(--sub);opacity:.7;">$415.80</span> <span style="color:var(--green);font-weight:600;">▲ +4.1%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMZN</span> <span style="color:var(--sub);opacity:.7;">$186.17</span> <span style="color:var(--green);font-weight:600;">▲ +1.9%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">GOOGL</span> <span style="color:var(--sub);opacity:.7;">$172.03</span> <span style="color:var(--red);font-weight:600;">▼ −0.3%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMD</span> <span style="color:var(--sub);opacity:.7;">$168.94</span> <span style="color:var(--green);font-weight:600;">▲ +3.7%</span></span>
+    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">SPY</span> <span style="color:var(--sub);opacity:.7;">$524.10</span> <span style="color:var(--green);font-weight:600;">▲ +1.1%</span></span>
+  </div>
+</div>
+
+</section>
+
+<!-- ── FEATURES ────────────────────────────────────── -->
+<section id="features" style="position:relative;z-index:10;background:#000;overflow:hidden;">
+  <div style="position:relative;z-index:1;padding:140px 24px;display:flex;align-items:center;justify-content:center;min-height:520px;">
+
+    <!-- Stock grid card — centered, expanded -->
+    <div class="reveal" style="width:100%;max-width:440px;background:rgba(8,8,12,0.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:36px 40px;">
+
+      <!-- Header row -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+        <div>
+          <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:6px;">Today's Movers</div>
+          <h3 style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.02em;font-family:'Inter',sans-serif;margin:0;">Top Gainers &amp; Losers</h3>
+        </div>
+        <div style="width:40px;height:40px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+          <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><path d="M11 3L14.5 8H7.5L11 3Z" fill="#10b981"/><path d="M11 19L7.5 14H14.5L11 19Z" fill="#ef4444"/><line x1="3" y1="11" x2="19" y2="11" stroke="rgba(107,140,186,.35)" stroke-width="1.2"/></svg>
+        </div>
+      </div>
+
+      <!-- Gainers -->
+      <div style="font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--green);opacity:.7;margin-bottom:10px;">Gainers</div>
+      <div style="display:flex;flex-direction:column;gap:0;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">N</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;letter-spacing:.02em;">NVDA</div>
+              <div style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">Nvidia Corp</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--green);font-family:'Inter',sans-serif;">+8.2%</div>
+            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">$887.40</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">A</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;letter-spacing:.02em;">AAPL</div>
+              <div style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">Apple Inc</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--green);font-family:'Inter',sans-serif;">+5.7%</div>
+            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">$214.80</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">M</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;letter-spacing:.02em;">MSFT</div>
+              <div style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">Microsoft Corp</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--green);font-family:'Inter',sans-serif;">+3.1%</div>
+            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">$420.15</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div style="height:1px;background:rgba(255,255,255,.07);margin-bottom:16px;"></div>
+
+      <!-- Losers -->
+      <div style="font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--red);opacity:.7;margin-bottom:10px;">Losers</div>
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">T</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;letter-spacing:.02em;">TSLA</div>
+              <div style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">Tesla Inc</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--red);font-family:'Inter',sans-serif;">−1.8%</div>
+            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">$174.20</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">M</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;letter-spacing:.02em;">META</div>
+              <div style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">Meta Platforms</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--red);font-family:'Inter',sans-serif;">−0.6%</div>
+            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">$492.65</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer note -->
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,.06);font-size:12px;color:var(--sub);font-family:'Inter',sans-serif;display:flex;align-items:center;gap:7px;">
+        <div style="width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);flex-shrink:0;"></div>
+        Live data · AI reason on every move
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ── ABOUT / TIMELINE SECTION ──────────────────── -->
+<section id="about" style="background:#000;padding:120px 24px 140px;overflow:hidden;scroll-margin-top:80px;">
+  <div style="max-width:900px;margin:0 auto;" id="about-root">
+
+    <h2 id="about-h2" class="about-reveal" data-delay="0"
+      style="font-family:'Inter',sans-serif;font-size:clamp(28px,5vw,58px);font-weight:700;color:#fff;line-height:1.12;letter-spacing:-.03em;margin-bottom:48px;">
+      We are&nbsp;<span class="about-word about-word-blue about-reveal" data-delay="150">eliminating</span>&nbsp;the chaos of everyday investing. Market data, news, portfolio tracking, AI insights — all in one place, so you can&nbsp;<span class="about-word about-word-green about-reveal" data-delay="300">save time</span>&nbsp;and&nbsp;<span class="about-word about-word-accent about-reveal" data-delay="450">invest with confidence.</span>
+    </h2>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;">
+      <div class="about-reveal" data-delay="600">
+        <div style="font-family:'Inter',sans-serif;font-size:15px;font-weight:500;color:rgba(255,255,255,.5);margin-bottom:5px;letter-spacing:.01em;">
+          We Are <span style="color:var(--sub);font-weight:600;font-size:15px;">Stockpilo</span> And We Will
+        </div>
+        <div style="font-family:'Inter',sans-serif;font-size:16px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.1em;">Clear The Noise</div>
+      </div>
+      <a href="#" class="about-reveal about-btn" data-magnetic data-delay="750">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L4.09 12.26a1 1 0 0 0 0 1.14L13 22M13 2l6.85 10.26a1 1 0 0 1 0 1.48L13 22" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M3 12h18" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Start free trial
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .about-word { display:inline-block; padding:2px 10px; border-radius:6px; border-width:2px; border-style:dashed; line-height:1.3; }
+  .about-word-blue   { color:#60a5fa; border-color:#3b82f6; }
+  .about-word-green  { color:#34d399; border-color:#10b981; }
+  .about-word-accent { color:#7dd3fc; border-color:#2d6be4; }
+  .about-reveal { opacity:0; filter:blur(10px); transform:translateY(32px); transition:opacity .7s ease,filter .7s ease,transform .7s ease; }
+  span.about-reveal { transform:none; transition:opacity .7s ease,filter .7s ease; }
+  .about-reveal.about-in { opacity:1; filter:blur(0); transform:translateY(0); }
+  .about-btn { display:inline-flex; align-items:center; gap:8px; background:var(--accent,#2d6be4); color:#fff; font-family:'Inter',sans-serif; font-size:14px; font-weight:600; padding:12px 24px; border-radius:999px; text-decoration:none; box-shadow:0 8px 24px rgba(45,107,228,.45); transition:transform .15s ease,box-shadow .15s ease,opacity .7s ease,filter .7s ease; }
+  .about-btn:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(45,107,228,.6); }
+</style>
+
+<!-- ── SECTION WITH MOCKUP 1 ─────────────────────── -->
+<section class="swm-section" style="position:relative;padding:96px 0 192px;background:#000;overflow:hidden;">
+  <div style="max-width:1220px;width:100%;padding:0 40px;margin:0 auto;position:relative;z-index:10;box-sizing:border-box;">
+    <div class="swm-inner-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;width:100%;">
+
+      <!-- Text -->
+      <div class="swm-item" style="display:flex;flex-direction:column;gap:20px;max-width:500px;">
+        <h2 style="font-family:'Inter',sans-serif;font-size:clamp(28px,3.2vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.3;margin:0;">
+          Intelligence,<br>delivered to you.
+        </h2>
+        <p style="font-family:'Inter',sans-serif;font-size:15px;color:#868f97;line-height:1.74;margin:0;">
+          Get a tailored brief directly in your dashboard — crafted by Stockpilo AI, spotlighting essential watchlist moves, earnings and macro signals for the week ahead.
+        </p>
+      </div>
+
+      <!-- Mockup -->
+      <div class="swm-item" style="position:relative;min-height:540px;">
+        <div class="swm-bg1" style="position:absolute;top:8%;left:-16%;width:100%;height:460px;background:#0a0a0f;border-radius:32px;z-index:0;filter:blur(3px);"></div>
+        <div class="swm-card1" style="position:relative;width:100%;height:540px;background:rgba(255,255,255,0.04);border-radius:32px;backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.07);z-index:10;overflow:hidden;box-sizing:border-box;padding:32px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+            <div>
+              <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:4px;">Stockpilo AI</div>
+              <div style="font-size:17px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;letter-spacing:-0.02em;">Morning Brief</div>
+            </div>
+            <div style="font-size:12px;color:var(--sub);font-family:'Inter',sans-serif;">Mon, May 16</div>
+          </div>
+          <div style="height:1px;background:rgba(255,255,255,.06);margin-bottom:22px;"></div>
+          <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:24px;">
+            <div style="background:rgba(45,107,228,.08);border:1px solid rgba(45,107,228,.15);border-radius:12px;padding:14px 16px;">
+              <div style="font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;">Market Mood</div>
+              <div style="font-size:13px;color:var(--text);line-height:1.6;font-family:'Inter',sans-serif;">Futures pointing higher after Fed signals pause. Tech outperforming — NVDA leads pre-market.</div>
+            </div>
+            <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.14);border-radius:12px;padding:14px 16px;">
+              <div style="font-size:11px;font-weight:600;color:var(--green);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;">Your Watchlist</div>
+              <div style="font-size:13px;color:var(--text);line-height:1.6;font-family:'Inter',sans-serif;">AAPL earnings Thursday — consensus expects $1.53 EPS. MSFT cloud revenue beat could drive sector.</div>
+            </div>
+            <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.13);border-radius:12px;padding:14px 16px;">
+              <div style="font-size:11px;font-weight:600;color:var(--red);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;">Watch Out</div>
+              <div style="font-size:13px;color:var(--text);line-height:1.6;font-family:'Inter',sans-serif;">CPI data drops at 8:30 AM ET. Higher print = volatility. TSLA short interest elevated.</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;padding-top:16px;border-top:1px solid rgba(255,255,255,.05);">
+            <div style="width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);flex-shrink:0;"></div>
+            <span style="font-size:12px;color:var(--sub);font-family:'Inter',sans-serif;">Generated by Stockpilo AI · updated 6:02 AM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:0;left:0;width:100%;height:1px;background:radial-gradient(50% 50% at 50% 50%,rgba(255,255,255,.2) 0%,rgba(255,255,255,0) 100%);"></div>
+</section>
+
+<!-- ── SECTION WITH MOCKUP 2 (reversed) ──────────── -->
+<section class="swm-section" style="position:relative;padding:96px 0 192px;background:#000;overflow:hidden;">
+  <div style="max-width:1220px;width:100%;padding:0 40px;margin:0 auto;position:relative;z-index:10;box-sizing:border-box;">
+    <div class="swm-inner-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;width:100%;">
+
+      <!-- Mockup (left in reversed) -->
+      <div class="swm-item" style="position:relative;min-height:540px;order:0;">
+        <div class="swm-bg2" style="position:absolute;top:8%;right:-16%;width:100%;height:460px;background:#0a0a0f;border-radius:32px;z-index:0;filter:blur(3px);"></div>
+        <div class="swm-card2" style="position:relative;width:100%;height:540px;background:rgba(255,255,255,0.04);border-radius:32px;backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.07);z-index:10;overflow:hidden;box-sizing:border-box;padding:32px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+            <div>
+              <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:4px;">Portfolio</div>
+              <div style="font-size:17px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;letter-spacing:-0.02em;">Overview</div>
+            </div>
+            <div style="font-family:'Inter',sans-serif;text-align:right;">
+              <div class="tabnum" style="font-size:22px;font-weight:800;color:var(--text);letter-spacing:-0.03em;">$24,812</div>
+              <div class="tabnum" style="font-size:13px;color:var(--green);font-weight:600;">+$342.80 today</div>
+            </div>
+          </div>
+          <div style="height:1px;background:rgba(255,255,255,.06);margin-bottom:22px;"></div>
+          <div style="display:flex;gap:4px;align-items:flex-end;height:72px;margin-bottom:24px;">
+            <div style="flex:1;height:45%;background:rgba(45,107,228,.3);border-radius:3px 3px 0 0;"></div>
+            <div style="flex:1;height:60%;background:rgba(45,107,228,.4);border-radius:3px 3px 0 0;"></div>
+            <div style="flex:1;height:50%;background:rgba(45,107,228,.35);border-radius:3px 3px 0 0;"></div>
+            <div style="flex:1;height:75%;background:rgba(45,107,228,.5);border-radius:3px 3px 0 0;"></div>
+            <div style="flex:1;height:65%;background:rgba(45,107,228,.45);border-radius:3px 3px 0 0;"></div>
+            <div style="flex:1;height:55%;background:rgba(45,107,228,.4);border-radius:3px 3px 0 0;"></div>
+            <div style="flex:1;height:80%;background:rgba(45,107,228,.55);border-radius:3px 3px 0 0;"></div>
+            <div style="flex:1;height:100%;background:var(--green);border-radius:3px 3px 0 0;box-shadow:0 0 8px rgba(16,185,129,.4);"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">N</div>
+                <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'Inter',sans-serif;">NVDA</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="tabnum" style="font-size:13px;font-weight:700;color:var(--green);">+$218.40</div>
+                <div class="tabnum" style="font-size:11px;color:var(--sub);">+8.2%</div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">A</div>
+                <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'Inter',sans-serif;">AAPL</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="tabnum" style="font-size:13px;font-weight:700;color:var(--green);">+$104.60</div>
+                <div class="tabnum" style="font-size:11px;color:var(--sub);">+5.7%</div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">T</div>
+                <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'Inter',sans-serif;">TSLA</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="tabnum" style="font-size:13px;font-weight:700;color:var(--red);">−$20.40</div>
+                <div class="tabnum" style="font-size:11px;color:var(--sub);">−1.8%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text (right in reversed) -->
+      <div class="swm-item" style="display:flex;flex-direction:column;gap:20px;max-width:500px;justify-self:end;">
+        <h2 style="font-family:'Inter',sans-serif;font-size:clamp(28px,3.2vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.3;margin:0;">
+          Your portfolio,<br>one clear view.
+        </h2>
+        <p style="font-family:'Inter',sans-serif;font-size:15px;color:#868f97;line-height:1.74;margin:0;">
+          Add your holdings manually or via import. See real-time P&amp;L, allocation by sector, and AI-powered rebalancing suggestions — all in one clean dashboard.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:0;left:0;width:100%;height:1px;background:radial-gradient(50% 50% at 50% 50%,rgba(255,255,255,.2) 0%,rgba(255,255,255,0) 100%);"></div>
+</section>
+
+<!-- ── TESTIMONIALS ───────────────────────────────── -->
+<section id="testimonials" style="position:relative;z-index:10;background:#000;padding:120px 48px;overflow:hidden;">
+  <div style="max-width:1160px;margin:0 auto;">
+    <div class="tst-grid" id="tst-root">
+
+      <!-- Left: heading + dots -->
+      <div class="tst-left tst-fade" style="display:flex;flex-direction:column;justify-content:center;gap:28px;">
+
+        <div style="display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:999px;background:rgba(45,107,228,.1);border:1px solid rgba(45,107,228,.2);width:fit-content;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="#2d6be4"><path d="M6 1L7.3 4.3H11L8.4 6.2L9.4 9.7L6 7.7L2.6 9.7L3.6 6.2L1 4.3H4.7L6 1Z"/></svg>
+          <span style="font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.05em;">Trusted by investors</span>
+        </div>
+
+        <h2 style="font-family:'Inter',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-.03em;line-height:1.1;color:#fff;margin:0;">
+          Loved by the<br>community
+        </h2>
+
+        <p style="font-size:16px;color:var(--sub);line-height:1.7;max-width:400px;font-family:'Inter',sans-serif;margin:0;">
+          Don't just take our word for it. See what investors have to say about Stockpilo.
+        </p>
+
+        <!-- Dot navigation -->
+        <div style="display:flex;align-items:center;gap:10px;padding-top:8px;" id="tst-dots"></div>
+      </div>
+
+      <!-- Right: rotating cards -->
+      <div class="tst-right tst-fade" style="position:relative;min-height:380px;">
+
+        <!-- Decorative corners -->
+        <div style="position:absolute;bottom:-20px;left:-20px;width:80px;height:80px;border-radius:14px;background:rgba(45,107,228,.05);pointer-events:none;"></div>
+        <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:14px;background:rgba(45,107,228,.05);pointer-events:none;"></div>
+
+        <div id="tst-cards" style="position:relative;width:100%;height:100%;"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .tst-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  @media (max-width: 768px) {
+    .tst-grid { grid-template-columns: 1fr; gap: 40px; }
+    .tst-right { min-height: 340px !important; }
+    section#testimonials { padding: 80px 24px !important; }
+  }
+  .tst-fade {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .tst-fade.tst-in { opacity: 1; transform: translateY(0); }
+  .tst-left.tst-in  { transition-delay: 0s; }
+  .tst-right.tst-in { transition-delay: 0.15s; }
+
+  .tst-card {
+    position: absolute;
+    inset: 0;
+    background: rgba(10,10,16,.9);
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 20px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    box-shadow: 0 24px 64px rgba(0,0,0,.5);
+    opacity: 0;
+    transform: translateX(60px) scale(0.96);
+    transition: opacity 0.5s cubic-bezier(.22,1,.36,1), transform 0.5s cubic-bezier(.22,1,.36,1);
+    pointer-events: none;
+  }
+  .tst-card.tst-card-active {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    pointer-events: auto;
+    z-index: 10;
+  }
+
+  .tst-stars { display: flex; gap: 4px; margin-bottom: 20px; }
+  .tst-star { width: 16px; height: 16px; color: #f59e0b; fill: #f59e0b; }
+
+  .tst-quote-icon {
+    opacity: 0.15;
+    margin-bottom: 6px;
+  }
+  .tst-content {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.7;
+    flex: 1;
+    margin-bottom: 24px;
+  }
+  .tst-sep {
+    height: 1px;
+    background: rgba(255,255,255,.07);
+    margin-bottom: 20px;
+  }
+  .tst-author { display: flex; align-items: center; gap: 14px; }
+  .tst-avatar {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,.1);
+    flex-shrink: 0;
+  }
+  .tst-name { font-size: 14px; font-weight: 700; color: #fff; font-family: 'Inter', sans-serif; }
+  .tst-role { font-size: 12px; color: var(--sub); font-family: 'Inter', sans-serif; margin-top: 2px; }
+
+  .tst-dot {
+    height: 8px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    background: rgba(255,255,255,.2);
+    transition: width .3s ease, background .3s ease;
+    width: 8px;
+    padding: 0;
+  }
+  .tst-dot.active { width: 32px; background: var(--accent); }
+</style>
+
+<!-- ── PRICING ─────────────────────────────────────── -->
+<section id="pricing" class="plan-section">
+
+  <!-- Header -->
+  <div class="reveal" style="position:relative;z-index:1;text-align:center;margin-bottom:56px;">
+    <h2 style="font-family:'Inter',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:800;letter-spacing:-.03em;color:#fff;margin-bottom:14px;line-height:1.06;">Pricing</h2>
+    <p style="font-size:16px;color:rgba(255,255,255,.45);max-width:420px;margin:0 auto 36px;line-height:1.7;font-family:'Inter',sans-serif;">Start free for 7 days. No credit card required. Upgrade anytime.</p>
+
+    <!-- Monthly / Yearly toggle -->
+    <div class="plan-toggle" id="plan-toggle">
+      <button class="plan-toggle-opt active" data-magnetic data-period="monthly">Monthly</button>
+      <button class="plan-toggle-opt" data-magnetic data-period="yearly">
+        Yearly <span class="plan-toggle-badge">30%</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Cards grid (2 plans only) -->
+  <div class="plan-outer">
+    <div class="plan-grid reveal">
+
+      <!-- ── STARTER ── -->
+      <div class="plan-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-desc">Free for 7 days — no credit card needed. Try everything before you decide.</div>
+        <div class="plan-price">Free</div>
+        <div class="plan-divider"></div>
+        <div class="plan-what">What's included:</div>
+        <div class="plan-features">
+          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Market Snapshot</div>
+          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Top Gainers &amp; Losers</div>
+          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>5 AI queries per day</div>
+          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>7-day full access trial</div>
+        </div>
+        <a href="#" id="btn-trial-pricing" class="plan-cta" data-magnetic>Start free trial <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+
+      <!-- ── PRO (featured) ── -->
+      <div class="plan-card plan-card-featured">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div class="plan-name" style="margin-bottom:0;">Pro</div>
+          <span class="plan-popular">POPULAR</span>
+        </div>
+        <div class="plan-desc">Everything you need to invest smarter — no limits, no noise.</div>
+        <div class="plan-price">
+          <span class="tabnum" id="plan-price-val">$9.99</span><span class="plan-price-sub" id="plan-price-period">/mo</span>
+        </div>
+        <div class="plan-divider"></div>
+        <div class="plan-what">What's included:</div>
+        <div class="plan-features">
+          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Full market suite unlocked</div>
+          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Portfolio Tracker</div>
+          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited AI queries</div>
+          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Smart Alerts</div>
+          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Priority support &amp; updates</div>
+        </div>
+        <a href="#" id="btn-pro-pricing" class="plan-cta-featured" data-magnetic>Get Started <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+
+    </div><!-- /.plan-grid -->
+
+    <!-- Trust line -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;font-size:13px;color:rgba(255,255,255,.3);font-family:'Inter',sans-serif;position:relative;z-index:1;">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2L8.5 5.5L12 6L9.5 8.5L10.2 12L7 10.5L3.8 12L4.5 8.5L2 6L5.5 5.5L7 2Z" stroke="rgba(45,107,228,.6)" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      Cancel any time · No credit card required
+    </div>
+  </div>
+
+</section>
+
+<!-- ── FLOATING ICONS CTA ─────────────────────────── -->
+<section class="fi-section" id="fi-section">
+
+  <!-- Financial data & news source logos -->
+
+  <!-- 1 Bloomberg  top-[10%] left-[10%] -->
+  <div class="fi-icon" style="top:10%;left:10%;--fi-delay:.00s;--fi-dur:6.2s;--fi-off:0s;"><div class="fi-float"><div class="fi-card">
+    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <rect width="36" height="36" rx="5" fill="#FF6900"/>
+      <text x="18" y="26" font-family="Arial,sans-serif" font-weight="900" font-size="24" fill="white" text-anchor="middle">B</text>
+    </svg>
+  </div></div></div>
+
+  <!-- 2 WSJ  top-[20%] right-[8%] -->
+  <div class="fi-icon" style="top:20%;right:8%;--fi-delay:.08s;--fi-dur:7.8s;--fi-off:-1s;"><div class="fi-float"><div class="fi-card">
+    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <rect width="36" height="36" rx="5" fill="#0A0A0A"/>
+      <text x="18" y="23" font-family="Georgia,serif" font-weight="900" font-size="11" fill="#F5E6C8" text-anchor="middle" letter-spacing="0.5">WSJ</text>
+    </svg>
+  </div></div></div>
+
+  <!-- 3 Yahoo Finance  top-[80%] left-[10%] -->
+  <div class="fi-icon" style="top:80%;left:10%;--fi-delay:.16s;--fi-dur:8.5s;--fi-off:-2s;"><div class="fi-float"><div class="fi-card">
+    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <rect width="36" height="36" rx="5" fill="#6001D2"/>
+      <text x="18" y="26" font-family="Arial,sans-serif" font-weight="900" font-size="20" fill="white" text-anchor="middle">Y!</text>
+    </svg>
+  </div></div></div>
+
+  <!-- 4 MarketWatch  bottom-[10%] right-[10%] -->
+  <div class="fi-icon" style="bottom:10%;right:10%;--fi-delay:.24s;--fi-dur:9.1s;--fi-off:-0.5s;"><div class="fi-float"><div class="fi-card">
+    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <text x="18" y="16" font-family="Arial,sans-serif" font-weight="900" font-size="13" fill="#00844A" text-anchor="middle">MW</text>
+      <rect x="6" y="20" width="3" height="10" rx="1" fill="#00844A"/>
+      <rect x="11" y="16" width="3" height="14" rx="1" fill="#00844A"/>
+      <rect x="16" y="13" width="3" height="17" rx="1" fill="#00844A"/>
+      <rect x="21" y="18" width="3" height="12" rx="1" fill="#00844A"/>
+      <rect x="26" y="10" width="3" height="20" rx="1" fill="#00844A"/>
+    </svg>
+  </div></div></div>
+
+  <!-- 5 Investing.com  top-[5%] left-[30%] -->
+  <div class="fi-icon" style="top:5%;left:30%;--fi-delay:.32s;--fi-dur:7.3s;--fi-off:-3s;"><div class="fi-float"><div class="fi-card">
+    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="18" cy="18" r="16" fill="#E63B2E"/>
+      <text x="18" y="25" font-family="Arial,sans-serif" font-weight="900" font-size="22" fill="white" text-anchor="middle">i</text>
+    </svg>
+  </div></div></div>
+
+  <!-- 6 TradingView  top-[5%] right-[30%] -->
+  <div class="fi-icon" style="top:5%;right:30%;--fi-delay:.40s;--fi-dur:6.8s;--fi-off:-1.5s;"><div class="fi-float"><div class="fi-card">
+    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3"  y="22" width="5" height="10" rx="1.5" fill="#2962FF"/>
+      <rect x="10" y="16" width="5" height="16" rx="1.5" fill="#2962FF"/>
+      <rect x="17" y="10" width="5" height="22" rx="1.5" fill="#2962FF"/>
+      <rect x="24" y="5"  width="5" height="27" rx="1.5" fill="#2962FF"/>
+      <path d="M3 20 L10 14 L17 8 L24 3" stroke="#2962FF" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div></div></div>
+
+  <!-- 7 Reuters  bottom-[8%] left-[25%] -->
+  <div class="fi-icon" style="bottom:8%;left:25%;--fi-delay:.48s;--fi-dur:8s;--fi-off:-2.5s;"><div class="fi-float"><div class="fi-card">
+    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="18" cy="18" r="16" fill="#FF8000"/>
+      <text x="18" y="25" font-family="Arial,sans-serif" font-weight="900" font-size="22" fill="white" text-anchor="middle">R</text>
+    </svg>
+  </div></div></div>
+
+  <!-- 8 CNBC  top-[40%] left-[15%] -->
+  <div class="fi-icon" style="top:40%;left:15%;--fi-delay:.56s;--fi-dur:9.5s;--fi-off:-0.8s;"><div class="fi-float"><div class="fi-card">
+    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <rect width="36" height="36" rx="5" fill="#CC0000"/>
+      <text x="18" y="23" font-family="Arial,sans-serif" font-weight="900" font-size="10" fill="white" text-anchor="middle" letter-spacing="0.5">CNBC</text>
+    </svg>
+  </div></div></div>
+
+  <!-- 9 Seeking Alpha  top-[75%] right-[25%] -->
+  <div class="fi-icon" style="top:75%;right:25%;--fi-delay:.64s;--fi-dur:7s;--fi-off:-1.8s;"><div class="fi-float"><div class="fi-card">
+    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="18" cy="18" r="16" fill="#1ABC9C"/>
+      <text x="18" y="25" font-family="Georgia,serif" font-weight="900" font-size="22" fill="white" text-anchor="middle">α</text>
+    </svg>
+  </div></div></div>
+
+  <!-- 10 Morningstar  top-[90%] left-[70%] -->
+  <div class="fi-icon" style="top:90%;left:70%;--fi-delay:.72s;--fi-dur:8.8s;--fi-off:-3.2s;"><div class="fi-float"><div class="fi-card">
+    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="18,3 21.5,13.5 32.5,13.5 23.5,20 27,30.5 18,24 9,30.5 12.5,20 3.5,13.5 14.5,13.5" fill="#E03C00"/>
+    </svg>
+  </div></div></div>
+
+  <!-- 11 Barron's  top-[50%] right-[5%] -->
+  <div class="fi-icon" style="top:50%;right:5%;--fi-delay:.80s;--fi-dur:6.5s;--fi-off:-0.3s;"><div class="fi-float"><div class="fi-card">
+    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <rect width="36" height="36" rx="5" fill="#001F5B"/>
+      <text x="18" y="27" font-family="Georgia,serif" font-weight="900" font-size="26" fill="white" text-anchor="middle">B</text>
+    </svg>
+  </div></div></div>
+
+  <!-- 12 Financial Times  top-[55%] left-[5%] -->
+  <div class="fi-icon" style="top:55%;left:5%;--fi-delay:.88s;--fi-dur:9.8s;--fi-off:-2.2s;"><div class="fi-float"><div class="fi-card">
+    <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <rect width="36" height="36" rx="5" fill="#FFF1E5"/>
+      <text x="18" y="26" font-family="Georgia,serif" font-weight="900" font-size="18" fill="#CC0000" text-anchor="middle">FT</text>
+    </svg>
+  </div></div></div>
+
+  <!-- Foreground content -->
+  <div style="position:relative;z-index:10;text-align:center;padding:0 24px;">
+    <h2 class="fi-title" style="margin-bottom:24px;max-width:700px;">
+      No need to jump<br>between sites.
+    </h2>
+    <p style="font-size:18px;color:rgba(255,255,255,.55);max-width:520px;margin:0 auto 40px;line-height:1.72;font-family:'Inter',sans-serif;">
+      Stockpilo brings it all together — real-time market data, AI-powered insights, and portfolio tracking in one place.
+    </p>
+    <a href="#" id="btn-trial-fi" class="fi-btn" data-magnetic>7-Day Free Trial</a>
+  </div>
+
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────── -->
+<div class="footer-outer">
+  <footer class="footer-inner">
+    <div class="footer-glow-line"></div>
+
+    <div class="footer-grid">
+      <!-- Brand column -->
+      <div class="footer-brand footer-anim" style="transition-delay:0.1s;">
+        <a href="/" class="logo-wordmark" style="display:inline-flex;">
+          <span class="white">stock</span><span class="logo-p-wrap"><span class="logo-p-accent"></span><span class="logo-p">p</span></span><span class="white">ilo</span>
+        </a>
+        <p class="footer-tagline">© 2026 Stockpilo. All rights reserved.</p>
+      </div>
+
+      <!-- Links columns -->
+      <div class="footer-links-grid">
+        <!-- Product -->
+        <div class="footer-anim" style="transition-delay:0.2s;">
+          <h3 class="footer-section-label">Product</h3>
+          <ul class="footer-link-list">
+            <li><a href="#features" class="footer-link" data-magnetic>Features</a></li>
+            <li><a href="#pricing" class="footer-link" data-magnetic>Pricing</a></li>
+            <li><a href="#testimonials" class="footer-link" data-magnetic>Testimonials</a></li>
+            <li><a href="/" class="footer-link" data-magnetic>Integration</a></li>
+          </ul>
+        </div>
+        <!-- Company -->
+        <div class="footer-anim" style="transition-delay:0.3s;">
+          <h3 class="footer-section-label">Company</h3>
+          <ul class="footer-link-list">
+            <li><a href="/faqs.html" class="footer-link" data-magnetic>FAQs</a></li>
+            <li><a href="/about" class="footer-link" data-magnetic>About Us</a></li>
+            <li><a href="/privacy.html" class="footer-link" data-magnetic>Privacy Policy</a></li>
+            <li><a href="/terms.html" class="footer-link" data-magnetic>Terms of Services</a></li>
+          </ul>
+        </div>
+        <!-- Resources -->
+        <div class="footer-anim" style="transition-delay:0.4s;">
+          <h3 class="footer-section-label">Resources</h3>
+          <ul class="footer-link-list">
+            <li><a href="/blog.html" class="footer-link" data-magnetic>Blog</a></li>
+            <li><a href="/changelog" class="footer-link" data-magnetic>Changelog</a></li>
+            <li><a href="/brand" class="footer-link" data-magnetic>Brand</a></li>
+            <li><a href="/help.html" class="footer-link" data-magnetic>Help</a></li>
+          </ul>
+        </div>
+        <!-- Social Links -->
+        <div class="footer-anim" style="transition-delay:0.5s;">
+          <h3 class="footer-section-label">Social Links</h3>
+          <ul class="footer-link-list">
+            <li class="footer-social-li">
+              <a href="#" class="footer-link" data-magnetic>
+                <svg class="footer-social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                Facebook
+              </a>
+            </li>
+            <li class="footer-social-li">
+              <a href="#" class="footer-link" data-magnetic>
+                <svg class="footer-social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                Instagram
+              </a>
+            </li>
+            <li class="footer-social-li">
+              <a href="#" class="footer-link" data-magnetic>
+                <svg class="footer-social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>
+                YouTube
+              </a>
+            </li>
+            <li class="footer-social-li">
+              <a href="#" class="footer-link" data-magnetic>
+                <svg class="footer-social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                LinkedIn
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // ── Pricing toggle (Monthly / Yearly) ──────────────
+  (function() {
+    const toggle = document.getElementById('plan-toggle');
+    const priceVal  = document.getElementById('plan-price-val');
+    const pricePer  = document.getElementById('plan-price-period');
+    if (!toggle) return;
+
+    toggle.querySelectorAll('.plan-toggle-opt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        toggle.querySelectorAll('.plan-toggle-opt').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const yearly = btn.dataset.period === 'yearly';
+        if (priceVal)  priceVal.textContent  = yearly ? '$6.99' : '$9.99';
+        if (pricePer)  pricePer.textContent  = '/mo';
+      });
+    });
+  })();
+
+  // ── Hero → Features scroll transition ──────────────
+  // Matches the component's heroContentRef fade + screenshotRef parallax
+  (function() {
+    const heroContent = document.getElementById('hero-content');
+    const scrollNext  = document.getElementById('scroll-next'); // ticker tape
+    const featSection = document.getElementById('features');
+
+    if (!heroContent) return;
+
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const scrollY  = window.pageYOffset;
+        const heroH    = window.innerHeight; // hero is 100vh
+
+        // Hero content: fades + drifts up
+        const maxScroll = 400;
+        const opacity   = Math.max(0, 1 - scrollY / maxScroll);
+        heroContent.style.opacity   = opacity;
+        heroContent.style.transform = `translateY(-${(scrollY * 0.15).toFixed(2)}px)`;
+
+        // Ticker: fades out same as hero
+        if (scrollNext) scrollNext.style.opacity = opacity;
+
+        // Top Gainers: parallax slide up (stays visible, no fade)
+        const shift = Math.min(scrollY * 0.35, heroH * 0.25);
+        if (featSection) {
+          featSection.style.opacity   = '1';
+          featSection.style.transform = `translateY(-${shift.toFixed(2)}px)`;
+        }
+
+        ticking = false;
+      });
+    }, { passive: true });
+  })();
+
+  // ── Floating icons mouse repulsion (spring physics) ─
+  (function() {
+    const icons = document.querySelectorAll('#fi-section .fi-icon');
+    if (!icons.length) return;
+
+    // Use window listener (same as React component's useEffect pattern)
+    // so repulsion doesn't cut out when cursor grazes outside section bounds
+    window.addEventListener('mousemove', e => {
+      icons.forEach(icon => {
+        const rect  = icon.getBoundingClientRect();
+        const cx    = rect.left + rect.width  / 2;
+        const cy    = rect.top  + rect.height / 2;
+        const dist  = Math.hypot(e.clientX - cx, e.clientY - cy);
+
+        if (dist < 150) {
+          const angle = Math.atan2(e.clientY - cy, e.clientX - cx);
+          const force = (1 - dist / 150) * 50;
+          // Use CSS `translate` property — independent of `transform`,
+          // so fi-appear (scale) and fi-float animations are unaffected
+          icon.style.translate = `${(-Math.cos(angle) * force).toFixed(2)}px ${(-Math.sin(angle) * force).toFixed(2)}px`;
+        } else {
+          icon.style.translate = '';
+        }
+      });
+    }, { passive: true });
+
+    window.addEventListener('mouseleave', () => {
+      icons.forEach(icon => { icon.style.translate = ''; });
+    });
+  })();
+
+  // ── HoverButton circle effect ──────────────────────
+  document.querySelectorAll('.hover-btn').forEach(btn => {
+    let listening = false;
+    let lastAdded = 0;
+
+    btn.addEventListener('pointerenter', () => { listening = true; });
+    btn.addEventListener('pointerleave', () => { listening = false; });
+
+    btn.addEventListener('pointermove', e => {
+      if (!listening) return;
+      const now = Date.now();
+      if (now - lastAdded < 100) return;
+      lastAdded = now;
+
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const xPct = (x / btn.offsetWidth) * 100;
+
+      const circle = document.createElement('div');
+      circle.className = 'hover-circle';
+      circle.style.left = x + 'px';
+      circle.style.top  = y + 'px';
+      circle.style.background = `linear-gradient(to right, #a0d9f8 ${xPct}%, #2d6be4 ${xPct}%)`;
+      btn.appendChild(circle);
+
+      requestAnimationFrame(() => circle.classList.add('ci-in'));
+
+      setTimeout(() => { circle.classList.remove('ci-in'); circle.classList.add('ci-out'); }, 1000);
+      setTimeout(() => circle.remove(), 2200);
+    });
+  });
+
+  // ── Tube-light navbar ──────────────────────────────
+  (function initTubeNav() {
+    const lamp  = document.getElementById('tube-lamp');
+    const inner = document.getElementById('tube-inner');
+    const tabs  = document.querySelectorAll('.tube-tab');
+
+    function moveLamp(tab) {
+      if (!lamp || !inner || !tab) return;
+      const iRect = inner.getBoundingClientRect();
+      const tRect = tab.getBoundingClientRect();
+      lamp.style.left  = (tRect.left - iRect.left) + 'px';
+      lamp.style.width = tRect.width + 'px';
+    }
+
+    function setActive(tab) {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      moveLamp(tab);
+    }
+
+    // Snap lamp to first active tab after fonts/layout settle
+    window.addEventListener('load', () => {
+      requestAnimationFrame(() => {
+        const first = document.querySelector('.tube-tab.active');
+        if (first) { lamp.style.transition = 'none'; moveLamp(first); requestAnimationFrame(() => { lamp.style.transition = ''; }); }
+      });
+    });
+
+    // Click handler
+    tabs.forEach(tab => tab.addEventListener('click', () => setActive(tab)));
+
+    // Scroll-based active section tracking
+    const sectionMap = { 'features': 'features', 'pricing': 'pricing', 'about': 'about' };
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY + 120;
+      let hit = '';
+      Object.entries(sectionMap).forEach(([id]) => {
+        const el = document.getElementById(id);
+        if (el && el.offsetTop <= y) hit = id;
+      });
+      tabs.forEach(tab => {
+        const sec = tab.dataset.section;
+        const match = hit ? sec === hit : sec === '';
+        if (match && !tab.classList.contains('active')) setActive(tab);
+      });
+    }, { passive: true });
+
+    // Reposition on resize
+    window.addEventListener('resize', () => {
+      const active = document.querySelector('.tube-tab.active');
+      if (active) { lamp.style.transition = 'none'; moveLamp(active); requestAnimationFrame(() => { lamp.style.transition = ''; }); }
+    });
+  })();
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.07, rootMargin: '0px 0px -32px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // SectionWithMockup animations
+  const swmIo = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('swm-in');
+        swmIo.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.swm-item, .swm-bg1, .swm-card1, .swm-bg2, .swm-card2').forEach(el => swmIo.observe(el));
+
+  // Footer animation
+  const footerIo = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('footer-anim-in'); footerIo.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.footer-anim').forEach(el => footerIo.observe(el));
+
+
+  // Hero word cycle (matches animated-hero component behaviour)
+  const heroWords = ['smarter', 'faster', 'clearer', 'informed', 'bolder'];
+  let heroIdx = 0;
+  const heroWordEl = document.querySelector('.hero-word');
+
+  function cycleHeroWord() {
+    heroWordEl.classList.remove('wc-enter');
+    heroWordEl.classList.add('wc-exit');
+
+    heroWordEl.addEventListener('animationend', () => {
+      heroWordEl.classList.remove('wc-exit');
+      heroIdx = (heroIdx + 1) % heroWords.length;
+      heroWordEl.textContent = heroWords[heroIdx];
+      heroWordEl.classList.add('wc-enter');
+      heroWordEl.addEventListener('animationend', () => {
+        heroWordEl.classList.remove('wc-enter');
+      }, { once: true });
+    }, { once: true });
+  }
+
+  setInterval(cycleHeroWord, 2200);
+
+  // ── Supabase + Stripe integration ──────────────────
+  (function() {
+    if (typeof window.supabase === 'undefined') return;
+
+    const SUPABASE_URL  = 'https://knurwbloofzchsblzwnr.supabase.co';
+    const ANON_KEY      = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtudXJ3Ymxvb2Z6Y2hzYmx6d25yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzODAyMjQsImV4cCI6MjA5Mzk1NjIyNH0.gla_wM2y8BAoDFE1C3KsX008RwBan8WIFcl_7DO5Too';
+    const APP_URL       = 'https://stockpiloapp.com';
+    const LOGIN_URL     = APP_URL + '/login';
+    const DASHBOARD_URL = APP_URL + '/dashboard';
+
+    const client = window.supabase.createClient(SUPABASE_URL, ANON_KEY);
+
+    // All trial buttons + pro button IDs
+    const TRIAL_IDS = ['hero-cta', 'btn-trial-pricing', 'btn-trial-fi'];
+    const PRO_IDS   = ['btn-pro-pricing'];
+
+    // ── Toast notification ──────────────────────────
+    function toast(msg, type) {
+      const el = document.createElement('div');
+      el.style.cssText = [
+        'position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(20px)',
+        'z-index:999997;max-width:420px;width:calc(100vw - 48px)',
+        'padding:14px 20px;border-radius:12px;font-family:Inter,sans-serif',
+        'font-size:14px;font-weight:500;line-height:1.5',
+        'opacity:0;transition:opacity .3s ease,transform .3s ease',
+        type === 'error'
+          ? 'background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#fca5a5;'
+          : 'background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.28);color:#6ee7b7;',
+      ].join(';');
+      el.textContent = msg;
+      document.body.appendChild(el);
+      requestAnimationFrame(() => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateX(-50%) translateY(0)';
+      });
+      setTimeout(() => {
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 400);
+      }, 5000);
+    }
+
+    // ── Button helpers ──────────────────────────────
+    function getBtn(id) { return document.getElementById(id); }
+
+    function setLoading(id, loading) {
+      const btn = getBtn(id);
+      if (!btn) return;
+      if (loading) {
+        btn.dataset.origText = btn.innerHTML;
+        btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="animation:spin .8s linear infinite"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5" stroke-dasharray="22" stroke-dashoffset="10"/></svg>Loading…</span>';
+        btn.style.pointerEvents = 'none';
+        btn.style.opacity = '0.65';
+      } else {
+        if (btn.dataset.origText) btn.innerHTML = btn.dataset.origText;
+        btn.style.pointerEvents = '';
+        btn.style.opacity = '';
+      }
+    }
+
+    function hideBtn(id) {
+      const btn = getBtn(id);
+      if (btn) { btn.style.display = 'none'; }
+    }
+
+    function setDashboardMode(id, label) {
+      const btn = getBtn(id);
+      if (!btn) return;
+      btn.textContent = label || 'Go to Dashboard →';
+      btn.href = DASHBOARD_URL;
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = '';
+    }
+
+    // Inject spin keyframe once
+    if (!document.getElementById('sp-spin-style')) {
+      const s = document.createElement('style');
+      s.id = 'sp-spin-style';
+      s.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
+      document.head.appendChild(s);
+    }
+
+    // ── Main init ───────────────────────────────────
+    async function init() {
+      try {
+        const { data: { session } } = await client.auth.getSession();
+
+        if (!session) {
+          // Not logged in: all buttons redirect to login
+          [...TRIAL_IDS, ...PRO_IDS].forEach(id => {
+            const btn = getBtn(id);
+            if (btn) btn.href = LOGIN_URL;
+          });
+          return;
+        }
+
+        const token  = session.access_token;
+        const userId = session.user.id;
+
+        // Fetch profile
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/profiles?select=plan,trial_used,trial_active,trial_end_date,subscription_status,manual_premium&id=eq.${userId}`,
+          { headers: { 'Authorization': `Bearer ${token}`, 'apikey': ANON_KEY } }
+        );
+        const rows = await res.json();
+        const p = rows?.[0] || {};
+
+        const hasPremium = p.plan === 'premium' || p.manual_premium === true || p.trial_active === true;
+        const trialUsed  = p.trial_used === true;
+
+        if (hasPremium) {
+          // Already has access — send all buttons to dashboard
+          TRIAL_IDS.forEach(id => setDashboardMode(id, 'Open Dashboard →'));
+          PRO_IDS.forEach(id   => setDashboardMode(id, 'Open Dashboard →'));
+          return;
+        }
+
+        if (trialUsed) {
+          // Trial used, not premium — hide trial buttons, show only Pro
+          TRIAL_IDS.forEach(hideBtn);
+        } else {
+          // No trial used — wire trial buttons
+          TRIAL_IDS.forEach(id => wireTrial(id, token));
+        }
+
+        // Always wire pro button when not on premium
+        PRO_IDS.forEach(id => wirePro(id, token));
+
+      } catch (err) {
+        console.error('[Stockpilo] Auth init error:', err);
+      }
+    }
+
+    // ── Start free trial ────────────────────────────
+    function wireTrial(id, token) {
+      const btn = getBtn(id);
+      if (!btn) return;
+
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        setLoading(id, true);
+
+        try {
+          const res = await fetch(`${SUPABASE_URL}/functions/v1/start-trial`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          const data = await res.json();
+
+          if (data.success) {
+            toast('✓ Your 7-day free trial is now active! You have full access.', 'success');
+            setTimeout(() => { window.location.href = DASHBOARD_URL; }, 1800);
+          } else if (data.error === 'Trial already used') {
+            toast('You have already used your free trial. Upgrade to Pro to continue.', 'error');
+            setLoading(id, false);
+            TRIAL_IDS.forEach(hideBtn);
+          } else if (data.error === 'Not authenticated') {
+            window.location.href = LOGIN_URL;
+          } else {
+            toast(data.error || 'Something went wrong. Please try again.', 'error');
+            setLoading(id, false);
+          }
+        } catch (err) {
+          toast('Network error. Please check your connection and try again.', 'error');
+          setLoading(id, false);
+        }
+      });
+    }
+
+    // ── Create Stripe checkout ──────────────────────
+    function wirePro(id, token) {
+      const btn = getBtn(id);
+      if (!btn) return;
+
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        setLoading(id, true);
+
+        try {
+          const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ plan: 'premium' }),
+          });
+          const data = await res.json();
+
+          if (data.url) {
+            window.location.href = data.url;
+          } else if (data.error === 'Not authenticated') {
+            window.location.href = LOGIN_URL;
+          } else {
+            toast(data.error || 'Could not create checkout session. Please try again.', 'error');
+            setLoading(id, false);
+          }
+        } catch (err) {
+          toast('Network error. Please check your connection and try again.', 'error');
+          setLoading(id, false);
+        }
+      });
+    }
+
+    init();
+  })();
+
+  // ── Animated Testimonials ──────────────────────────
+  (function() {
+    const TESTIMONIALS = [
+      {
+        name: 'James K.',
+        role: 'Retail investor',
+        company: '5 years experience',
+        content: 'I used to spend an hour every morning reading market news. Now I get the same picture in 5 minutes with Stockpilo\'s brief. The AI context is exactly what I was missing.',
+        rating: 5,
+        avatar: 'https://i.pravatar.cc/80?img=11',
+      },
+      {
+        name: 'Sara M.',
+        role: 'Day trader',
+        company: 'London',
+        content: 'I switched from Trading212 and Robinhood. Stockpilo actually tells me why things are moving — not just that they moved. That context is the bit that makes it click.',
+        rating: 5,
+        avatar: 'https://i.pravatar.cc/80?img=32',
+      },
+      {
+        name: 'Alex R.',
+        role: 'Self-directed investor',
+        company: 'Berlin',
+        content: 'Premium feel without the Wall Street stuffiness. It respects that I\'m a beginner but doesn\'t talk down to me. The portfolio tracker alone is worth it.',
+        rating: 5,
+        avatar: 'https://i.pravatar.cc/80?img=47',
+      },
+      {
+        name: 'Nina P.',
+        role: 'Software engineer',
+        company: 'Side investor',
+        content: 'I don\'t have time to watch the markets all day. Stockpilo\'s morning brief and smart alerts keep me informed without the noise. Exactly what I needed.',
+        rating: 5,
+        avatar: 'https://i.pravatar.cc/80?img=56',
+      },
+    ];
+
+    const cardsEl = document.getElementById('tst-cards');
+    const dotsEl  = document.getElementById('tst-dots');
+    const root    = document.getElementById('tst-root');
+    if (!cardsEl || !dotsEl || !root) return;
+
+    let active = 0;
+    let timer  = null;
+
+    // Build star SVG
+    function stars(n) {
+      return Array.from({length:n}, () =>
+        `<svg class="tst-star" viewBox="0 0 20 20"><path d="M10 1L12.4 7.3H19.2L13.8 11.2L15.8 17.6L10 13.8L4.2 17.6L6.2 11.2L0.8 7.3H7.6L10 1Z"/></svg>`
+      ).join('');
+    }
+
+    // Build cards
+    TESTIMONIALS.forEach((t, i) => {
+      const card = document.createElement('div');
+      card.className = 'tst-card' + (i === 0 ? ' tst-card-active' : '');
+      card.style.zIndex = i === 0 ? '10' : '0';
+      card.innerHTML = `
+        <div class="tst-stars">${stars(t.rating)}</div>
+        <svg class="tst-quote-icon" width="32" height="32" viewBox="0 0 32 32" fill="white"><path d="M10 8C6.7 8 4 10.7 4 14v10h10V14H7.3C7.3 12.2 8.5 11 10 11V8zm14 0c-3.3 0-6 2.7-6 6v10h10V14h-6.7c0-1.8 1.2-3 2.7-3V8z"/></svg>
+        <p class="tst-content">"${t.content}"</p>
+        <div class="tst-sep"></div>
+        <div class="tst-author">
+          <img class="tst-avatar" src="${t.avatar}" alt="${t.name}" loading="lazy">
+          <div>
+            <div class="tst-name">${t.name}</div>
+            <div class="tst-role">${t.role}, ${t.company}</div>
+          </div>
+        </div>
+      `;
+      cardsEl.appendChild(card);
+    });
+
+    // Build dots
+    TESTIMONIALS.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'tst-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', `Testimonial ${i+1}`);
+      dot.addEventListener('click', () => { goTo(i); resetTimer(); });
+      dotsEl.appendChild(dot);
+    });
+
+    function goTo(idx) {
+      const cards = cardsEl.querySelectorAll('.tst-card');
+      const dots  = dotsEl.querySelectorAll('.tst-dot');
+      cards[active].classList.remove('tst-card-active');
+      cards[active].style.zIndex = '0';
+      dots[active].classList.remove('active');
+      active = idx;
+      cards[active].classList.add('tst-card-active');
+      cards[active].style.zIndex = '10';
+      dots[active].classList.add('active');
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => goTo((active + 1) % TESTIMONIALS.length), 6000);
+    }
+    resetTimer();
+
+    // Scroll reveal
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        root.querySelectorAll('.tst-fade').forEach(el => el.classList.add('tst-in'));
+        io.disconnect();
+      });
+    }, { threshold: 0.15 });
+    io.observe(root);
+  })();
+
+  // ── About section timeline reveal ─────────────────
+  (function() {
+    const root = document.getElementById('about-root');
+    if (!root) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        // Fire all children with their individual delays
+        root.querySelectorAll('.about-reveal').forEach(el => {
+          const delay = parseInt(el.dataset.delay || '0', 10);
+          setTimeout(() => el.classList.add('about-in'), delay);
+        });
+        observer.disconnect();
+      });
+    }, { threshold: 0.15 });
+
+    observer.observe(root);
+  })();
+
+  // ── Footer social icon repulsion ──────────────────
+  (function() {
+    const RADIUS = 90;
+    const FORCE  = 44;
+    const items  = document.querySelectorAll('.footer-social-li');
+    if (!items.length) return;
+
+    window.addEventListener('mousemove', e => {
+      items.forEach(item => {
+        const rect  = item.getBoundingClientRect();
+        const cx    = rect.left + rect.width  / 2;
+        const cy    = rect.top  + rect.height / 2;
+        const dist  = Math.hypot(e.clientX - cx, e.clientY - cy);
+
+        if (dist < RADIUS) {
+          const angle = Math.atan2(cy - e.clientY, cx - e.clientX);
+          const f     = (1 - dist / RADIUS) * FORCE;
+          item.style.transform = `translate(${(Math.cos(angle) * f).toFixed(2)}px, ${(Math.sin(angle) * f).toFixed(2)}px)`;
+        } else {
+          item.style.transform = '';
+        }
+      });
+    }, { passive: true });
+
+    window.addEventListener('mouseleave', () => {
+      items.forEach(item => { item.style.transform = ''; });
+    });
+  })();
+
+  // ── Hero sparkle strip ─────────────────────────────
+  tsParticles.load('sparkles-strip', {
+    background:   { color: { value: 'transparent' } },
+    fullScreen:   { enable: false },
+    fpsLimit:     120,
+    detectRetina: true,
+    interactivity: { events: { resize: true } },
+    particles: {
+      color:  { value: '#ffffff' },
+      shape:  { type: 'circle' },
+      move: {
+        enable:    true,
+        direction: 'none',
+        random:    false,
+        straight:  false,
+        speed:     { min: 0.1, max: 1 },
+        outModes:  { default: 'out' },
+      },
+      number: {
+        density: { enable: true, width: 400, height: 400 },
+        value: 120,
+      },
+      opacity: {
+        value: { min: 0.1, max: 1 },
+        animation: { enable: true, speed: 4, sync: false, startValue: 'random' },
+      },
+      size: {
+        value: { min: 1, max: 3 },
+      },
+    },
+  });
+
+  // ── Stars background ───────────────────────────────
+  (function() {
+    function genStars(count) {
+      const s = [];
+      for (let i = 0; i < count; i++) {
+        const x = Math.floor(Math.random() * 4000) - 2000;
+        const y = Math.floor(Math.random() * 4000) - 2000;
+        s.push(`${x}px ${y}px #fff`);
+      }
+      return s.join(',');
+    }
+
+    const small = genStars(1000);
+    const med   = genStars(400);
+    const large = genStars(200);
+
+    ['sd-s1','sd-s2'].forEach(id => { const e = document.getElementById(id); if (e) e.style.boxShadow = small; });
+    ['sd-m1','sd-m2'].forEach(id => { const e = document.getElementById(id); if (e) e.style.boxShadow = med;   });
+    ['sd-l1','sd-l2'].forEach(id => { const e = document.getElementById(id); if (e) e.style.boxShadow = large; });
+
+    // Mouse parallax (spring lerp)
+    const parallax = document.getElementById('stars-parallax');
+    let tx = 0, ty = 0, cx = 0, cy = 0;
+    const factor = 0.05;
+
+    window.addEventListener('mousemove', (e) => {
+      tx = -(e.clientX - window.innerWidth  / 2) * factor;
+      ty = -(e.clientY - window.innerHeight / 2) * factor;
+    }, { passive: true });
+
+    (function tick() {
+      requestAnimationFrame(tick);
+      cx += (tx - cx) * 0.05;
+      cy += (ty - cy) * 0.05;
+      if (parallax) parallax.style.transform = `translate(${cx.toFixed(2)}px,${cy.toFixed(2)}px)`;
+    })();
+  })();
+
+  // ── Magnetic Cursor ────────────────────────────────
+  (function() {
+    if (typeof gsap === 'undefined') return;
+
+    // Minimal Vec2
+    function vec2(x, y) {
+      return {
+        x, y,
+        clone()       { return vec2(this.x, this.y); },
+        copy(v)       { this.x = v.x; this.y = v.y; return this; },
+        sub(v)        { this.x -= v.x; this.y -= v.y; return this; },
+        lerp(v, t)    { this.x += (v.x - this.x) * t; this.y += (v.y - this.y) * t; return this; },
+      };
+    }
+
+    const CFG = { lerp: 0.1, magnetic: 0.2, pad: 12, size: 24, speed: 0.02, maxSX: 1, maxSY: 0.3 };
+
+    // Create cursor div
+    const el = document.createElement('div');
+    el.style.cssText = `position:fixed;top:0;left:0;z-index:9999;pointer-events:none;will-change:transform;
+      background:white;mix-blend-mode:exclusion;width:${CFG.size}px;height:${CFG.size}px;border-radius:50%;
+      opacity:0;backdrop-filter:contrast(1.5);-webkit-backdrop-filter:contrast(1.5);`;
+    document.body.appendChild(el);
+    gsap.set(el, { xPercent: -50, yPercent: -50 });
+
+    const pos = { cur: vec2(-100,-100), tgt: vec2(-100,-100), prv: vec2(-100,-100) };
+    let hovered = false, detaching = false, ready = false;
+
+    // RAF loop
+    gsap.ticker.add(() => {
+      if (hovered || !ready) return;
+      pos.cur.lerp(pos.tgt, CFG.lerp);
+      const dx = pos.cur.x - pos.prv.x, dy = pos.cur.y - pos.prv.y;
+      pos.prv.copy(pos.cur);
+      const spd = Math.sqrt(dx*dx + dy*dy) * CFG.speed;
+      if (detaching) {
+        gsap.set(el, { x: pos.cur.x, y: pos.cur.y, scaleX:1, scaleY:1, rotate:0 });
+      } else {
+        gsap.set(el, {
+          x: pos.cur.x, y: pos.cur.y,
+          rotate: Math.atan2(dy, dx) * (180/Math.PI),
+          scaleX: 1 + Math.min(spd, CFG.maxSX),
+          scaleY: 1 - Math.min(spd, CFG.maxSY),
+        });
+      }
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!ready) {
+        pos.cur.x = pos.tgt.x = pos.prv.x = e.clientX;
+        pos.cur.y = pos.tgt.y = pos.prv.y = e.clientY;
+        gsap.set(el, { x: e.clientX, y: e.clientY, opacity: 1 });
+        ready = true;
+      }
+      pos.tgt.x = e.clientX;
+      pos.tgt.y = e.clientY;
+      gsap.to(el, { opacity: 1, duration: 0.2, overwrite: 'auto' });
+    }, { passive: true });
+
+    document.addEventListener('mouseleave', () => gsap.to(el, { opacity: 0, duration: 0.3 }));
+    document.addEventListener('mouseenter', () => gsap.to(el, { opacity: 1, duration: 0.3 }));
+
+    // Magnetic elements
+    document.querySelectorAll('[data-magnetic]').forEach(target => {
+      const xTo = gsap.quickTo(target, 'x', { duration: 1, ease: 'elastic.out(1,0.3)' });
+      const yTo = gsap.quickTo(target, 'y', { duration: 1, ease: 'elastic.out(1,0.3)' });
+
+      target.addEventListener('pointerenter', () => {
+        hovered = true; detaching = false;
+        const b = target.getBoundingClientRect();
+        const pad = CFG.pad * (1 + CFG.magnetic);
+        gsap.killTweensOf(el);
+        gsap.to(el, {
+          x: b.left + b.width/2, y: b.top + b.height/2,
+          width: b.width + pad*2, height: b.height + pad*2,
+          borderRadius: window.getComputedStyle(target).borderRadius || '50%',
+          scaleX:1, scaleY:1, rotate:0,
+          duration: 0.3, ease: 'power3.out', overwrite: 'all',
+        });
+      });
+
+      target.addEventListener('pointerleave', () => {
+        pos.cur.x = pos.prv.x = gsap.getProperty(el,'x');
+        pos.cur.y = pos.prv.y = gsap.getProperty(el,'y');
+        hovered = false; detaching = true;
+        gsap.killTweensOf(el);
+        gsap.to(el, {
+          width: CFG.size, height: CFG.size, borderRadius:'50%',
+          scaleX:1, scaleY:1,
+          duration: 0.35, ease: 'power3.out', overwrite: 'all',
+          onComplete: () => { detaching = false; },
+        });
+        xTo(0); yTo(0);
+      });
+
+      target.addEventListener('pointermove', (e) => {
+        const b = target.getBoundingClientRect();
+        xTo((e.clientX - (b.left + b.width/2))  * CFG.magnetic);
+        yTo((e.clientY - (b.top  + b.height/2)) * CFG.magnetic);
+      });
+
+      target.addEventListener('pointerout', () => { xTo(0); yTo(0); });
+    });
+  })();
+
+</script>
+
+<!-- ── Cookie Consent Banner ─────────────────────── -->
+<div id="cookie-banner" style="
+  position:fixed;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%) translateY(120px);
+  z-index:99998;
+  width:min(360px,calc(100vw - 32px));
+  background:rgba(10,10,14,0.96);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;
+  padding:22px 22px 18px;
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  box-shadow:0 24px 64px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.05) inset;
+  opacity:0;
+  transition:transform 0.45s cubic-bezier(.22,1,.36,1), opacity 0.45s ease;
+  pointer-events:none;
+">
+  <!-- Header row -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+    <span style="font-size:22px;line-height:1;">🍪</span>
+    <span style="font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:#fff;letter-spacing:-.01em;">Cookie Notice</span>
+  </div>
+
+  <!-- Body text -->
+  <p style="font-family:'Inter',sans-serif;font-size:13px;color:rgba(255,255,255,.55);line-height:1.65;margin-bottom:18px;">
+    We use Google reCAPTCHA to protect against bots. This loads a third-party script that may set cookies (<code style="font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:4px;">_GRECAPTCHA</code>). We have no analytics or tracking pixels. <a href="/privacy.html" style="color:#2d6be4;text-decoration:none;">Privacy Policy</a>.
+  </p>
+
+  <!-- Actions -->
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+    <button id="cookie-decline" style="
+      font-family:'Inter',sans-serif;font-size:13px;font-weight:500;
+      color:rgba(255,255,255,.4);background:none;border:none;
+      cursor:pointer;padding:0;text-decoration:underline;
+      text-underline-offset:3px;transition:color .2s;
+    ">Decline</button>
+    <button id="cookie-accept" style="
+      font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
+      color:#fff;background:#2d6be4;border:none;
+      padding:9px 22px;border-radius:999px;cursor:pointer;
+      box-shadow:0 4px 16px rgba(45,107,228,.4);
+      transition:transform .15s ease, box-shadow .15s ease;
+    ">Accept</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  const CONSENT_KEY = 'stockpilo_cookie_consent';
+  const banner = document.getElementById('cookie-banner');
+  const btnAccept  = document.getElementById('cookie-accept');
+  const btnDecline = document.getElementById('cookie-decline');
+
+  if (!banner || localStorage.getItem(CONSENT_KEY)) return;
+
+  // Show banner after short delay
+  setTimeout(() => {
+    banner.style.pointerEvents = 'auto';
+    banner.style.transform = 'translateX(-50%) translateY(0)';
+    banner.style.opacity   = '1';
+  }, 1200);
+
+  function dismiss(choice) {
+    localStorage.setItem(CONSENT_KEY, choice);
+    banner.style.transform = 'translateX(-50%) translateY(120px)';
+    banner.style.opacity   = '0';
+    banner.style.pointerEvents = 'none';
+    setTimeout(() => banner.remove(), 500);
+  }
+
+  btnAccept.addEventListener('click', () => dismiss('accepted'));
+  btnDecline.addEventListener('click', () => dismiss('declined'));
+
+  btnAccept.addEventListener('mouseenter', () => {
+    btnAccept.style.transform = 'translateY(-1px)';
+    btnAccept.style.boxShadow = '0 6px 20px rgba(45,107,228,.6)';
+  });
+  btnAccept.addEventListener('mouseleave', () => {
+    btnAccept.style.transform = '';
+    btnAccept.style.boxShadow = '0 4px 16px rgba(45,107,228,.4)';
+  });
+  btnDecline.addEventListener('mouseenter', () => { btnDecline.style.color = 'rgba(255,255,255,.75)'; });
+  btnDecline.addEventListener('mouseleave', () => { btnDecline.style.color = 'rgba(255,255,255,.4)'; });
+})();
+</script>
+
+</body>
+</html>

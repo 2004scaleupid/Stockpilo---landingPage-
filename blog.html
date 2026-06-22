@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — Stockpilo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent:  #2d6be4;
+      --sub:     #6b8cba;
+      --hover:   #ce624c;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Spiral background ──────────────────────────── */
+    #spiral-bg {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.22;
+      mask-image: radial-gradient(circle at center, rgba(255,255,255,1), rgba(255,255,255,0.1) 60%, transparent 75%);
+      -webkit-mask-image: radial-gradient(circle at center, rgba(255,255,255,1), rgba(255,255,255,0.1) 60%, transparent 75%);
+      mix-blend-mode: screen;
+      z-index: 0;
+    }
+
+    /* ── Page ───────────────────────────────────────── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 56px 24px 100px;
+    }
+
+    /* ── Nav ────────────────────────────────────────── */
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 64px;
+    }
+    .logo-wordmark {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.01em;
+      color: #fff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: flex-start;
+      user-select: none;
+    }
+    .logo-p { color: var(--accent); position: relative; }
+    .logo-p::before {
+      content: '';
+      position: absolute;
+      top: -3px; left: 2px;
+      width: 5px; height: 3px;
+      background: var(--accent);
+      border-radius: 1px;
+    }
+    .back-link {
+      font-size: 13px;
+      color: rgba(255,255,255,.4);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color .2s ease;
+    }
+    .back-link:hover { color: #fff; }
+
+    /* ── Header ─────────────────────────────────────── */
+    .blog-header {
+      margin-bottom: 16px;
+    }
+    .blog-header h1 {
+      font-size: clamp(40px, 8vw, 72px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .blog-header p {
+      font-size: 14px;
+      color: rgba(255,255,255,.4);
+    }
+
+    /* ── Coming soon badge ──────────────────────────── */
+    .coming-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(206,98,76,.3);
+      background: rgba(206,98,76,.07);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #ce624c;
+      margin-bottom: 48px;
+    }
+
+    /* ── Divider ────────────────────────────────────── */
+    .blog-divider {
+      height: 1px;
+      background: rgba(255,255,255,.08);
+      margin-bottom: 8px;
+    }
+
+    /* ── Blog card (faithful port of component) ─────── */
+    .blog-card {
+      width: 100%;
+      padding: 18px 4px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      text-decoration: none;
+      display: block;
+    }
+    .blog-card:last-child { border-bottom: none; }
+
+    .blog-card-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .blog-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(17px, 2.2vw, 22px);
+      font-weight: 600;
+      color: rgba(255,255,255,.92);
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: color .5s ease-out;
+      line-height: 1.2;
+    }
+
+    .blog-dash {
+      flex: 1;
+      border: none;
+      border-bottom: 0.5px dashed rgba(255,255,255,.18);
+      margin-bottom: 4px;
+      transition: border-color .5s ease-out;
+    }
+
+    .blog-date {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: clamp(11px, 1.3vw, 13px);
+      color: rgba(255,255,255,.38);
+      text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: color .5s ease-out;
+      letter-spacing: .04em;
+    }
+
+    .blog-desc {
+      font-size: clamp(13px, 1.6vw, 15px);
+      color: rgba(255,255,255,.42);
+      line-height: 1.6;
+      transition: color .5s ease-out;
+    }
+
+    /* Hover state — all turn #ce624c */
+    .blog-card:hover .blog-title { color: var(--hover); }
+    .blog-card:hover .blog-dash  { border-color: var(--hover); }
+    .blog-card:hover .blog-date  { color: var(--hover); }
+    .blog-card:hover .blog-desc  { color: var(--hover); }
+
+    /* ── Footer ─────────────────────────────────────── */
+    .blog-footer {
+      margin-top: 64px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 24px;
+      font-size: 12px;
+      color: rgba(255,255,255,.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .blog-footer a { color: rgba(255,255,255,.3); text-decoration: none; transition: color .2s; }
+    .blog-footer a:hover { color: #fff; }
+    .blog-footer-links { display: flex; gap: 16px; }
+  </style>
+</head>
+<body>
+
+<div id="spiral-bg"></div>
+
+<div class="page">
+
+  <!-- Nav -->
+  <nav class="top-nav">
+    <a href="/" class="logo-wordmark">stock<span class="logo-p">p</span>ilo</a>
+    <a href="/" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12 7H2M2 7L6 3M2 7L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to home
+    </a>
+  </nav>
+
+  <!-- Header -->
+  <header class="blog-header">
+    <h1>Blog</h1>
+    <p>Insights on markets, AI, and smarter investing.</p>
+  </header>
+
+  <div class="coming-badge">
+    <svg width="7" height="7" viewBox="0 0 7 7"><circle cx="3.5" cy="3.5" r="3.5" fill="#ce624c"/></svg>
+    Posts coming soon
+  </div>
+
+  <div class="blog-divider"></div>
+
+  <!-- Blog cards list -->
+  <div id="blog-list"></div>
+
+  <!-- Footer -->
+  <footer class="blog-footer">
+    <span>© 2026 Stockpilo. All rights reserved.</span>
+    <div class="blog-footer-links">
+      <a href="/faqs.html">FAQs</a>
+      <a href="/help.html">Help</a>
+      <a href="/">Home</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+// ── Blog posts data ──────────────────────────────────
+const posts = [
+  {
+    title: 'Why AI Is Changing How Retail Investors Research Stocks',
+    date: 'Coming Soon',
+    desc: 'From screening to sentiment — how language models are reshaping the way ordinary investors make sense of the market.',
+    href: '#',
+  },
+  {
+    title: 'The 5-Minute Morning Brief: How to Stay Informed Without the Noise',
+    date: 'Coming Soon',
+    desc: 'A deep dive into how we built the daily brief feature, and why we think concise intelligence beats infinite scrolling.',
+    href: '#',
+  },
+  {
+    title: 'Understanding Market Snapshots: What Every Investor Should Track',
+    date: 'Coming Soon',
+    desc: 'Indices, sectors, and macro signals — a plain-English guide to reading the big picture before the market opens.',
+    href: '#',
+  },
+  {
+    title: 'Top Gainers & Losers: How to Read Movers Without Overreacting',
+    date: 'Coming Soon',
+    desc: 'A stock jumping 8% sounds dramatic. Here\'s how to decide whether it\'s signal or noise — every single time.',
+    href: '#',
+  },
+  {
+    title: 'Portfolio Tracking vs Portfolio Management: What\'s the Difference?',
+    date: 'Coming Soon',
+    desc: 'Knowing what you own is step one. Knowing why you own it — and when to change it — is where returns come from.',
+    href: '#',
+  },
+  {
+    title: 'Why We Built Stockpilo: The Story Behind the Platform',
+    date: 'Coming Soon',
+    desc: 'We were tired of jumping between Bloomberg, Reddit, and three different apps just to answer one simple question: what\'s happening?',
+    href: '#',
+  },
+];
+
+// ── Render cards ─────────────────────────────────────
+const list = document.getElementById('blog-list');
+posts.forEach(post => {
+  const a = document.createElement('a');
+  a.className = 'blog-card';
+  a.href = post.href;
+  a.innerHTML = `
+    <div class="blog-card-row">
+      <span class="blog-title">${post.title}</span>
+      <span class="blog-dash"></span>
+      <span class="blog-date">${post.date}</span>
+    </div>
+    <div class="blog-desc">${post.desc}</div>
+  `;
+  list.appendChild(a);
+});
+
+// ── Spiral background ────────────────────────────────
+(function() {
+  const SIZE = 560, GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+  const N = 700, DOT = 1.8, CENTER = SIZE / 2, MAX_R = CENTER - 4 - DOT, DUR = 3.0;
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('width', String(SIZE)); svg.setAttribute('height', String(SIZE));
+  svg.setAttribute('viewBox', `0 0 ${SIZE} ${SIZE}`);
+  for (let i = 0; i < N; i++) {
+    const idx = i + 0.5, frac = idx / N;
+    const r = Math.sqrt(frac) * MAX_R, theta = idx * GOLDEN_ANGLE;
+    const x = CENTER + r * Math.cos(theta), y = CENTER + r * Math.sin(theta);
+    const c = document.createElementNS(svgNS, 'circle');
+    c.setAttribute('cx', x.toFixed(3)); c.setAttribute('cy', y.toFixed(3));
+    c.setAttribute('r', String(DOT)); c.setAttribute('fill', '#ffffff'); c.setAttribute('opacity', '0.6');
+    const begin = (frac * DUR).toFixed(3) + 's';
+    const aR = document.createElementNS(svgNS, 'animate');
+    aR.setAttribute('attributeName','r'); aR.setAttribute('values',`${DOT*.5};${DOT*1.4};${DOT*.5}`);
+    aR.setAttribute('dur',DUR+'s'); aR.setAttribute('begin',begin); aR.setAttribute('repeatCount','indefinite');
+    aR.setAttribute('calcMode','spline'); aR.setAttribute('keySplines','0.4 0 0.6 1;0.4 0 0.6 1'); c.appendChild(aR);
+    const aO = document.createElementNS(svgNS, 'animate');
+    aO.setAttribute('attributeName','opacity'); aO.setAttribute('values','0.25;0.9;0.25');
+    aO.setAttribute('dur',DUR+'s'); aO.setAttribute('begin',begin); aO.setAttribute('repeatCount','indefinite');
+    aO.setAttribute('calcMode','spline'); aO.setAttribute('keySplines','0.4 0 0.6 1;0.4 0 0.6 1'); c.appendChild(aO);
+    svg.appendChild(c);
+  }
+  document.getElementById('spiral-bg').appendChild(svg);
+})();
+</script>
+</body>
+</html>
