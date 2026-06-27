@@ -11,7 +11,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg:     #000000;
@@ -107,6 +107,40 @@
       background: transparent !important;
     }
 
+    /* ── ShinyText ─────────────────────────────────── */
+    @keyframes shinyMove {
+      0%   { background-position: 150% center; }
+      100% { background-position: -50% center; }
+    }
+    .shiny-text {
+      display: inline;
+      background-image: linear-gradient(115deg, #fff 0%, #fff 35%, #2509d0 50%, #fff 65%, #fff 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shinyMove 7.2s linear infinite;
+    }
+    .shiny-text-fi {
+      display: inline;
+      background-image: linear-gradient(115deg, #c9c8c8 0%, #c9c8c8 35%, #2509d0 50%, #c9c8c8 65%, #c9c8c8 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shinyMove 7.2s linear infinite;
+    }
+
+    /* ── RotatingText ──────────────────────────────── */
+    #rotating-word-wrap { vertical-align: middle; }
+    .rt-char {
+      display: inline-block;
+      animation-fill-mode: both;
+      line-height: 1.2;
+    }
+    @keyframes rtIn  { from { transform: translateY(110%); opacity:0; } to { transform: translateY(0); opacity:1; } }
+    @keyframes rtOut { from { transform: translateY(0);    opacity:1; } to { transform: translateY(-110%); opacity:0; } }
+
     /* ── Mission typewriter ─────────────────────────── */
     .about-tt-cursor {
       display: inline-block;
@@ -119,6 +153,7 @@
     @keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
 
     /* ── Footer logo typewriter ────────────────────── */
+    #footer-logo .logo-p-accent { opacity: 0; transition: opacity 0.1s; }
     .footer-logo-letter { display: inline-block; opacity: 0; }
     .footer-logo-letter.in { opacity: 1; }
     .footer-logo-cursor {
@@ -384,8 +419,96 @@
     .tabnum { font-variant-numeric: tabular-nums; }
     .mono { font-family: 'SF Mono', 'Fira Code', monospace; }
 
-    /* ── Tube-light navbar ─────────────────────────── */
-    .tube-wrap {
+    /* ── CardNav ───────────────────────────────────── */
+    .card-nav-container {
+      position: fixed;
+      top: 1.5em;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 820px;
+      z-index: 300;
+      box-sizing: border-box;
+    }
+    .card-nav {
+      height: 56px;
+      background: rgba(10,10,14,0.85);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
+      will-change: height;
+    }
+    .card-nav-top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px 0 18px;
+      z-index: 2;
+    }
+    .hamburger-menu {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+      color: rgba(255,255,255,0.7);
+    }
+    .hamburger-line {
+      width: 22px; height: 2px;
+      background: currentColor;
+      border-radius: 2px;
+      transition: transform 0.25s ease, opacity 0.2s ease;
+      transform-origin: 50% 50%;
+    }
+    .hamburger-menu.open .hamburger-line:first-child { transform: translateY(3.5px) rotate(45deg); }
+    .hamburger-menu.open .hamburger-line:last-child  { transform: translateY(-3.5px) rotate(-45deg); }
+    .logo-container { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); }
+    .cn-logo { height: 28px; width: auto; }
+    .card-nav-cta-button {
+      background: #2d6be4; color: #fff;
+      border: none; border-radius: 8px;
+      padding: 8px 18px; font-size: 13px; font-weight: 600;
+      font-family: 'Geist', sans-serif; cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center;
+      transition: background 0.2s;
+    }
+    .card-nav-cta-button:hover { background: #2558c4; }
+    .card-nav-content {
+      position: absolute; left: 0; right: 0;
+      top: 56px; bottom: 0;
+      padding: 8px; display: flex; gap: 8px;
+      visibility: hidden; pointer-events: none; z-index: 1;
+    }
+    .card-nav.open .card-nav-content { visibility: visible; pointer-events: auto; }
+    .nav-card {
+      flex: 1; border-radius: 10px; padding: 14px 16px;
+      display: flex; flex-direction: column; gap: 8px; min-width: 0;
+    }
+    .nav-card-label { font-family: 'Geist',sans-serif; font-size: 18px; font-weight: 500; letter-spacing: -0.3px; }
+    .nav-card-links { margin-top: auto; display: flex; flex-direction: column; gap: 3px; }
+    .nav-card-link {
+      font-family: 'Geist',sans-serif; font-size: 13px;
+      color: rgba(255,255,255,0.65); text-decoration: none;
+      transition: color 0.2s; display: flex; align-items: center; gap: 4px;
+    }
+    .nav-card-link:hover { color: #fff; }
+    @media (max-width: 640px) {
+      .card-nav-container { width: 94%; top: 1em; }
+      .card-nav-content { flex-direction: column; }
+      .nav-card { flex: none; }
+    }
+
+    /* ── Tube-light navbar (hidden) ─────────────────── */
+    .tube-wrap { display: none !important; }
+    .tube-wrap-OLD {
       position: fixed;
       bottom: 24px;
       left: 50%;
@@ -729,8 +852,8 @@
       position: relative;
       z-index: 10;
       background: #000;
-      padding: 110px 48px 100px; /* globe rim peeks above the header at top */
-      overflow: hidden;
+      padding: 110px 48px 100px;
+      overflow: visible;
     }
     /* Monthly/Yearly toggle */
     .plan-toggle {
@@ -779,8 +902,10 @@
       background: rgba(255,255,255,.08);
       border: 1px solid rgba(255,255,255,.08);
       border-radius: 16px;
-      overflow: hidden;
+      overflow: visible;
     }
+    .plan-grid > *:first-child { border-radius: 16px 0 0 16px; }
+    .plan-grid > *:last-child  { border-radius: 0 16px 16px 0; }
     .plan-card {
       background: rgba(10,10,10,.95);
       padding: 32px;
@@ -793,6 +918,56 @@
     .plan-card-featured {
       background: rgba(15,15,20,.98);
       position: relative;
+    }
+
+    /* ── ElectricBorder ────────────────────────────── */
+    .eb-wrap {
+      --eb-color: #1a0aa5;
+      position: relative;
+      border-radius: 0 16px 16px 0;
+      overflow: visible;
+      isolation: isolate;
+    }
+    .eb-canvas-wrap {
+      position: absolute;
+      inset: 0;
+      overflow: visible;
+      pointer-events: none;
+      z-index: 2;
+    }
+    #pro-eb-canvas {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .eb-layers {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .eb-glow-1 {
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      border: 2px solid rgba(26,10,165,0.6);
+      filter: blur(1px);
+    }
+    .eb-glow-2 {
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      border: 2px solid #1a0aa5;
+      filter: blur(4px);
+    }
+    .eb-bg-glow {
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      z-index: -1;
+      transform: scale(1.1);
+      filter: blur(32px);
+      opacity: 0.3;
+      background: linear-gradient(-30deg, #1a0aa5, transparent, #1a0aa5);
     }
     .plan-popular {
       display: inline-flex; align-items: center;
@@ -1278,55 +1453,48 @@
   <div style="position:absolute;top:40%;right:-8%;width:500px;height:500px;background:radial-gradient(circle,rgba(16,185,129,.045) 0%,transparent 68%);"></div>
 </div>
 
-<!-- ── TUBE-LIGHT NAVBAR ──────────────────────────────── -->
-<nav class="tube-wrap" aria-label="Main navigation">
-  <div class="tube-inner" id="tube-inner">
-
-    <!-- Sliding lamp indicator -->
-    <div id="tube-lamp" aria-hidden="true">
-      <div class="tube-h1"></div>
-      <div class="tube-h2"></div>
-      <div class="tube-h3"></div>
-      <div class="tube-bar"></div>
+<!-- ── CARD NAV ─────────────────────────────────────────── -->
+<div class="card-nav-container" id="card-nav-container">
+  <nav class="card-nav" id="card-nav">
+    <div class="card-nav-top">
+      <div class="hamburger-menu" id="cn-hamburger" role="button" aria-label="Open menu" aria-expanded="false" tabindex="0">
+        <div class="hamburger-line"></div>
+        <div class="hamburger-line"></div>
+      </div>
+      <div class="logo-container">
+        <a href="/" style="display:flex;align-items:center;text-decoration:none;">
+          <img src="brand_assets/logo12-crop.png" alt="Stockpilo" class="cn-logo">
+        </a>
+      </div>
+      <a href="#" class="card-nav-cta-button" id="hero-cta-nav">Get Started</a>
     </div>
-
-    <!-- Features -->
-    <a class="tube-tab active" data-magnetic href="#features" data-section="">
-      <span class="t-icon" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13L6 9L9 12L14 5"/><path d="M11 5H14V8"/></svg>
-      </span>
-      <span class="t-label">Features</span>
-    </a>
-
-
-    <!-- Pricing -->
-    <a class="tube-tab" data-magnetic href="#pricing" data-section="pricing">
-      <span class="t-icon" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3H15L13 11H5L3 3Z"/><circle cx="6" cy="14.5" r="1"/><circle cx="12" cy="14.5" r="1"/></svg>
-      </span>
-      <span class="t-label">Pricing</span>
-    </a>
-
-    <!-- Mission -->
-    <a class="tube-tab" data-magnetic href="#about" data-section="about">
-      <span class="t-icon" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="7"/><circle cx="9" cy="9" r="3"/><line x1="9" y1="2" x2="9" y2="1"/><line x1="9" y1="17" x2="9" y2="16"/><line x1="2" y1="9" x2="1" y2="9"/><line x1="17" y1="9" x2="16" y2="9"/></svg>
-      </span>
-      <span class="t-label">Mission</span>
-    </a>
-
-    <!-- Blog -->
-    <a class="tube-tab" data-magnetic href="/blog.html" data-section="">
-      <span class="t-icon" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="12" height="14" rx="1"/><line x1="6" y1="6" x2="12" y2="6"/><line x1="6" y1="9" x2="12" y2="9"/><line x1="6" y1="12" x2="9" y2="12"/></svg>
-      </span>
-      <span class="t-label">Blog</span>
-    </a>
-
-  </div>
-
-
-</nav>
+    <div class="card-nav-content" id="cn-content" aria-hidden="true">
+      <div class="nav-card" id="cn-card-0" style="background:#1B1722;color:#fff;">
+        <div class="nav-card-label">Features</div>
+        <div class="nav-card-links">
+          <a class="nav-card-link" href="#features">↗ Top Gainers &amp; Losers</a>
+          <a class="nav-card-link" href="#features">↗ AI Insights</a>
+          <a class="nav-card-link" href="#features">↗ Portfolio Tracker</a>
+        </div>
+      </div>
+      <div class="nav-card" id="cn-card-1" style="background:#2F293A;color:#fff;">
+        <div class="nav-card-label">Pricing</div>
+        <div class="nav-card-links">
+          <a class="nav-card-link" href="#pricing">↗ Starter — Free</a>
+          <a class="nav-card-link" href="#pricing">↗ Pro — $9.99/mo</a>
+        </div>
+      </div>
+      <div class="nav-card" id="cn-card-2" style="background:#1a2540;color:#fff;">
+        <div class="nav-card-label">Company</div>
+        <div class="nav-card-links">
+          <a class="nav-card-link" href="#about">↗ Mission</a>
+          <a class="nav-card-link" href="/blog.html">↗ Blog</a>
+          <a class="nav-card-link" href="/faqs.html">↗ FAQs</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>
 
 <!-- SVG filter: removes pure black background from logo -->
 <svg width="0" height="0" style="position:absolute;pointer-events:none;" aria-hidden="true">
@@ -1344,18 +1512,32 @@
 <!-- ── HERO (hero-3 layout) ───────────────────────────── -->
 <section id="hero-section" style="position:relative;z-index:10;background:#000;min-height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;">
 
-  <!-- DarkVeil background -->
-  <canvas id="darkveil-hero" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0;"></canvas>
+  <!-- ColorBends background -->
+  <div id="colorbends-container" style="position:absolute;inset:0;width:100%;height:100%;overflow:hidden;z-index:0;"></div>
+
+  <!-- DotField overlay -->
+  <div id="dotfield-container" style="position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;">
+    <canvas id="dotfield-canvas" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
+    <svg id="dotfield-svg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;">
+      <defs>
+        <radialGradient id="df-glow">
+          <stop offset="0%" stop-color="#120F17"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </radialGradient>
+      </defs>
+      <circle id="df-glow-circle" cx="-9999" cy="-9999" r="160" fill="url(#df-glow)" style="opacity:0;will-change:opacity;"/>
+    </svg>
+  </div>
 
   <!-- Main container -->
   <div style="position:relative;z-index:1;width:100%;max-width:1060px;margin:0 auto;padding:100px 24px 80px;">
     <div class="hero3-grid" id="hero-content">
 
       <!-- Left: text -->
-      <div style="display:flex;flex-direction:column;gap:22px;">
+      <div style="display:flex;flex-direction:column;gap:22px;align-items:center;text-align:center;">
 
         <!-- H1 -->
-        <h1 class="hero3-h1 anim-up d1" aria-label="Invest smarter. Know why before you buy.">
+        <h1 class="hero3-h1 anim-up d1" aria-label="Invest smarter. Know why before you buy." style="margin:0;">
           Invest <span class="hero-word" aria-live="polite">smarter</span>.<br>
           Know <span style="color:#2d6be4;">why</span> before you buy.
         </h1>
@@ -1365,10 +1547,9 @@
           Investing is complex enough. Your tools shouldn't be. Track every stock you follow from one clean dashboard — powerful insights, zero noise.
         </p>
 
-        <!-- CTAs -->
-        <div class="anim-up d3" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-top:4px;">
+        <!-- CTA -->
+        <div class="anim-up d3" style="padding-top:4px;display:flex;justify-content:center;width:100%;">
           <a href="#" class="hover-btn" id="hero-cta">7-Day Free Trial</a>
-          <a href="#features" class="btn-ghost">View Features</a>
         </div>
 
       </div>
@@ -1386,29 +1567,6 @@
     </div>
   </div>
 
-  <!-- Ticker tape -->
-  <div id="scroll-next" style="position:absolute;bottom:0;left:0;width:100%;z-index:10;overflow:hidden;padding:11px 0;border-top:1px solid rgba(30,58,95,.15);background:rgba(0,0,0,.2);backdrop-filter:blur(8px);">
-    <div class="ticker-track" style="display:flex;gap:56px;white-space:nowrap;width:max-content;">
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AAPL</span> <span style="color:var(--sub);opacity:.7;">$189.44</span> <span style="color:var(--green);font-weight:600;">▲ +2.3%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">TSLA</span> <span style="color:var(--sub);opacity:.7;">$173.12</span> <span style="color:var(--red);font-weight:600;">▼ −1.8%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">NVDA</span> <span style="color:var(--sub);opacity:.7;">$891.23</span> <span style="color:var(--green);font-weight:600;">▲ +8.2%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">META</span> <span style="color:var(--sub);opacity:.7;">$509.44</span> <span style="color:var(--red);font-weight:600;">▼ −0.6%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">MSFT</span> <span style="color:var(--sub);opacity:.7;">$415.80</span> <span style="color:var(--green);font-weight:600;">▲ +4.1%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMZN</span> <span style="color:var(--sub);opacity:.7;">$186.17</span> <span style="color:var(--green);font-weight:600;">▲ +1.9%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">GOOGL</span> <span style="color:var(--sub);opacity:.7;">$172.03</span> <span style="color:var(--red);font-weight:600;">▼ −0.3%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMD</span> <span style="color:var(--sub);opacity:.7;">$168.94</span> <span style="color:var(--green);font-weight:600;">▲ +3.7%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">SPY</span> <span style="color:var(--sub);opacity:.7;">$524.10</span> <span style="color:var(--green);font-weight:600;">▲ +1.1%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AAPL</span> <span style="color:var(--sub);opacity:.7;">$189.44</span> <span style="color:var(--green);font-weight:600;">▲ +2.3%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">TSLA</span> <span style="color:var(--sub);opacity:.7;">$173.12</span> <span style="color:var(--red);font-weight:600;">▼ −1.8%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">NVDA</span> <span style="color:var(--sub);opacity:.7;">$891.23</span> <span style="color:var(--green);font-weight:600;">▲ +8.2%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">META</span> <span style="color:var(--sub);opacity:.7;">$509.44</span> <span style="color:var(--red);font-weight:600;">▼ −0.6%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">MSFT</span> <span style="color:var(--sub);opacity:.7;">$415.80</span> <span style="color:var(--green);font-weight:600;">▲ +4.1%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMZN</span> <span style="color:var(--sub);opacity:.7;">$186.17</span> <span style="color:var(--green);font-weight:600;">▲ +1.9%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">GOOGL</span> <span style="color:var(--sub);opacity:.7;">$172.03</span> <span style="color:var(--red);font-weight:600;">▼ −0.3%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMD</span> <span style="color:var(--sub);opacity:.7;">$168.94</span> <span style="color:var(--green);font-weight:600;">▲ +3.7%</span></span>
-      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">SPY</span> <span style="color:var(--sub);opacity:.7;">$524.10</span> <span style="color:var(--green);font-weight:600;">▲ +1.1%</span></span>
-    </div>
-  </div>
 
 </section>
 
@@ -1419,8 +1577,8 @@
     <!-- Left: text -->
     <div class="reveal" style="display:flex;flex-direction:column;gap:20px;">
       <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);opacity:.8;">Features</div>
-      <h2 data-whisper style="font-size:clamp(28px,4vw,44px);font-weight:700;color:#fff;line-height:1.1;letter-spacing:-0.025em;margin:0;">
-        See what's moving the market — live
+      <h2 style="font-size:clamp(28px,4vw,44px);font-weight:700;line-height:1.1;letter-spacing:-0.025em;margin:0;">
+        <span class="shiny-text">See what's moving the market — live</span>
       </h2>
       <p style="font-size:16px;color:rgba(255,255,255,.5);line-height:1.75;margin:0;max-width:380px;">
         Real-time top gainers and losers, updated every 15 seconds. Know which stocks are on the move before the crowd catches on.
@@ -1555,8 +1713,10 @@
     </h2>
 
     <div id="about-tagline" style="opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease;">
-      <p style="font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;margin:0 0 8px;">We are <span style="color:#2d6be4;font-weight:700;">Stockpilo</span> — and we will</p>
-      <p style="font-family:'Geist',sans-serif;font-size:clamp(18px,2vw,26px);font-weight:700;color:#fff;letter-spacing:.12em;text-transform:uppercase;line-height:1.2;margin:0;">Clear The Noise.</p>
+      <p style="font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;margin:0 0 2px;">We are</p>
+      <div id="ascii-stockpilo" style="position:relative;width:100%;height:72px;"></div>
+      <p style="font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px;">and we will</p>
+      <p style="font-family:'Geist',sans-serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:.14em;text-transform:uppercase;line-height:1.2;margin:0;">Clear The Noise.</p>
     </div>
 
   </div>
@@ -1581,10 +1741,12 @@
 
       <!-- Text -->
       <div class="swm-item" style="display:flex;flex-direction:column;gap:20px;max-width:500px;">
-        <h2 data-whisper style="font-family:'Geist',sans-serif;font-size:clamp(28px,3.2vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.3;margin:0;">
-          Intelligence, delivered to you.
+        <h2 style="font-family:'Geist',sans-serif;font-size:clamp(28px,3.2vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.4;margin:0;display:flex;flex-wrap:nowrap;align-items:center;gap:0.3em;white-space:nowrap;">
+          <span id="rotating-word-wrap" style="display:inline-flex;align-items:center;overflow:hidden;background:var(--accent);border-radius:8px;padding:4px 16px 6px;transition:width 0.3s ease;" aria-live="polite">
+            <span id="rotating-word" style="display:inline-flex;color:#fff;white-space:nowrap;"></span>
+          </span><span style="white-space:nowrap;"> delivered to you.</span>
         </h2>
-        <p style="font-family:'Geist',sans-serif;font-size:15px;color:#868f97;line-height:1.74;margin:0;">
+        <p id="rotating-sub" style="font-family:'Geist',sans-serif;font-size:15px;color:#868f97;line-height:1.74;margin:0;transition:opacity 0.3s ease;">
           Get a tailored brief directly in your dashboard — crafted by Stockpilo AI, spotlighting essential watchlist moves, earnings and macro signals for the week ahead.
         </p>
       </div>
@@ -1941,7 +2103,10 @@
       </div>
 
       <!-- ── PRO (featured) ── -->
-      <div class="plan-card plan-card-featured">
+      <div class="eb-wrap" id="pro-eb-wrap">
+        <div class="eb-canvas-wrap"><canvas id="pro-eb-canvas"></canvas></div>
+        <div class="eb-layers"><div class="eb-glow-1"></div><div class="eb-glow-2"></div><div class="eb-bg-glow"></div></div>
+      <div class="plan-card plan-card-featured" style="position:relative;z-index:1;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
           <div class="plan-name" style="margin-bottom:0;">Pro</div>
           <span class="plan-popular">POPULAR</span>
@@ -1960,6 +2125,7 @@
           <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Priority support &amp; updates</div>
         </div>
         <a href="#" id="btn-pro-pricing" class="plan-cta-featured" data-magnetic>Get Started <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
       </div>
 
     </div><!-- /.plan-grid -->
@@ -2082,7 +2248,7 @@
   <!-- Foreground content -->
   <div style="position:relative;z-index:10;text-align:center;padding:0 24px;">
     <h2 class="fi-title" style="margin-bottom:24px;max-width:700px;">
-      No need to jump<br>between sites.
+      <span class="shiny-text-fi">No need to jump<br>between sites.</span>
     </h2>
     <p style="font-size:18px;color:rgba(255,255,255,.55);max-width:520px;margin:0 auto 40px;line-height:1.72;font-family:'Geist',sans-serif;">
       Stockpilo brings it all together — real-time market data, AI-powered insights, and portfolio tracking in one place.
@@ -2441,11 +2607,18 @@
         played = true;
         io.disconnect();
 
+        const accent = logo.querySelector('.logo-p-accent');
+
         letters.forEach((el, i) => {
           setTimeout(() => {
             el.classList.add('in');
-            // Move cursor after this letter
-            el.parentNode.insertBefore(cursor, el.nextSibling);
+            // Show accent dot together with the p letter
+            if (el.classList.contains('logo-p') && accent) {
+              accent.style.opacity = '1';
+            }
+            // Move cursor after this letter's parent (handle logo-p-wrap)
+            const insertAfter = el.closest('.logo-p-wrap') || el;
+            insertAfter.parentNode.insertBefore(cursor, insertAfter.nextSibling);
           }, i * 500);
         });
 
@@ -2852,112 +3025,498 @@
 
 
 
-  // ── DarkVeil hero background ───────────────────────
+  // ── DotField overlay ───────────────────────────────
   (function() {
-    const canvas = document.getElementById('darkveil-hero');
+    const canvas  = document.getElementById('dotfield-canvas');
+    const glowEl  = document.getElementById('df-glow-circle');
+    const container = document.getElementById('dotfield-container');
     if (!canvas) return;
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    if (!gl) return;
 
-    const VS = `attribute vec2 position;void main(){gl_Position=vec4(position,0.0,1.0);}`;
-    const FS = `
-#ifdef GL_ES
-precision lowp float;
-#endif
-uniform vec2 uResolution;
-uniform float uTime;
-uniform float uHueShift;
-uniform float uNoise;
-uniform float uScan;
-uniform float uScanFreq;
-uniform float uWarp;
-#define iTime uTime
-#define iResolution uResolution
-vec4 buf[8];
-float rand(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}
-mat3 rgb2yiq=mat3(0.299,0.587,0.114,0.596,-0.274,-0.322,0.211,-0.523,0.312);
-mat3 yiq2rgb=mat3(1.0,0.956,0.621,1.0,-0.272,-0.647,1.0,-1.106,1.703);
-vec3 hueShiftRGB(vec3 col,float deg){
-  vec3 yiq=rgb2yiq*col;float rad=radians(deg);float cosh=cos(rad),sinh=sin(rad);
-  return clamp(yiq2rgb*vec3(yiq.x,yiq.y*cosh-yiq.z*sinh,yiq.y*sinh+yiq.z*cosh),0.0,1.0);}
-vec4 sigmoid(vec4 x){return 1./(1.+exp(-x));}
-vec4 cppn_fn(vec2 coordinate,float in0,float in1,float in2){
-  buf[6]=vec4(coordinate.x,coordinate.y,0.3948333106474662+in0,0.36+in1);
-  buf[7]=vec4(0.14+in2,sqrt(coordinate.x*coordinate.x+coordinate.y*coordinate.y),0.,0.);
-  buf[0]=mat4(vec4(6.5404263,-3.6126034,0.7590882,-1.13613),vec4(2.4582713,3.1660357,1.2219609,0.06276096),vec4(-5.478085,-6.159632,1.8701609,-4.7742867),vec4(6.039214,-5.542865,-0.90925294,3.251348))*buf[6]+mat4(vec4(0.8473259,-5.722911,3.975766,1.6522468),vec4(-0.24321538,0.5839259,-1.7661959,-5.350116),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(0.21808943,1.1243913,-1.7969975,5.0294676);
-  buf[1]=mat4(vec4(-3.3522482,-6.0612736,0.55641043,-4.4719114),vec4(0.8631464,1.7432913,5.643898,1.6106541),vec4(2.4941394,-3.5012043,1.7184316,6.357333),vec4(3.310376,8.209261,1.1355612,-1.165539))*buf[6]+mat4(vec4(5.24046,-13.034365,0.009859298,15.870829),vec4(2.987511,3.129433,-0.89023495,-1.6822904),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-5.9457836,-6.573602,-0.8812491,1.5436668);
-  buf[0]=sigmoid(buf[0]);buf[1]=sigmoid(buf[1]);
-  buf[2]=mat4(vec4(-15.219568,8.095543,-2.429353,-1.9381982),vec4(-5.951362,4.3115187,2.6393783,1.274315),vec4(-7.3145227,6.7297835,5.2473326,5.9411426),vec4(5.0796127,8.979051,-1.7278991,-1.158976))*buf[6]+mat4(vec4(-11.967154,-11.608155,6.1486754,11.237008),vec4(2.124141,-6.263192,-1.7050359,-0.7021966),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-4.17164,-3.2281182,-4.576417,-3.6401186);
-  buf[3]=mat4(vec4(3.1832156,-13.738922,1.879223,3.233465),vec4(0.64300746,12.768129,1.9141049,0.50990224),vec4(-0.049295485,4.4807224,1.4733979,1.801449),vec4(5.0039253,13.000481,3.3991797,-4.5561905))*buf[6]+mat4(vec4(-0.1285731,7.720628,-3.1425676,4.742367),vec4(0.6393625,3.714393,-0.8108378,-0.39174938),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-1.1811101,-21.621881,0.7851888,1.2329718);
-  buf[2]=sigmoid(buf[2]);buf[3]=sigmoid(buf[3]);
-  buf[4]=mat4(vec4(5.214916,-7.183024,2.7228765,2.6592617),vec4(-5.601878,-25.3591,4.067988,0.4602802),vec4(-10.57759,24.286327,21.102104,37.546658),vec4(4.3024497,-1.9625226,2.3458803,-1.372816))*buf[0]+mat4(vec4(-17.6526,-10.507558,2.2587414,12.462782),vec4(6.265566,-502.75443,-12.642513,0.9112289),vec4(-10.983244,20.741234,-9.701768,-0.7635988),vec4(5.383626,1.4819539,-4.1911616,-4.8444734))*buf[1]+mat4(vec4(12.785233,-16.345072,-0.39901125,1.7955981),vec4(-30.48365,-1.8345358,1.4542528,-1.1118771),vec4(19.872723,-7.337935,-42.941723,-98.52709),vec4(8.337645,-2.7312303,-2.2927687,-36.142323))*buf[2]+mat4(vec4(-16.298317,3.5471997,-0.44300047,-9.444417),vec4(57.5077,-35.609753,16.163465,-4.1534753),vec4(-0.07470326,-3.8656476,-7.0901804,3.1523974),vec4(-12.559385,-7.077619,1.490437,-0.8211543))*buf[3]+vec4(-7.67914,15.927437,1.3207729,-1.6686112);
-  buf[5]=mat4(vec4(-1.4109162,-0.372762,-3.770383,-21.367174),vec4(-6.2103205,-9.35908,0.92529047,8.82561),vec4(11.460242,-22.348068,13.625772,-18.693201),vec4(-0.3429052,-3.9905605,-2.4626114,-0.45033523))*buf[0]+mat4(vec4(7.3481627,-4.3661838,-6.3037653,-3.868115),vec4(1.5462853,6.5488915,1.9701879,-0.58291394),vec4(6.5858274,-2.2180402,3.7127688,-1.3730392),vec4(-5.7973905,10.134961,-2.3395722,-5.965605))*buf[1]+mat4(vec4(-2.5132585,-6.6685553,-1.4029363,-0.16285264),vec4(-0.37908727,0.53738135,4.389061,-1.3024765),vec4(-0.70647055,2.0111287,-5.1659346,-3.728635),vec4(-13.562562,10.487719,-0.9173751,-2.6487076))*buf[2]+mat4(vec4(-8.645013,6.5546675,-6.3944063,-5.5933375),vec4(-0.57783127,-1.077275,36.91025,5.736769),vec4(14.283112,3.7146652,7.1452246,-4.5958776),vec4(2.7192075,3.6021907,-4.366337,-2.3653464))*buf[3]+vec4(-5.9000807,-4.329569,1.2427121,8.59503);
-  buf[4]=sigmoid(buf[4]);buf[5]=sigmoid(buf[5]);
-  buf[6]=mat4(vec4(-1.61102,0.7970257,1.4675229,0.20917463),vec4(-28.793737,-7.1390953,1.5025433,4.656581),vec4(-10.94861,39.66238,0.74318546,-10.095605),vec4(-0.7229728,-1.5483948,0.7301322,2.1687684))*buf[0]+mat4(vec4(3.2547753,21.489103,-1.0194173,-3.3100595),vec4(-3.7316632,-3.3792162,-7.223193,-0.23685838),vec4(13.1804495,0.7916005,5.338587,5.687114),vec4(-4.167605,-17.798311,-6.815736,-1.6451967))*buf[1]+mat4(vec4(0.604885,-7.800309,-7.213122,-2.741014),vec4(-3.522382,-0.12359311,-0.5258442,0.43852118),vec4(9.6752825,-22.853785,2.062431,0.099892326),vec4(-4.3196306,-17.730087,2.5184598,5.30267))*buf[2]+mat4(vec4(-6.545563,-15.790176,-6.0438633,-5.415399),vec4(-43.591583,28.551912,-16.00161,18.84728),vec4(4.212382,8.394307,3.0958717,8.657522),vec4(-5.0237565,-4.450633,-4.4768,-5.5010443))*buf[3]+mat4(vec4(1.6985557,-67.05806,6.897715,1.9004834),vec4(1.8680354,2.3915145,2.5231109,4.081538),vec4(11.158006,1.7294737,2.0738268,7.386411),vec4(-4.256034,-306.24686,8.258898,-17.132736))*buf[4]+mat4(vec4(1.6889864,-4.5852966,3.8534803,-6.3482175),vec4(1.3543309,-1.2640043,9.932754,2.9079645),vec4(-5.2770967,0.07150358,-0.13962056,3.3269649),vec4(28.34703,-4.918278,6.1044083,4.085355))*buf[5]+vec4(6.6818056,12.522166,-3.7075126,-4.104386);
-  buf[7]=mat4(vec4(-8.265602,-4.7027016,5.098234,0.7509808),vec4(8.6507845,-17.15949,16.51939,-8.884479),vec4(-4.036479,-2.3946867,-2.6055532,-1.9866527),vec4(-2.2167742,-1.8135649,-5.9759874,4.8846445))*buf[0]+mat4(vec4(6.7790847,3.5076547,-2.8191125,-2.7028968),vec4(-5.743024,-0.27844876,1.4958696,-5.0517144),vec4(13.122226,15.735168,-2.9397483,-4.101023),vec4(-14.375265,-5.030483,-6.2599335,2.9848232))*buf[1]+mat4(vec4(4.0950394,-0.94011575,-5.674733,4.755022),vec4(4.3809423,4.8310084,1.7425908,-3.437416),vec4(2.117492,0.16342592,-104.56341,16.949184),vec4(-5.22543,-2.994248,3.8350096,-1.9364246))*buf[2]+mat4(vec4(-5.900337,1.7946124,-13.604192,-3.8060522),vec4(6.6583457,31.911177,25.164474,91.81147),vec4(11.840538,4.1503043,-0.7314397,6.768467),vec4(-6.3967767,4.034772,6.1714606,-0.32874924))*buf[3]+mat4(vec4(3.4992442,-196.91893,-8.923708,2.8142626),vec4(3.4806502,-3.1846354,5.1725626,5.1804223),vec4(-2.4009497,15.585794,1.2863957,2.0252278),vec4(-71.25271,-62.441242,-8.138444,0.50670296))*buf[4]+mat4(vec4(-12.291733,-11.176166,-7.3474145,4.390294),vec4(10.805477,5.6337385,-0.9385842,-4.7348723),vec4(-12.869276,-7.039391,5.3029537,7.5436664),vec4(1.4593618,8.91898,3.5101583,5.840625))*buf[5]+vec4(2.2415268,-6.705987,-0.98861027,-2.117676);
-  buf[6]=sigmoid(buf[6]);buf[7]=sigmoid(buf[7]);
-  buf[0]=mat4(vec4(1.6794263,1.3817469,2.9625452,0.),vec4(-1.8834411,-1.4806935,-3.5924516,0.),vec4(-1.3279216,-1.0918057,-2.3124623,0.),vec4(0.2662234,0.23235129,0.44178495,0.))*buf[0]+mat4(vec4(-0.6299101,-0.5945583,-0.9125601,0.),vec4(0.17828953,0.18300213,0.18182953,0.),vec4(-2.96544,-2.5819945,-4.9001055,0.),vec4(1.4195864,1.1868085,2.5176322,0.))*buf[1]+mat4(vec4(-1.2584374,-1.0552157,-2.1688404,0.),vec4(-0.7200217,-0.52666044,-1.438251,0.),vec4(0.15345335,0.15196142,0.272854,0.),vec4(0.945728,0.8861938,1.2766753,0.))*buf[2]+mat4(vec4(-2.4218085,-1.968602,-4.35166,0.),vec4(-22.683098,-18.0544,-41.954372,0.),vec4(0.63792,0.5470648,1.1078634,0.),vec4(-1.5489894,-1.3075932,-2.6444845,0.))*buf[3]+mat4(vec4(-0.49252132,-0.39877754,-0.91366625,0.),vec4(0.95609266,0.7923952,1.640221,0.),vec4(0.30616966,0.15693925,0.8639857,0.),vec4(1.1825981,0.94504964,2.176963,0.))*buf[4]+mat4(vec4(0.35446745,0.3293795,0.59547555,0.),vec4(-0.58784515,-0.48177817,-1.0614829,0.),vec4(2.5271258,1.9991658,4.6846647,0.),vec4(0.13042648,0.08864098,0.30187556,0.))*buf[5]+mat4(vec4(-1.7718065,-1.4033192,-3.3355875,0.),vec4(3.1664357,2.638297,5.378702,0.),vec4(-3.1724713,-2.6107926,-5.549295,0.),vec4(-2.851368,-2.249092,-5.3013067,0.))*buf[6]+mat4(vec4(1.5203838,1.2212278,2.8404984,0.),vec4(1.5210563,1.2651345,2.683903,0.),vec4(2.9789467,2.4364579,5.2347264,0.),vec4(2.2270417,1.8825914,3.8028636,0.))*buf[7]+vec4(-1.5468478,-3.6171484,0.24762098,0.);
-  buf[0]=sigmoid(buf[0]);
-  return vec4(buf[0].x,buf[0].y,buf[0].z,1.);}
-void mainImage(out vec4 fragColor,in vec2 fragCoord){
-  vec2 uv=fragCoord/uResolution.xy*2.-1.; uv.y*=-1.;
-  uv+=uWarp*vec2(sin(uv.y*6.283+uTime*0.5),cos(uv.x*6.283+uTime*0.5))*0.05;
-  fragColor=cppn_fn(uv,0.1*sin(0.3*uTime),0.1*sin(0.69*uTime),0.1*sin(0.44*uTime));}
-void main(){
-  vec4 col; mainImage(col,gl_FragCoord.xy);
-  col.rgb=hueShiftRGB(col.rgb,uHueShift);
-  float sv=sin(gl_FragCoord.y*uScanFreq)*0.5+0.5;
-  col.rgb*=1.-(sv*sv)*uScan;
-  col.rgb+=(rand(gl_FragCoord.xy+uTime)-0.5)*uNoise;
-  gl_FragColor=vec4(clamp(col.rgb,0.0,1.0),1.0);}`;
+    const ctx = canvas.getContext('2d', { alpha: true });
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const TWO_PI = Math.PI * 2;
 
-    function compile(type, src) {
-      const s = gl.createShader(type);
-      gl.shaderSource(s, src); gl.compileShader(s); return s;
+    const props = {
+      dotRadius: 1.5, dotSpacing: 14, cursorRadius: 500,
+      cursorForce: 0.1, bulgeOnly: true, bulgeStrength: 67,
+      sparkle: false, waveAmplitude: 0,
+      gradientFrom: 'rgba(168,85,247,0.35)', gradientTo: 'rgba(180,151,207,0.25)',
+    };
+
+    let dots = [];
+    const mouse = { x: -9999, y: -9999, prevX: -9999, prevY: -9999, speed: 0 };
+    const size  = { w: 0, h: 0, offsetX: 0, offsetY: 0 };
+    let glowOpacity = 0, engagement = 0, frameCount = 0;
+
+    function buildDots(w, h) {
+      const step = props.dotRadius + props.dotSpacing;
+      const cols = Math.floor(w / step), rows = Math.floor(h / step);
+      const padX = (w % step) / 2, padY = (h % step) / 2;
+      dots = [];
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const ax = padX + col * step + step / 2;
+          const ay = padY + row * step + step / 2;
+          dots.push({ ax, ay, sx: ax, sy: ay, vx: 0, vy: 0, x: ax, y: ay });
+        }
+      }
     }
-    const prog = gl.createProgram();
-    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
-    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
-    gl.linkProgram(prog); gl.useProgram(prog);
 
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,3,-1,-1,3]), gl.STATIC_DRAW);
-    const pos = gl.getAttribLocation(prog, 'position');
-    gl.enableVertexAttribArray(pos);
-    gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
-
-    const uTime     = gl.getUniformLocation(prog, 'uTime');
-    const uRes      = gl.getUniformLocation(prog, 'uResolution');
-    const uHue      = gl.getUniformLocation(prog, 'uHueShift');
-    const uNoise    = gl.getUniformLocation(prog, 'uNoise');
-    const uScan     = gl.getUniformLocation(prog, 'uScan');
-    const uScanFreq = gl.getUniformLocation(prog, 'uScanFreq');
-    const uWarp     = gl.getUniformLocation(prog, 'uWarp');
-
-    gl.uniform1f(uHue,      43);
-    gl.uniform1f(uNoise,    0.05);
-    gl.uniform1f(uScan,     1);
-    gl.uniform1f(uScanFreq, 1.8);
-    gl.uniform1f(uWarp,     2.3);
-
-    function resize() {
-      const dpr = Math.min(devicePixelRatio || 1, 2);
-      const section = canvas.parentElement;
-      const w = section.clientWidth, h = section.clientHeight;
+    function doResize() {
+      const rect = (container || canvas.parentElement).getBoundingClientRect();
+      const w = rect.width, h = rect.height;
       canvas.width = w * dpr; canvas.height = h * dpr;
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.uniform2f(uRes, w, h);
+      canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      size.w = w; size.h = h;
+      size.offsetX = rect.left + window.scrollX;
+      size.offsetY = rect.top  + window.scrollY;
+      buildDots(w, h);
     }
-    window.addEventListener('resize', resize);
+
+    let resizeTimer;
+    window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(doResize, 100); });
+    window.addEventListener('mousemove', e => {
+      mouse.x = e.pageX - size.offsetX;
+      mouse.y = e.pageY - size.offsetY;
+    }, { passive: true });
+
+    const speedInterval = setInterval(() => {
+      const dx = mouse.prevX - mouse.x, dy = mouse.prevY - mouse.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      mouse.speed += (dist - mouse.speed) * 0.5;
+      if (mouse.speed < 0.001) mouse.speed = 0;
+      mouse.prevX = mouse.x; mouse.prevY = mouse.y;
+    }, 20);
+
+    function tick() {
+      frameCount++;
+      const { w, h } = size;
+      const len = dots.length;
+      const t = frameCount * 0.02;
+      const targetEng = Math.min(mouse.speed / 5, 1);
+      engagement += (targetEng - engagement) * 0.06;
+      if (engagement < 0.001) engagement = 0;
+      glowOpacity += (engagement - glowOpacity) * 0.08;
+
+      if (glowEl) {
+        glowEl.setAttribute('cx', mouse.x);
+        glowEl.setAttribute('cy', mouse.y);
+        glowEl.style.opacity = glowOpacity;
+      }
+
+      ctx.clearRect(0, 0, w, h);
+      const grad = ctx.createLinearGradient(0, 0, w, h);
+      grad.addColorStop(0, props.gradientFrom);
+      grad.addColorStop(1, props.gradientTo);
+      ctx.fillStyle = grad;
+
+      const crSq = props.cursorRadius * props.cursorRadius;
+      const rad  = props.dotRadius / 2;
+      ctx.beginPath();
+
+      for (let i = 0; i < len; i++) {
+        const d = dots[i];
+        const dx = mouse.x - d.ax, dy = mouse.y - d.ay;
+        const distSq = dx*dx + dy*dy;
+
+        if (distSq < crSq && engagement > 0.01) {
+          const dist = Math.sqrt(distSq);
+          if (props.bulgeOnly) {
+            const push = (1 - dist/props.cursorRadius) ** 2 * props.bulgeStrength * engagement;
+            const angle = Math.atan2(dy, dx);
+            d.sx += (d.ax - Math.cos(angle)*push - d.sx) * 0.15;
+            d.sy += (d.ay - Math.sin(angle)*push - d.sy) * 0.15;
+          } else {
+            const angle = Math.atan2(dy, dx);
+            const move = (500/dist) * (mouse.speed * props.cursorForce);
+            d.vx += Math.cos(angle) * -move;
+            d.vy += Math.sin(angle) * -move;
+          }
+        } else if (props.bulgeOnly) {
+          d.sx += (d.ax - d.sx) * 0.1;
+          d.sy += (d.ay - d.sy) * 0.1;
+        }
+
+        if (!props.bulgeOnly) {
+          d.vx *= 0.9; d.vy *= 0.9;
+          d.x = d.ax + d.vx; d.y = d.ay + d.vy;
+          d.sx += (d.x - d.sx) * 0.1;
+          d.sy += (d.y - d.sy) * 0.1;
+        }
+
+        const drawX = d.sx, drawY = d.sy;
+        ctx.moveTo(drawX + rad, drawY);
+        ctx.arc(drawX, drawY, rad, 0, TWO_PI);
+      }
+      ctx.fill();
+      requestAnimationFrame(tick);
+    }
+
+    doResize();
+    requestAnimationFrame(tick);
+  })();
+
+  // ── ColorBends hero background ─────────────────────
+  (function() {
+    const container = document.getElementById('colorbends-container');
+    if (!container || typeof THREE === 'undefined') return;
+
+    const MAX_COLORS = 8;
+    const COLORS = ['#0b00c6'];
+    const ROTATION=90,SPEED=0.25,SCALE=1.1,FREQUENCY=1;
+    const WARP=1,MOUSE_INF=1,PARALLAX=0.65,NOISE=0.15;
+    const ITERATIONS=1,INTENSITY=1.7,BAND_WIDTH=3;
+
+    const frag=`#define MAX_COLORS ${MAX_COLORS}
+uniform vec2 uCanvas;uniform float uTime;uniform float uSpeed;uniform vec2 uRot;
+uniform int uColorCount;uniform vec3 uColors[MAX_COLORS];uniform int uTransparent;
+uniform float uScale;uniform float uFrequency;uniform float uWarpStrength;
+uniform vec2 uPointer;uniform float uMouseInfluence;uniform float uParallax;
+uniform float uNoise;uniform int uIterations;uniform float uIntensity;uniform float uBandWidth;
+varying vec2 vUv;
+void main(){
+  float t=uTime*uSpeed;vec2 p=vUv*2.0-1.0;
+  p+=uPointer*uParallax*0.1;
+  vec2 rp=vec2(p.x*uRot.x-p.y*uRot.y,p.x*uRot.y+p.y*uRot.x);
+  vec2 q=vec2(rp.x*(uCanvas.x/uCanvas.y),rp.y);
+  q/=max(uScale,0.0001);q/=0.5+0.2*dot(q,q);
+  q+=0.2*cos(t)-7.56;
+  q+=(uPointer-rp)*uMouseInfluence*0.2;
+  for(int j=0;j<5;j++){
+    if(j>=uIterations-1)break;
+    vec2 rr=sin(1.5*(q.yx*uFrequency)+2.0*cos(q*uFrequency));
+    q+=(rr-q)*0.15;
+  }
+  vec3 col=vec3(0.0);float a=1.0;
+  if(uColorCount>0){
+    vec2 s=q;vec3 sumCol=vec3(0.0);float cover=0.0;
+    for(int i=0;i<MAX_COLORS;++i){
+      if(i>=uColorCount)break;
+      s-=0.01;
+      vec2 r=sin(1.5*(s.yx*uFrequency)+2.0*cos(s*uFrequency));
+      float m0=length(r+sin(5.0*r.y*uFrequency-3.0*t+float(i))/4.0);
+      float kBelow=clamp(uWarpStrength,0.0,1.0);float kMix=pow(kBelow,0.3);
+      float gain=1.0+max(uWarpStrength-1.0,0.0);
+      vec2 warped=s+(r-s)*kBelow*gain;
+      float m1=length(warped+sin(5.0*warped.y*uFrequency-3.0*t+float(i))/4.0);
+      float m=mix(m0,m1,kMix);
+      float w=1.0-exp(-uBandWidth/exp(uBandWidth*m));
+      sumCol+=uColors[i]*w;cover=max(cover,w);
+    }
+    col=clamp(sumCol,0.0,1.0);a=uTransparent>0?cover:1.0;
+  }
+  col*=uIntensity;
+  if(uNoise>0.0001){
+    float n=fract(sin(dot(gl_FragCoord.xy+vec2(uTime),vec2(12.9898,78.233)))*43758.5453123);
+    col+=(n-0.5)*uNoise;col=clamp(col,0.0,1.0);
+  }
+  gl_FragColor=vec4(uTransparent>0?col*a:col,a);
+}`;
+
+    const vert=`varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position,1.0);}`;
+
+    const scene=new THREE.Scene();
+    const camera=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+    const geometry=new THREE.PlaneGeometry(2,2);
+
+    function hex3(hex){const h=hex.replace('#','');return new THREE.Vector3(parseInt(h.slice(0,2),16)/255,parseInt(h.slice(2,4),16)/255,parseInt(h.slice(4,6),16)/255);}
+
+    const uColorsArr=Array.from({length:MAX_COLORS},()=>new THREE.Vector3());
+    COLORS.slice(0,MAX_COLORS).forEach((c,i)=>uColorsArr[i].copy(hex3(c)));
+    const rad=ROTATION*Math.PI/180;
+
+    const material=new THREE.ShaderMaterial({
+      vertexShader:vert,fragmentShader:frag,
+      uniforms:{
+        uCanvas:{value:new THREE.Vector2(1,1)},uTime:{value:0},uSpeed:{value:SPEED},
+        uRot:{value:new THREE.Vector2(Math.cos(rad),Math.sin(rad))},
+        uColorCount:{value:COLORS.length},uColors:{value:uColorsArr},
+        uTransparent:{value:1},uScale:{value:SCALE},uFrequency:{value:FREQUENCY},
+        uWarpStrength:{value:WARP},uPointer:{value:new THREE.Vector2(0,0)},
+        uMouseInfluence:{value:MOUSE_INF},uParallax:{value:PARALLAX},
+        uNoise:{value:NOISE},uIterations:{value:ITERATIONS},
+        uIntensity:{value:INTENSITY},uBandWidth:{value:BAND_WIDTH},
+      },
+      premultipliedAlpha:true,transparent:true,
+    });
+
+    scene.add(new THREE.Mesh(geometry,material));
+
+    const renderer=new THREE.WebGLRenderer({antialias:false,alpha:true,powerPreference:'high-performance'});
+    renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+    renderer.setClearColor(0x000000,0);
+    Object.assign(renderer.domElement.style,{position:'absolute',inset:'0',width:'100%',height:'100%',display:'block'});
+    container.appendChild(renderer.domElement);
+
+    function resize(){const w=container.clientWidth||1,h=container.clientHeight||1;renderer.setSize(w,h,false);material.uniforms.uCanvas.value.set(w,h);}
+    new ResizeObserver(resize).observe(container);
     resize();
 
-    const start = performance.now();
-    (function loop() {
-      gl.uniform1f(uTime, (performance.now() - start) / 1000 * 0.5);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    const ptr={t:new THREE.Vector2(),c:new THREE.Vector2()};
+    window.addEventListener('pointermove',e=>{
+      const r=container.getBoundingClientRect();
+      ptr.t.set(((e.clientX-r.left)/(r.width||1))*2-1,-(((e.clientY-r.top)/(r.height||1))*2-1));
+    },{passive:true});
+
+    const clock=new THREE.Clock();
+    (function loop(){
+      const dt=clock.getDelta();
+      material.uniforms.uTime.value=clock.elapsedTime;
+      ptr.c.lerp(ptr.t,Math.min(1,dt*8));
+      material.uniforms.uPointer.value.copy(ptr.c);
+      renderer.render(scene,camera);
       requestAnimationFrame(loop);
     })();
+  })();
+
+  // ── ASCIIText (Stockpilo mission) ──────────────────
+  (function() {
+    const container = document.getElementById('ascii-stockpilo');
+    if (!container || typeof THREE === 'undefined') return;
+
+    Math.map = (n, a, b, c, d) => ((n-a)/(b-a))*(d-c)+c;
+    const PX = window.devicePixelRatio || 1;
+
+    const VERT = `
+varying vec2 vUv; uniform float uTime; uniform float uEnableWaves;
+void main(){vUv=uv;vec3 p=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
+    const FRAG = `
+varying vec2 vUv; uniform float uTime; uniform sampler2D uTexture;
+void main(){vec2 pos=vUv;
+float r=texture2D(uTexture,pos+cos(uTime*2.-uTime+pos.x)*.01).r;
+float g=texture2D(uTexture,pos+tan(uTime*.5+pos.x-uTime)*.01).g;
+float b=texture2D(uTexture,pos-cos(uTime*2.+uTime+pos.y)*.01).b;
+float a=texture2D(uTexture,pos).a;
+gl_FragColor=vec4(r,g,b,a);}`;
+
+    const CHARSET = " .'`^\",;Il!i~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
+
+    // Build text canvas
+    const txtCanvas = document.createElement('canvas');
+    const txtCtx = txtCanvas.getContext('2d');
+    const FONT = '600 200px "IBM Plex Mono", monospace';
+    txtCtx.font = FONT;
+    const m = txtCtx.measureText('StockPilo');
+    txtCanvas.width  = Math.ceil(m.width) + 20;
+    txtCanvas.height = Math.ceil(m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) + 20;
+    function renderText() {
+      txtCtx.clearRect(0,0,txtCanvas.width,txtCanvas.height);
+      txtCtx.fillStyle = '#fdf9f3';
+      txtCtx.font = FONT;
+      const m2 = txtCtx.measureText('StockPilo');
+      txtCtx.fillText('StockPilo', 10, 10 + m2.actualBoundingBoxAscent);
+    }
+    renderText();
+
+    // Three.js scene
+    const W = container.clientWidth || 400;
+    const H = container.clientHeight || 80;
+    const camera = new THREE.PerspectiveCamera(45, W/H, 1, 1000);
+    camera.position.z = 30;
+    const scene = new THREE.Scene();
+    const texture = new THREE.CanvasTexture(txtCanvas);
+    texture.minFilter = THREE.NearestFilter;
+    const aspect = txtCanvas.width / txtCanvas.height;
+    const bh = 8, bw = bh * aspect;
+    const geo = new THREE.PlaneGeometry(bw, bh, 36, 36);
+    const mat = new THREE.ShaderMaterial({
+      vertexShader: VERT, fragmentShader: FRAG, transparent: true,
+      uniforms: { uTime:{value:0}, uTexture:{value:texture}, uEnableWaves:{value:0} }
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+    scene.add(mesh);
+
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({antialias:false,alpha:true});
+    renderer.setPixelRatio(1);
+    renderer.setClearColor(0,0);
+
+    // ASCII overlay
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;';
+    const pre = document.createElement('pre');
+    pre.style.cssText = `margin:0;padding:0;line-height:1em;position:absolute;left:0;top:0;z-index:9;
+      font-family:"IBM Plex Mono",monospace;font-size:7px;mix-blend-mode:difference;
+      background-image:radial-gradient(circle,#ff6188 0%,#fc9867 50%,#ffd866 100%);
+      background-attachment:fixed;-webkit-text-fill-color:transparent;-webkit-background-clip:text;background-clip:text;`;
+    const aCanvas = document.createElement('canvas');
+    overlay.appendChild(pre);
+    overlay.appendChild(aCanvas);
+    container.appendChild(overlay);
+    container.style.position = 'relative';
+    container.style.overflow = 'hidden';
+
+    const aCtx = aCanvas.getContext('2d');
+    aCtx.imageSmoothingEnabled = false;
+
+    let cols, rows, degRot = 0;
+    const mouse = {x: W/2, y: H/2};
+
+    function setSize(w, h) {
+      camera.aspect = w/h; camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+      aCtx.font = `7px "IBM Plex Mono",monospace`;
+      const cw = aCtx.measureText('A').width;
+      cols = Math.floor(w / cw);
+      rows = Math.floor(h / 7);
+      aCanvas.width = cols; aCanvas.height = rows;
+      pre.style.fontSize = '7px';
+    }
+    setSize(W, H);
+
+    document.addEventListener('mousemove', e => { mouse.x = e.clientX*PX; mouse.y = e.clientY*PX; });
+
+    function asciify() {
+      const w = aCanvas.width, h = aCanvas.height;
+      aCtx.clearRect(0,0,w,h);
+      aCtx.drawImage(renderer.domElement, 0,0, w, h);
+      const data = aCtx.getImageData(0,0,w,h).data;
+      let str = '';
+      for (let y=0; y<h; y++) {
+        for (let x=0; x<w; x++) {
+          const i = (x + y*w)*4;
+          if (data[i+3]===0){str+=' ';continue;}
+          const gray=(0.3*data[i]+0.6*data[i+1]+0.1*data[i+2])/255;
+          str += CHARSET[CHARSET.length - 1 - Math.floor((1-gray)*(CHARSET.length-1))];
+        }
+        str += '\n';
+      }
+      pre.textContent = str;
+    }
+
+    function hue() {
+      const cx = W/2, cy = H/2;
+      const deg = Math.atan2(mouse.y-cy, mouse.x-cx)*180/Math.PI;
+      degRot += (deg-degRot)*0.075;
+      overlay.style.filter = `hue-rotate(${degRot.toFixed(1)}deg)`;
+    }
+
+    new ResizeObserver(([e]) => {
+      const {width:w,height:h} = e.contentRect;
+      if(w>0&&h>0) setSize(w,h);
+    }).observe(container);
+
+    let mx=0, my=0;
+    container.addEventListener('mousemove', e => {
+      const r = container.getBoundingClientRect();
+      mx = e.clientX - r.left; my = e.clientY - r.top;
+    });
+
+    (function loop() {
+      const t = Date.now()*0.001;
+      renderText(); texture.needsUpdate = true;
+      mat.uniforms.uTime.value = Math.sin(t);
+      const rx = Math.map(my, 0, H, 0.3, -0.3);
+      const ry = Math.map(mx, 0, W, -0.3, 0.3);
+      mesh.rotation.x += (rx-mesh.rotation.x)*0.05;
+      mesh.rotation.y += (ry-mesh.rotation.y)*0.05;
+      renderer.render(scene, camera);
+      asciify(); hue();
+      requestAnimationFrame(loop);
+    })();
+  })();
+
+  // ── ElectricBorder (Pro card) ──────────────────────
+  (function() {
+    const canvas = document.getElementById('pro-eb-canvas');
+    const wrap   = document.getElementById('pro-eb-wrap');
+    if (!canvas || !wrap) return;
+
+    // Use the inner plan-card as size reference (not the wrapper which includes canvas overflow)
+    const card = wrap.querySelector('.plan-card-featured');
+    if (!card) return;
+
+    const ctx = canvas.getContext('2d');
+    const SPEED = 0.3, CHAOS = 0.26, BORDER_RADIUS = 16;
+    const OFFSET = 60, DISP = 60;
+    const COLOR = '#1a0aa5';
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    let W = 0, H = 0, time = 0, lastT = 0;
+
+    function rand(x) { return ((Math.sin(x * 12.9898) * 43758.5453) % 1 + 1) % 1; }
+
+    function noise2D(x, y) {
+      const i = Math.floor(x), j = Math.floor(y);
+      const fx = x - i, fy = y - j;
+      const a = rand(i+j*57), b = rand(i+1+j*57);
+      const c = rand(i+(j+1)*57), d = rand(i+1+(j+1)*57);
+      const ux = fx*fx*(3-2*fx), uy = fy*fy*(3-2*fy);
+      return a*(1-ux)*(1-uy)+b*ux*(1-uy)+c*(1-ux)*uy+d*ux*uy;
+    }
+
+    function octNoise(x, t, seed) {
+      let y=0, amp=CHAOS, freq=10;
+      for (let i=0; i<10; i++) {
+        if (i > 0) y += amp * noise2D(freq*x + seed*100, t*freq*0.3);
+        freq *= 1.6; amp *= 0.7;
+      }
+      return y;
+    }
+
+    function corner(cx,cy,r,sa,al,p){ const a=sa+p*al; return {x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)}; }
+
+    function rectPoint(t,l,top,w,h,r) {
+      const sw=w-2*r,sh=h-2*r,ca=Math.PI*r/2;
+      const perim=2*sw+2*sh+4*ca;
+      let d=t*perim,acc=0;
+      if(d<=acc+sw){return{x:l+r+(d-acc)/sw*sw,y:top};} acc+=sw;
+      if(d<=acc+ca){return corner(l+w-r,top+r,r,-Math.PI/2,Math.PI/2,(d-acc)/ca);} acc+=ca;
+      if(d<=acc+sh){return{x:l+w,y:top+r+(d-acc)/sh*sh};} acc+=sh;
+      if(d<=acc+ca){return corner(l+w-r,top+h-r,r,0,Math.PI/2,(d-acc)/ca);} acc+=ca;
+      if(d<=acc+sw){return{x:l+w-r-(d-acc)/sw*sw,y:top+h};} acc+=sw;
+      if(d<=acc+ca){return corner(l+r,top+h-r,r,Math.PI/2,Math.PI/2,(d-acc)/ca);} acc+=ca;
+      if(d<=acc+sh){return{x:l,y:top+h-r-(d-acc)/sh*sh};} acc+=sh;
+      return corner(l+r,top+r,r,Math.PI,Math.PI/2,(d-acc)/ca);
+    }
+
+    const canvasWrap = canvas.parentElement;
+
+    function resize() {
+      const cardRect = card.getBoundingClientRect();
+      W = cardRect.width  + OFFSET*2;
+      H = cardRect.height + OFFSET*2;
+      canvas.width  = W*dpr; canvas.height = H*dpr;
+      canvas.style.width  = W+'px';
+      canvas.style.height = H+'px';
+    }
+
+    new ResizeObserver(resize).observe(card);
+    resize();
+
+    function draw(now) {
+      const dt = (now - lastT) / 1000;
+      time += dt * SPEED;
+      lastT = now;
+
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.scale(dpr,dpr);
+      ctx.strokeStyle = COLOR;
+      ctx.lineWidth = 1.5;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      const l=OFFSET, top=OFFSET;
+      const bw=W-2*OFFSET, bh=H-2*OFFSET;
+      const r = Math.min(BORDER_RADIUS, Math.min(bw,bh)/2);
+      const perim = 2*(bw+bh)+2*Math.PI*r;
+      const samples = Math.floor(perim/2);
+
+      ctx.beginPath();
+      for (let i=0; i<=samples; i++) {
+        const p = i/samples;
+        const pt = rectPoint(p,l,top,bw,bh,r);
+        const dx = octNoise(p*8, time, 0) * DISP;
+        const dy = octNoise(p*8, time, 1) * DISP;
+        i===0 ? ctx.moveTo(pt.x+dx,pt.y+dy) : ctx.lineTo(pt.x+dx,pt.y+dy);
+      }
+      ctx.closePath();
+      ctx.stroke();
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
   })();
 
   // ── CardSwap ───────────────────────────────────────
@@ -3004,8 +3563,72 @@ void main(){
       tl.call(() => { order.push(order.shift()); });
     }
 
-    swap();
-    setInterval(swap, delay);
+    // RotatingText + subtext synced with cards
+    const rtWords = ['Intelligence', 'Market data', 'AI Insights'];
+    const rtSubs  = [
+      'Get a tailored morning brief crafted by Stockpilo AI — macro signals, earnings alerts and watchlist moves, delivered before the market opens.',
+      'See which stocks are moving and why. Live top gainers and losers updated every 15 seconds, with AI context on every significant price move.',
+      'Every price spike gets an explanation. Stockpilo AI analyses earnings, news and analyst upgrades so you always know the reason behind the move.'
+    ];
+    const rtWrap = document.getElementById('rotating-word-wrap');
+    const rtEl   = document.getElementById('rotating-word');
+    const rtSub  = document.getElementById('rotating-sub');
+    let rtIndex  = 0;
+
+    // Hidden ruler to measure text width
+    const rtRuler = document.createElement('span');
+    Object.assign(rtRuler.style, {
+      position:'absolute', visibility:'hidden', whiteSpace:'nowrap',
+      fontFamily:'Geist,sans-serif', fontWeight:'700',
+      fontSize: getComputedStyle(rtWrap.closest('h2')||document.body).fontSize || '36px'
+    });
+    document.body.appendChild(rtRuler);
+
+    function rtShow(text) {
+      // Measure new word width and expand box immediately
+      rtRuler.textContent = text;
+      const newW = rtRuler.offsetWidth + 32; // 16px padding each side
+      rtWrap.style.width = newW + 'px';
+
+      const existingChars = Array.from(rtEl.children);
+      existingChars.forEach((c, i) => {
+        c.style.animation = 'none';
+        void c.offsetHeight;
+        c.style.animation = `rtOut 0.25s cubic-bezier(.55,0,1,.45) ${i * 0.02}s both`;
+      });
+      const outDur = existingChars.length * 0.02 + 0.3;
+      setTimeout(() => {
+        rtEl.innerHTML = '';
+        const chars = Array.from(text);
+        chars.forEach((ch, i) => {
+          const s = document.createElement('span');
+          s.className = 'rt-char';
+          s.textContent = ch;
+          s.style.animation = `rtIn 0.4s cubic-bezier(.34,1.56,.64,1) ${(chars.length-1-i)*0.025}s both`;
+          rtEl.appendChild(s);
+        });
+      }, outDur * 1000);
+    }
+
+    function rtSubSwap(text) {
+      if (!rtSub) return;
+      rtSub.style.opacity = '0';
+      setTimeout(() => { rtSub.textContent = text; rtSub.style.opacity = '1'; }, 300);
+    }
+
+    rtShow(rtWords[0]);
+
+    function swapWithText() {
+      swap();
+      setTimeout(() => {
+        rtIndex = (rtIndex + 1) % rtWords.length;
+        rtShow(rtWords[rtIndex]);
+        rtSubSwap(rtSubs[rtIndex]);
+      }, 400);
+    }
+
+    swapWithText();
+    setInterval(swapWithText, delay);
   })();
 
   // ── Fi-section logos scatter animation ─────────────
@@ -3038,6 +3661,64 @@ void main(){
       x: 0, y: 0, opacity: 1, scale: 1,
       ease: 'power2.out',
       stagger: 0.06,
+    });
+  })();
+
+  // ── CardNav ────────────────────────────────────────
+  (function() {
+    if (typeof gsap === 'undefined') return;
+    const nav       = document.getElementById('card-nav');
+    const hamburger = document.getElementById('cn-hamburger');
+    const content   = document.getElementById('cn-content');
+    const cards     = [
+      document.getElementById('cn-card-0'),
+      document.getElementById('cn-card-1'),
+      document.getElementById('cn-card-2'),
+    ].filter(Boolean);
+    if (!nav || !hamburger) return;
+
+    let isOpen = false;
+    let tl = null;
+
+    function buildTl() {
+      if (tl) tl.kill();
+      gsap.set(nav, { height: 56, overflow: 'hidden' });
+      gsap.set(cards, { y: 40, opacity: 0 });
+      tl = gsap.timeline({ paused: true });
+      tl.to(nav, { height: 260, duration: 0.4, ease: 'power3.out' });
+      tl.to(cards, { y: 0, opacity: 1, duration: 0.35, ease: 'power3.out', stagger: 0.07 }, '-=0.15');
+    }
+    buildTl();
+    window.addEventListener('resize', buildTl);
+
+    function toggle() {
+      if (!isOpen) {
+        isOpen = true;
+        hamburger.classList.add('open');
+        hamburger.setAttribute('aria-expanded', 'true');
+        nav.classList.add('open');
+        content.setAttribute('aria-hidden', 'false');
+        tl.play(0);
+      } else {
+        isOpen = false;
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        tl.eventCallback('onReverseComplete', () => {
+          nav.classList.remove('open');
+          content.setAttribute('aria-hidden', 'true');
+        });
+        tl.reverse();
+      }
+    }
+
+    hamburger.addEventListener('click', toggle);
+    hamburger.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+
+    // Close when clicking a nav link
+    content.querySelectorAll('.nav-card-link').forEach(a => {
+      a.addEventListener('click', () => { if (isOpen) toggle(); });
     });
   })();
 
