@@ -9,6 +9,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -419,92 +420,77 @@
     .tabnum { font-variant-numeric: tabular-nums; }
     .mono { font-family: 'SF Mono', 'Fira Code', monospace; }
 
-    /* ── CardNav ───────────────────────────────────── */
-    .card-nav-container {
-      position: fixed;
-      top: 1.5em;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      max-width: 820px;
+    /* ── Header (efferd/header-2 adapted) ─────────────── */
+    #site-header {
+      position: sticky;
+      top: 0;
       z-index: 300;
-      box-sizing: border-box;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 56rem;
+      border-bottom: 1px solid transparent;
+      background: transparent;
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
+      transition: top 0.3s ease-out, max-width 0.3s ease-out, background 0.3s ease-out,
+                  border-color 0.3s ease-out, box-shadow 0.3s ease-out,
+                  backdrop-filter 0.3s ease-out, border-radius 0.3s ease-out;
     }
-    .card-nav {
-      height: 56px;
-      background: rgba(10,10,14,0.85);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 14px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.45);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      position: relative;
-      overflow: hidden;
-      will-change: height;
+    @media (min-width: 768px) {
+      #site-header { border-radius: 0; border: 1px solid transparent; }
+      #site-header.scrolled {
+        top: 8px;
+        max-width: 48rem;
+        border-radius: 12px;
+        border-color: rgba(255,255,255,0.1);
+        background: rgba(0,0,0,0.75);
+        backdrop-filter: blur(32px) saturate(1.4);
+        -webkit-backdrop-filter: blur(32px) saturate(1.4);
+        box-shadow: 0 4px 32px rgba(0,0,0,0.7);
+      }
     }
-    .card-nav-top {
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 8px 0 18px;
-      z-index: 2;
+    #site-header.scrolled {
+      border-bottom-color: rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(32px) saturate(1.4);
+      -webkit-backdrop-filter: blur(32px) saturate(1.4);
     }
-    .hamburger-menu {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 5px;
-      cursor: pointer;
-      padding: 8px;
-      color: rgba(255,255,255,0.7);
+    #site-nav { transition: padding 0.25s ease-out; }
+    #site-header.scrolled #site-nav { padding-left: 8px; padding-right: 8px; }
+    .header-nav-link {
+      display: inline-flex; align-items: center;
+      padding: 5px 11px; border-radius: 6px;
+      font-size: 13px; font-weight: 500; color: rgba(232,240,254,0.65);
+      text-decoration: none; transition: color 0.15s, background 0.15s;
+      font-family: 'Geist', sans-serif;
     }
-    .hamburger-line {
-      width: 22px; height: 2px;
-      background: currentColor;
-      border-radius: 2px;
-      transition: transform 0.25s ease, opacity 0.2s ease;
-      transform-origin: 50% 50%;
-    }
-    .hamburger-menu.open .hamburger-line:first-child { transform: translateY(3.5px) rotate(45deg); }
-    .hamburger-menu.open .hamburger-line:last-child  { transform: translateY(-3.5px) rotate(-45deg); }
-    .logo-container { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); }
-    .cn-logo { height: 28px; width: auto; }
-    .card-nav-cta-button {
-      background: #2d6be4; color: #fff;
-      border: none; border-radius: 8px;
-      padding: 8px 18px; font-size: 13px; font-weight: 600;
+    .header-nav-link:hover { color: #e8f0fe; background: rgba(255,255,255,0.06); }
+    .header-btn-outline {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 5px 14px; border-radius: 7px;
+      font-size: 13px; font-weight: 600; color: #e8f0fe;
+      text-decoration: none; border: 1px solid rgba(255,255,255,0.15);
+      background: transparent; transition: background 0.15s, border-color 0.15s;
       font-family: 'Geist', sans-serif; cursor: pointer;
-      text-decoration: none; display: inline-flex; align-items: center;
-      transition: background 0.2s;
     }
-    .card-nav-cta-button:hover { background: #2558c4; }
-    .card-nav-content {
-      position: absolute; left: 0; right: 0;
-      top: 56px; bottom: 0;
-      padding: 8px; display: flex; gap: 8px;
-      visibility: hidden; pointer-events: none; z-index: 1;
+    .header-btn-outline:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.25); }
+    .header-btn-solid {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 5px 14px; border-radius: 7px;
+      font-size: 13px; font-weight: 600; color: #fff;
+      text-decoration: none; background: #2d6be4;
+      transition: background 0.15s; font-family: 'Geist', sans-serif;
+      cursor: pointer; border: none;
     }
-    .card-nav.open .card-nav-content { visibility: visible; pointer-events: auto; }
-    .nav-card {
-      flex: 1; border-radius: 10px; padding: 14px 16px;
-      display: flex; flex-direction: column; gap: 8px; min-width: 0;
+    .header-btn-solid:hover { background: #2558c4; }
+    .mobile-nav-link {
+      display: flex; align-items: center;
+      padding: 10px 12px; border-radius: 7px;
+      font-size: 15px; font-weight: 500; color: rgba(232,240,254,0.7);
+      text-decoration: none; transition: color 0.15s, background 0.15s;
+      font-family: 'Geist', sans-serif;
     }
-    .nav-card-label { font-family: 'Geist',sans-serif; font-size: 18px; font-weight: 500; letter-spacing: -0.3px; }
-    .nav-card-links { margin-top: auto; display: flex; flex-direction: column; gap: 3px; }
-    .nav-card-link {
-      font-family: 'Geist',sans-serif; font-size: 13px;
-      color: rgba(255,255,255,0.65); text-decoration: none;
-      transition: color 0.2s; display: flex; align-items: center; gap: 4px;
-    }
-    .nav-card-link:hover { color: #fff; }
-    @media (max-width: 640px) {
-      .card-nav-container { width: 94%; top: 1em; }
-      .card-nav-content { flex-direction: column; }
-      .nav-card { flex: none; }
-    }
+    .mobile-nav-link:hover { color: #e8f0fe; background: rgba(255,255,255,0.06); }
 
     /* ── Tube-light navbar (hidden) ─────────────────── */
     .tube-wrap { display: none !important; }
@@ -1508,48 +1494,49 @@
   <div style="position:absolute;top:40%;right:-8%;width:500px;height:500px;background:radial-gradient(circle,rgba(16,185,129,.045) 0%,transparent 68%);"></div>
 </div>
 
-<!-- ── CARD NAV ─────────────────────────────────────────── -->
-<div class="card-nav-container" id="card-nav-container">
-  <nav class="card-nav" id="card-nav">
-    <div class="card-nav-top">
-      <div class="hamburger-menu" id="cn-hamburger" role="button" aria-label="Open menu" aria-expanded="false" tabindex="0">
-        <div class="hamburger-line"></div>
-        <div class="hamburger-line"></div>
+<!-- ── HEADER (efferd/header-2 adapted) ───────────────── -->
+<header id="site-header">
+  <nav id="site-nav" style="display:flex;height:56px;width:100%;align-items:center;justify-content:space-between;padding:0 16px;">
+    <!-- Logo -->
+    <a href="/" style="display:flex;align-items:center;padding:6px;border-radius:6px;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
+      <img src="brand_assets/logo12-crop.png" alt="Stockpilo" style="height:28px;width:auto;">
+    </a>
+
+    <!-- Desktop nav -->
+    <div class="hidden md:flex" style="align-items:center;gap:8px;">
+      <div style="display:flex;">
+        <a href="#features" class="header-nav-link">Features</a>
+        <a href="#pricing" class="header-nav-link">Pricing</a>
+        <a href="#about" class="header-nav-link">About</a>
+        <a href="/blog.html" class="header-nav-link">Blog</a>
       </div>
-      <div class="logo-container">
-        <a href="/" style="display:flex;align-items:center;text-decoration:none;">
-          <img src="brand_assets/logo12-crop.png" alt="Stockpilo" class="cn-logo">
-        </a>
-      </div>
-      <a href="#" class="card-nav-cta-button" id="hero-cta-nav">Get Started</a>
+      <a href="#" class="header-btn-outline">Sign In</a>
+      <a href="#" class="header-btn-solid" id="hero-cta-nav">Get Started</a>
     </div>
-    <div class="card-nav-content" id="cn-content" aria-hidden="true">
-      <div class="nav-card" id="cn-card-0" style="background:#1B1722;color:#fff;">
-        <div class="nav-card-label">Features</div>
-        <div class="nav-card-links">
-          <a class="nav-card-link" href="#features">↗ Top Gainers &amp; Losers</a>
-          <a class="nav-card-link" href="#features">↗ AI Insights</a>
-          <a class="nav-card-link" href="#features">↗ Portfolio Tracker</a>
-        </div>
-      </div>
-      <div class="nav-card" id="cn-card-1" style="background:#2F293A;color:#fff;">
-        <div class="nav-card-label">Pricing</div>
-        <div class="nav-card-links">
-          <a class="nav-card-link" href="#pricing">↗ Starter — Free</a>
-          <a class="nav-card-link" href="#pricing">↗ Pro — $9.99/mo</a>
-        </div>
-      </div>
-      <div class="nav-card" id="cn-card-2" style="background:#1a2540;color:#fff;">
-        <div class="nav-card-label">Company</div>
-        <div class="nav-card-links">
-          <a class="nav-card-link" href="#about">↗ Mission</a>
-          <a class="nav-card-link" href="/blog.html">↗ Blog</a>
-          <a class="nav-card-link" href="/faqs.html">↗ FAQs</a>
-        </div>
-      </div>
-    </div>
+
+    <!-- Mobile hamburger -->
+    <button id="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" style="display:none;align-items:center;justify-content:center;width:36px;height:36px;border-radius:7px;border:1px solid rgba(255,255,255,0.12);background:transparent;color:rgba(232,240,254,0.75);cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='transparent'">
+      <svg id="icon-menu" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+      <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
   </nav>
-</div>
+
+  <!-- Mobile drawer -->
+  <div id="mobile-menu" style="display:none;position:fixed;inset:0;z-index:290;flex-direction:column;" aria-hidden="true">
+    <div id="mobile-backdrop" style="position:absolute;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);"></div>
+    <div style="position:relative;top:56px;margin:0 auto;width:100%;max-width:56rem;background:rgba(0,0,0,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.08);padding:12px 8px;">
+      <a href="#features" class="mobile-nav-link">Features</a>
+      <a href="#pricing" class="mobile-nav-link">Pricing</a>
+      <a href="#about" class="mobile-nav-link">About</a>
+      <a href="/blog.html" class="mobile-nav-link">Blog</a>
+      <a href="/faqs.html" class="mobile-nav-link">FAQs</a>
+      <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;padding:0 4px;">
+        <a href="#" class="header-btn-outline" style="width:100%;justify-content:center;">Sign In</a>
+        <a href="#" class="header-btn-solid" style="width:100%;justify-content:center;">Get Started</a>
+      </div>
+    </div>
+  </div>
+</header>
 
 <!-- SVG filter: removes pure black background from logo -->
 <svg width="0" height="0" style="position:absolute;pointer-events:none;" aria-hidden="true">
@@ -1565,7 +1552,7 @@
 </svg>
 
 <!-- ── HERO (hero-3 layout) ───────────────────────────── -->
-<section id="hero-section" style="position:relative;z-index:10;background:#000;min-height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;">
+<section id="hero-section" style="position:relative;z-index:10;background:#000;min-height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;-webkit-mask-image:linear-gradient(to bottom,black 0%,black 55%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 55%,transparent 100%);">
 
   <!-- ColorBends background -->
   <div id="colorbends-container" style="position:absolute;inset:0;width:100%;height:100%;overflow:hidden;z-index:0;"></div>
@@ -1622,9 +1609,6 @@
     </div>
   </div>
 
-  <!-- Bottom fade + blur transition -->
-  <div style="position:absolute;bottom:0;left:0;right:0;height:280px;background:linear-gradient(to bottom,transparent 0%,rgba(0,0,8,0.5) 35%,rgba(0,0,4,0.85) 65%,#000 100%);pointer-events:none;z-index:10;"></div>
-  <div style="position:absolute;bottom:0;left:0;right:0;height:120px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,0.8) 50%,black 100%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,0.8) 50%,black 100%);pointer-events:none;z-index:9;"></div>
 
 </section>
 
@@ -1773,8 +1757,8 @@
     </h2>
 
     <div id="about-tagline" style="opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease;">
-      <p style="font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;margin:0 0 2px;">We are</p>
-      <div id="ascii-stockpilo" style="position:relative;width:100%;height:72px;"></div>
+      <p style="font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;margin:0 0 10px;">We are</p>
+      <img src="brand_assets/logo12-crop.png" alt="Stockpilo" style="height:32px;width:auto;opacity:0.85;display:block;margin-bottom:10px;">
       <p style="font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px;">and we will</p>
       <p style="font-family:'Geist',sans-serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:.14em;text-transform:uppercase;line-height:1.2;margin:0;">Clear The Noise.</p>
     </div>
@@ -2597,11 +2581,32 @@
           setTimeout(() => {
             erase(18, () => {
               type(part2, 35, () => {
-                setTimeout(() => { if (cursor) cursor.classList.add('done'); }, 800);
+                // Inject highlight span around "all in one place"
+                const phrase = 'all in one place';
+                const raw = textEl.textContent;
+                const idx = raw.indexOf(phrase);
+                if (idx !== -1) {
+                  textEl.innerHTML =
+                    raw.slice(0, idx) +
+                    '<span class="shiny-text">' + phrase + '</span>' +
+                    raw.slice(idx + phrase.length);
+                }
+
+                setTimeout(() => {
+                  if (cursor) cursor.classList.add('done');
+                }, 800);
                 setTimeout(() => {
                   const tag = document.getElementById('about-tagline');
-                  if (tag) { tag.style.opacity = '1'; tag.style.transform = 'translateY(0)'; }
+                  if (tag) {
+                    tag.style.opacity = '1';
+                    tag.style.transform = 'translateY(0)';
+                    window.dispatchEvent(new CustomEvent('aboutTaglineReveal'));
+                  }
                 }, 1000);
+                // FallingText fires after highlight animation (2s) + small buffer
+                setTimeout(() => {
+                  window.dispatchEvent(new CustomEvent('aboutTypewriterDone'));
+                }, 2800);
               });
             });
           }, 600);
@@ -3218,10 +3223,10 @@ void main(){
     })();
   })();
 
-  // ── ASCIIText (Stockpilo mission) ──────────────────
+  // ── ASCIIText (removed) ────────────────────────────
   (function() {
     const container = document.getElementById('ascii-stockpilo');
-    if (!container || typeof THREE === 'undefined') return;
+    if (!container) return;
 
     Math.map = (n, a, b, c, d) => ((n-a)/(b-a))*(d-c)+c;
     const PX = window.devicePixelRatio || 1;
@@ -3688,62 +3693,58 @@ gl_FragColor=vec4(r,g,b,a);}`;
     });
   })();
 
-  // ── CardNav ────────────────────────────────────────
+  // ── Header (efferd/header-2) ───────────────────────
   (function() {
-    if (typeof gsap === 'undefined') return;
-    const nav       = document.getElementById('card-nav');
-    const hamburger = document.getElementById('cn-hamburger');
-    const content   = document.getElementById('cn-content');
-    const cards     = [
-      document.getElementById('cn-card-0'),
-      document.getElementById('cn-card-1'),
-      document.getElementById('cn-card-2'),
-    ].filter(Boolean);
-    if (!nav || !hamburger) return;
+    const header = document.getElementById('site-header');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const iconMenu = document.getElementById('icon-menu');
+    const iconClose = document.getElementById('icon-close');
 
-    let isOpen = false;
-    let tl = null;
-
-    function buildTl() {
-      if (tl) tl.kill();
-      gsap.set(nav, { height: 56, overflow: 'hidden' });
-      gsap.set(cards, { y: 40, opacity: 0 });
-      tl = gsap.timeline({ paused: true });
-      tl.to(nav, { height: 260, duration: 0.4, ease: 'power3.out' });
-      tl.to(cards, { y: 0, opacity: 1, duration: 0.35, ease: 'power3.out', stagger: 0.07 }, '-=0.15');
-    }
-    buildTl();
-    window.addEventListener('resize', buildTl);
-
-    function toggle() {
-      if (!isOpen) {
-        isOpen = true;
-        hamburger.classList.add('open');
-        hamburger.setAttribute('aria-expanded', 'true');
-        nav.classList.add('open');
-        content.setAttribute('aria-hidden', 'false');
-        tl.play(0);
-      } else {
-        isOpen = false;
-        hamburger.classList.remove('open');
-        hamburger.setAttribute('aria-expanded', 'false');
-        tl.eventCallback('onReverseComplete', () => {
-          nav.classList.remove('open');
-          content.setAttribute('aria-hidden', 'true');
-        });
-        tl.reverse();
+    // Scroll-based shrink with hysteresis
+    const SCROLL_DOWN = 10, SCROLL_UP = 5;
+    let wasScrolled = false;
+    function updateHeader() {
+      const y = window.scrollY;
+      const shouldScroll = wasScrolled ? y > SCROLL_UP : y > SCROLL_DOWN;
+      if (shouldScroll !== wasScrolled) {
+        wasScrolled = shouldScroll;
+        header.classList.toggle('scrolled', shouldScroll);
       }
     }
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    updateHeader();
 
-    hamburger.addEventListener('click', toggle);
-    hamburger.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-    });
+    // Show hamburger on mobile
+    function syncHamburger() {
+      mobileMenuBtn.style.display = window.innerWidth < 768 ? 'flex' : 'none';
+    }
+    syncHamburger();
+    window.addEventListener('resize', syncHamburger);
 
-    // Close when clicking a nav link
-    content.querySelectorAll('.nav-card-link').forEach(a => {
-      a.addEventListener('click', () => { if (isOpen) toggle(); });
+    // Mobile menu open/close
+    function openMenu() {
+      mobileMenu.style.display = 'flex';
+      mobileMenu.setAttribute('aria-hidden', 'false');
+      mobileMenuBtn.setAttribute('aria-expanded', 'true');
+      iconMenu.style.display = 'none';
+      iconClose.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+      mobileMenu.style.display = 'none';
+      mobileMenu.setAttribute('aria-hidden', 'true');
+      mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      iconMenu.style.display = 'block';
+      iconClose.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.style.display === 'none' ? openMenu() : closeMenu();
     });
+    document.getElementById('mobile-backdrop').addEventListener('click', closeMenu);
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
   })();
 
   // ── WhisperText ────────────────────────────────────
@@ -3976,6 +3977,260 @@ gl_FragColor=vec4(r,g,b,a);}`;
   btnDecline.addEventListener('mouseenter', () => { btnDecline.style.color = 'rgba(255,255,255,.75)'; });
   btnDecline.addEventListener('mouseleave', () => { btnDecline.style.color = 'rgba(255,255,255,.4)'; });
 })();
+
+  // ── FallingText (about/mission H2) ────────────────
+  (function () {
+    const h2 = document.getElementById('about-h2');
+    if (!h2) return;
+
+    window.addEventListener('aboutTypewriterDone', function handler() {
+      window.removeEventListener('aboutTypewriterDone', handler);
+      if (window.Matter) runFall();
+      else {
+        const t = setInterval(() => { if (window.Matter) { clearInterval(t); runFall(); } }, 50);
+      }
+    });
+
+    function runFall() {
+      const { Engine, Bodies, Body, World, Runner } = Matter;
+      const textEl = document.getElementById('about-tt-text');
+      if (!textEl) return;
+
+      // Wrap text node words in spans for measurement
+      function wrapWords(node) {
+        if (node.nodeType === 3) {
+          const parts = node.textContent.split(/(\s+)/);
+          const frag = document.createDocumentFragment();
+          parts.forEach(p => {
+            if (/\S/.test(p)) {
+              const s = document.createElement('span');
+              s.dataset.fw = '1';
+              s.style.display = 'inline-block';
+              s.textContent = p;
+              frag.appendChild(s);
+            } else if (p) {
+              frag.appendChild(document.createTextNode(p));
+            }
+          });
+          node.parentNode.replaceChild(frag, node);
+        } else if (node.nodeType === 1) {
+          Array.from(node.childNodes).forEach(wrapWords);
+        }
+      }
+
+      const savedHTML = h2.innerHTML;
+      wrapWords(textEl);
+
+      const data = Array.from(h2.querySelectorAll('[data-fw]')).map(s => {
+        const r = s.getBoundingClientRect();
+        const cs = window.getComputedStyle(s);
+        return {
+          text: s.textContent,
+          cx: r.left + r.width / 2,
+          cy: r.top + r.height / 2,
+          w: Math.max(r.width, 1),
+          h: Math.max(r.height, 1),
+          color: cs.color,
+          fontSize: cs.fontSize,
+          fontWeight: cs.fontWeight,
+          fontFamily: cs.fontFamily,
+        };
+      });
+
+      h2.innerHTML = savedHTML;
+      h2.style.visibility = 'hidden';
+
+      const els = data.map(d => {
+        const el = document.createElement('div');
+        el.textContent = d.text;
+        el.style.cssText =
+          'position:fixed;pointer-events:none;z-index:9999;user-select:none;' +
+          'display:flex;align-items:center;justify-content:center;' +
+          'transform-origin:center center;will-change:transform;' +
+          `left:${d.cx - d.w / 2}px;top:${d.cy - d.h / 2}px;` +
+          `width:${d.w}px;height:${d.h}px;` +
+          `color:${d.color};font-size:${d.fontSize};` +
+          `font-weight:${d.fontWeight};font-family:${d.fontFamily};`;
+        document.body.appendChild(el);
+        return el;
+      });
+
+      const engine = Engine.create({ gravity: { x: 0, y: 0.8 } });
+
+      const bodies = data.map(d => {
+        const b = Bodies.rectangle(d.cx, d.cy, d.w, d.h, {
+          restitution: 0.6,
+          frictionAir: 0.02,
+          friction: 0.3,
+        });
+        Body.setVelocity(b, { x: (Math.random() - 0.5) * 5, y: Math.random() * -2 });
+        Body.setAngularVelocity(b, (Math.random() - 0.5) * 0.1);
+        return b;
+      });
+
+      const ground = Bodies.rectangle(
+        window.innerWidth / 2, window.innerHeight + 40,
+        window.innerWidth * 3, 60,
+        { isStatic: true }
+      );
+
+      World.add(engine.world, [...bodies, ground]);
+      const runner = Runner.create();
+      Runner.run(runner, engine);
+
+      let raf;
+      (function tick() {
+        bodies.forEach((b, i) => {
+          const dx = b.position.x - data[i].cx;
+          const dy = b.position.y - data[i].cy;
+          els[i].style.transform = `translate(${dx}px,${dy}px) rotate(${b.angle}rad)`;
+        });
+        raf = requestAnimationFrame(tick);
+      })();
+
+      setTimeout(() => {
+        cancelAnimationFrame(raf);
+        Runner.stop(runner);
+        els.forEach(el => {
+          el.style.transition = 'opacity 0.4s ease';
+          el.style.opacity = '0';
+        });
+        setTimeout(() => {
+          els.forEach(el => el.remove());
+          h2.style.visibility = '';
+        }, 400);
+      }, 1200);
+    }
+  })();
+
+  // ── SVG Annotations (hero H1) ─────────────────────
+  (function () {
+    const NS = 'http://www.w3.org/2000/svg';
+    const COLOR = '#3b7ff5';
+
+    function makeSvg(w, h) {
+      const s = document.createElementNS(NS, 'svg');
+      s.setAttribute('width', w);
+      s.setAttribute('height', h);
+      s.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      s.setAttribute('fill', 'none');
+      s.style.cssText = 'position:absolute;pointer-events:none;z-index:10;overflow:visible;';
+      return s;
+    }
+
+    function makePath(d, delay) {
+      const p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', d);
+      p.setAttribute('stroke', COLOR);
+      p.setAttribute('stroke-width', '2.5');
+      p.setAttribute('fill', 'none');
+      p.setAttribute('stroke-linecap', 'round');
+      p.setAttribute('stroke-linejoin', 'round');
+      p.style.strokeDasharray = '1000';
+      p.style.strokeDashoffset = '1000';
+      p._delay = delay || 0;
+      return p;
+    }
+
+    function wrapInline(el) {
+      const wrap = document.createElement('span');
+      wrap.style.cssText = 'position:relative;display:inline-block;';
+      el.parentNode.insertBefore(wrap, el);
+      wrap.appendChild(el);
+      return wrap;
+    }
+
+    // ── Ring around .hero-word ──────────────────────
+    const heroWord = document.querySelector('#hero-section .hero-word');
+    let ringPath = null;
+
+    if (heroWord) {
+      const wrap = wrapInline(heroWord);
+
+      requestAnimationFrame(() => {
+        const tw = wrap.offsetWidth;
+        const th = wrap.offsetHeight;
+        const px = 14, py = 10;
+        const W = tw + px * 2;
+        const H = th + py * 2;
+
+        const svg = makeSvg(W, H);
+        svg.style.left = `-${px}px`;
+        svg.style.top  = `-${py}px`;
+        svg.style.transform = 'rotate(-5deg)';
+        svg.style.transformOrigin = '50% 50%';
+
+        // Wobbly hand-drawn ellipse path
+        const cx = W / 2, cy = H / 2;
+        const rx = W / 2 - 1, ry = H / 2 - 1;
+        const k = 0.552;
+        const d = [
+          `M ${cx + 3} ${cy - ry - 1}`,
+          `C ${cx + rx * k + 4} ${cy - ry - 2}, ${cx + rx + 2} ${cy - ry * k - 2}, ${cx + rx + 1} ${cy + 1}`,
+          `C ${cx + rx + 2} ${cy + ry * k + 3}, ${cx + rx * k - 1} ${cy + ry + 2}, ${cx - 2} ${cy + ry + 1}`,
+          `C ${cx - rx * k - 3} ${cy + ry + 2}, ${cx - rx - 2} ${cy + ry * k - 1}, ${cx - rx - 1} ${cy - 1}`,
+          `C ${cx - rx - 1} ${cy - ry * k - 2}, ${cx - rx * k + 2} ${cy - ry - 2}, ${cx + 3} ${cy - ry - 1}`,
+          'Z'
+        ].join(' ');
+
+        ringPath = makePath(d, 0);
+        svg.appendChild(ringPath);
+        wrap.appendChild(svg);
+      });
+    }
+
+    // ── Wavy underline under "why" ──────────────────
+    const whySpan = Array.from(
+      document.querySelectorAll('#hero-section h1 span')
+    ).find(s => s.textContent.trim() === 'why');
+    let wavePath = null;
+
+    if (whySpan) {
+      const wrap = wrapInline(whySpan);
+
+      requestAnimationFrame(() => {
+        const tw = wrap.offsetWidth;
+        const W = tw + 12;
+        const H = 12;
+
+        const svg = makeSvg(W, H);
+        svg.style.left = '-6px';
+        svg.style.top  = `${wrap.offsetHeight + 2}px`;
+
+        // Wavy path
+        const amp = 2.5, segs = 3;
+        const segW = W / segs;
+        let d = `M 0 ${H / 2}`;
+        for (let i = 0; i < segs; i++) {
+          const x0 = i * segW;
+          d += ` C ${x0 + segW * 0.25} ${H / 2 - amp}, ${x0 + segW * 0.75} ${H / 2 + amp}, ${x0 + segW} ${H / 2}`;
+        }
+
+        wavePath = makePath(d, 200);
+        svg.appendChild(wavePath);
+        wrap.appendChild(svg);
+      });
+    }
+
+    // ── IntersectionObserver — trigger both ─────────
+    const heroSection = document.getElementById('hero-section');
+    if (!heroSection) return;
+
+    const obs = new IntersectionObserver(entries => {
+      if (!entries[0].isIntersecting) return;
+      obs.disconnect();
+
+      [ringPath, wavePath].forEach(path => {
+        if (!path) return;
+        setTimeout(() => {
+          path.style.transition = 'stroke-dashoffset 1s ease-out';
+          path.style.strokeDashoffset = '0';
+        }, path._delay);
+      });
+    }, { threshold: 0.5 });
+
+    obs.observe(heroSection);
+  })();
 </script>
 
 </body>
