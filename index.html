@@ -1411,7 +1411,6 @@
       top: 50%;
       left: 50%;
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.1);
       background: rgba(8,8,18,0.92);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
@@ -1421,8 +1420,64 @@
       -webkit-backface-visibility: hidden;
       padding: 28px;
       box-sizing: border-box;
-      overflow: hidden;
+      overflow: visible;
+      /* BorderGlow vars */
+      --edge-proximity: 0;
+      --cursor-angle: 45deg;
+      --edge-sensitivity: 25;
+      --color-sensitivity: calc(var(--edge-sensitivity) + 20);
+      --border-radius: 16px;
+      --glow-padding: 32px;
+      --cone-spread: 25;
+      --card-bg: rgba(8,8,18,0.92);
+      --fill-opacity: 0.4;
+      isolation: isolate;
+      border: 1px solid rgb(255 255 255 / 12%);
     }
+    .cs-card::before, .cs-card::after, .cs-card > .edge-light {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      transition: opacity 0.25s ease-out;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .cs-card:not(:hover)::before,
+    .cs-card:not(:hover)::after,
+    .cs-card:not(:hover) > .edge-light { opacity: 0; transition: opacity 0.75s ease-in-out; }
+    .cs-card::before {
+      border: 1px solid transparent;
+      background:
+        linear-gradient(var(--card-bg) 0 100%) padding-box,
+        var(--gradient-one,radial-gradient(at 80% 55%,#2d6be4 0px,transparent 50%)) border-box,
+        var(--gradient-two,radial-gradient(at 20% 80%,#60a5fa 0px,transparent 50%)) border-box,
+        var(--gradient-three,radial-gradient(at 50% 10%,#a855f7 0px,transparent 50%)) border-box,
+        linear-gradient(#2d6be4 0 100%) border-box;
+      opacity: calc((var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity)));
+      mask-image: conic-gradient(from var(--cursor-angle) at center, black calc(var(--cone-spread) * 1%), transparent calc((var(--cone-spread) + 15) * 1%), transparent calc((100 - var(--cone-spread) - 15) * 1%), black calc((100 - var(--cone-spread)) * 1%));
+    }
+    .cs-card > .edge-light {
+      inset: calc(var(--glow-padding) * -1);
+      z-index: 2;
+      mask-image: conic-gradient(from var(--cursor-angle) at center, black 2.5%, transparent 10%, transparent 90%, black 97.5%);
+      opacity: calc((var(--edge-proximity) - var(--edge-sensitivity)) / (100 - var(--edge-sensitivity)));
+      mix-blend-mode: plus-lighter;
+    }
+    .cs-card > .edge-light::before {
+      content: "";
+      position: absolute;
+      inset: var(--glow-padding);
+      border-radius: inherit;
+      box-shadow:
+        inset 0 0 0 1px hsl(220deg 80% 60% / 80%),
+        inset 0 0 8px 0 hsl(220deg 80% 60% / 50%),
+        inset 0 0 20px 2px hsl(220deg 80% 60% / 25%),
+        0 0 8px 0 hsl(220deg 80% 60% / 50%),
+        0 0 20px 2px hsl(220deg 80% 60% / 25%),
+        0 0 40px 4px hsl(220deg 80% 60% / 15%);
+    }
+    .cs-card-inner { position: relative; z-index: 1; }
     @media (max-width: 768px) {
       .card-swap-container { transform: scale(0.75) translate(25%, 25%); }
     }
@@ -1567,11 +1622,16 @@
     </div>
   </div>
 
+  <!-- Bottom fade + blur transition -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:280px;background:linear-gradient(to bottom,transparent 0%,rgba(0,0,8,0.5) 35%,rgba(0,0,4,0.85) 65%,#000 100%);pointer-events:none;z-index:10;"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:120px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,0.8) 50%,black 100%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,0.8) 50%,black 100%);pointer-events:none;z-index:9;"></div>
 
 </section>
 
 <!-- ── FEATURES ────────────────────────────────────── -->
-<section id="features" data-inner style="position:relative;z-index:10;background:#000;overflow:hidden;">
+<section id="features" data-inner style="position:relative;z-index:10;background:#000;overflow:visible;">
+  <!-- Top fade from hero -->
+  <div style="position:absolute;top:-60px;left:0;right:0;height:120px;background:linear-gradient(to bottom,#000 0%,transparent 100%);pointer-events:none;z-index:5;"></div>
   <div style="position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:140px 24px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
 
     <!-- Left: text -->
@@ -1756,7 +1816,7 @@
         <div class="card-swap-container" id="card-swap-wrap">
 
           <!-- Card 0: Morning Brief -->
-          <div class="cs-card" id="cs-card-0">
+          <div class="cs-card" id="cs-card-0"><span class="edge-light"></span>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
               <div>
                 <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:4px;">Stockpilo AI</div>
@@ -1786,7 +1846,7 @@
           </div>
 
           <!-- Card 1: Top Movers -->
-          <div class="cs-card" id="cs-card-1">
+          <div class="cs-card" id="cs-card-1"><span class="edge-light"></span>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
               <div>
                 <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:4px;">Today's Movers</div>
@@ -1827,7 +1887,7 @@
           </div>
 
           <!-- Card 2: AI Insight -->
-          <div class="cs-card" id="cs-card-2">
+          <div class="cs-card" id="cs-card-2"><span class="edge-light"></span>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
               <div>
                 <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:4px;">AI Insight</div>
@@ -1939,131 +1999,94 @@
   <div style="position:absolute;bottom:0;left:0;width:100%;height:1px;background:radial-gradient(50% 50% at 50% 50%,rgba(255,255,255,.2) 0%,rgba(255,255,255,0) 100%);"></div>
 </section>
 <!-- ── TESTIMONIALS ───────────────────────────────── -->
-<section id="testimonials" style="position:relative;z-index:10;background:#000;padding:120px 48px;overflow:hidden;">
-  <div style="max-width:1160px;margin:0 auto;">
-    <div class="tst-grid" id="tst-root">
+<section id="testimonials" style="position:relative;z-index:10;background:#000;padding:100px 0;overflow:hidden;">
+  <div style="max-width:1100px;margin:0 auto;padding:0 48px 56px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="#2d6be4"><rect x="0" y="2" width="7" height="2" rx="1"/><rect x="0" y="6" width="5" height="2" rx="1"/><rect x="0" y="10" width="7" height="2" rx="1"/></svg>
+    </div>
+    <h2 style="font-family:'Geist',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-.03em;color:#fff;margin:0 0 12px;">Why investors are switching</h2>
+    <p style="font-family:'Geist',sans-serif;font-size:16px;color:rgba(255,255,255,.45);margin:0;">2,000+ investors already made the move. No noise — just clarity.</p>
+  </div>
 
-      <!-- Left: heading + dots -->
-      <div class="tst-left tst-fade" style="display:flex;flex-direction:column;justify-content:center;gap:28px;">
+  <!-- Row 1 — scrolls left -->
+  <div class="tst-row-wrap">
+    <div class="tst-row" id="tst-row-1"></div>
+  </div>
 
-        <div style="display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:999px;background:rgba(45,107,228,.1);border:1px solid rgba(45,107,228,.2);width:fit-content;">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="#2d6be4"><path d="M6 1L7.3 4.3H11L8.4 6.2L9.4 9.7L6 7.7L2.6 9.7L3.6 6.2L1 4.3H4.7L6 1Z"/></svg>
-          <span style="font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.05em;">Trusted by investors</span>
-        </div>
+  <!-- Row 2 — scrolls right -->
+  <div class="tst-row-wrap" style="margin-top:16px;">
+    <div class="tst-row tst-row-rev" id="tst-row-2"></div>
+  </div>
+</section>
 
-        <h2 style="font-family:'Geist',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-.03em;line-height:1.1;color:#fff;margin:0;">
-          Loved by the<br>community
-        </h2>
+<style>
+  .tst-row-wrap {
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  .tst-row {
+    display: flex;
+    gap: 16px;
+    width: max-content;
+    animation: tstScroll 40s linear infinite;
+  }
+  .tst-row-rev { animation: tstScrollRev 40s linear infinite; }
+  .tst-row:hover, .tst-row-rev:hover { animation-play-state: paused; }
+  @keyframes tstScroll    { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes tstScrollRev { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+  .tst-mcard {
+    flex-shrink: 0;
+    width: 320px;
+    background: rgba(10,12,20,.85);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    cursor: default;
+    transition: border-color .2s;
+  }
+  .tst-mcard:hover { border-color: rgba(255,255,255,.18); }
+  .tst-mquote { font-family: 'Geist',sans-serif; font-size: 14px; color: rgba(255,255,255,.8); line-height: 1.65; flex: 1; }
+  .tst-mfooter { display: flex; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.06); }
+  .tst-mavatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,.1); flex-shrink: 0; }
+  .tst-mavatar-placeholder { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Geist',sans-serif; font-weight: 700; font-size: 14px; color: #fff; flex-shrink: 0; }
+  .tst-mname { font-family: 'Geist',sans-serif; font-size: 13px; font-weight: 700; color: #fff; }
+  .tst-mrole { font-family: 'Geist',sans-serif; font-size: 11px; color: rgba(255,255,255,.4); margin-top: 1px; }
+</style>
 
-        <p style="font-size:16px;color:var(--sub);line-height:1.7;max-width:400px;font-family:'Geist',sans-serif;margin:0;">
-          Don't just take our word for it. See what investors have to say about Stockpilo.
-        </p>
-
-        <!-- Dot navigation -->
-        <div style="display:flex;align-items:center;gap:10px;padding-top:8px;" id="tst-dots"></div>
-      </div>
-
-      <!-- Right: rotating cards -->
-      <div class="tst-right tst-fade" style="position:relative;min-height:380px;">
-
-        <!-- Decorative corners -->
-        <div style="position:absolute;bottom:-20px;left:-20px;width:80px;height:80px;border-radius:14px;background:rgba(45,107,228,.05);pointer-events:none;"></div>
-        <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:14px;background:rgba(45,107,228,.05);pointer-events:none;"></div>
-
-        <div id="tst-cards" style="position:relative;width:100%;height:100%;"></div>
-      </div>
-
+<!-- ── LOGO LOOP ───────────────────────────────────── -->
+<section style="background:#000;padding:48px 0 64px;overflow:hidden;">
+  <p style="text-align:center;font-family:'Geist',sans-serif;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin:0 0 32px;">Used by investors at</p>
+  <div class="logoloop logoloop--horizontal logoloop--fade" id="logo-loop-wrap" style="--logoloop-fadeColor:#000;" aria-label="Partner platforms">
+    <div class="logoloop__track" id="logo-loop-track">
+      <ul class="logoloop__list" id="logo-loop-seq" style="--logoloop-gap:56px;--logoloop-logoHeight:28px;">
+        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/bloomberg.svg" alt="Bloomberg" style="filter:invert(1);opacity:0.45;"></li>
+        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/yahoo.svg" alt="Yahoo Finance" style="filter:invert(1);opacity:0.45;"></li>
+        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/tradingview.svg" alt="TradingView" style="filter:invert(1);opacity:0.45;"></li>
+        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/reuters.svg" alt="Reuters" style="filter:invert(1);opacity:0.45;"></li>
+        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/wsj.svg" alt="WSJ" style="filter:invert(1);opacity:0.45;"></li>
+        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/robinhood.svg" alt="Robinhood" style="filter:invert(1);opacity:0.45;"></li>
+        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/coinbase.svg" alt="Coinbase" style="filter:invert(1);opacity:0.45;"></li>
+        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/ft.svg" alt="Financial Times" style="filter:invert(1);opacity:0.45;"></li>
+      </ul>
     </div>
   </div>
 </section>
 
 <style>
-  .tst-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 64px;
-    align-items: center;
+  .logoloop { position:relative; }
+  .logoloop__track { display:flex; width:max-content; will-change:transform; user-select:none; }
+  .logoloop__list { display:flex; align-items:center; list-style:none; padding:0; margin:0; }
+  .logoloop__item { flex:0 0 auto; margin-right:var(--logoloop-gap,32px); }
+  .logoloop__item img { height:var(--logoloop-logoHeight,28px); width:auto; display:block; object-fit:contain; }
+  .logoloop--fade::before, .logoloop--fade::after {
+    content:''; position:absolute; top:0; bottom:0; width:clamp(24px,8%,120px); pointer-events:none; z-index:10;
   }
-  @media (max-width: 768px) {
-    .tst-grid { grid-template-columns: 1fr; gap: 40px; }
-    .tst-right { min-height: 340px !important; }
-    section#testimonials { padding: 80px 24px !important; }
-  }
-  .tst-fade {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-  .tst-fade.tst-in { opacity: 1; transform: translateY(0); }
-  .tst-left.tst-in  { transition-delay: 0s; }
-  .tst-right.tst-in { transition-delay: 0.15s; }
-
-  .tst-card {
-    position: absolute;
-    inset: 0;
-    background: rgba(10,10,16,.9);
-    border: 1px solid rgba(255,255,255,.09);
-    border-radius: 20px;
-    padding: 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    box-shadow: 0 24px 64px rgba(0,0,0,.5);
-    opacity: 0;
-    transform: translateX(60px) scale(0.96);
-    transition: opacity 0.5s cubic-bezier(.22,1,.36,1), transform 0.5s cubic-bezier(.22,1,.36,1);
-    pointer-events: none;
-  }
-  .tst-card.tst-card-active {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-    pointer-events: auto;
-    z-index: 10;
-  }
-
-  .tst-stars { display: flex; gap: 4px; margin-bottom: 20px; }
-  .tst-star { width: 16px; height: 16px; color: #f59e0b; fill: #f59e0b; }
-
-  .tst-quote-icon {
-    opacity: 0.15;
-    margin-bottom: 6px;
-  }
-  .tst-content {
-    font-family: 'Geist', sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--text);
-    line-height: 1.7;
-    flex: 1;
-    margin-bottom: 24px;
-  }
-  .tst-sep {
-    height: 1px;
-    background: rgba(255,255,255,.07);
-    margin-bottom: 20px;
-  }
-  .tst-author { display: flex; align-items: center; gap: 14px; }
-  .tst-avatar {
-    width: 46px; height: 46px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(255,255,255,.1);
-    flex-shrink: 0;
-  }
-  .tst-name { font-size: 14px; font-weight: 700; color: #fff; font-family: 'Geist', sans-serif; }
-  .tst-role { font-size: 12px; color: var(--sub); font-family: 'Geist', sans-serif; margin-top: 2px; }
-
-  .tst-dot {
-    height: 8px;
-    border-radius: 999px;
-    border: none;
-    cursor: pointer;
-    background: rgba(255,255,255,.2);
-    transition: width .3s ease, background .3s ease;
-    width: 8px;
-    padding: 0;
-  }
-  .tst-dot.active { width: 32px; background: var(--accent); }
+  .logoloop--fade::before { left:0; background:linear-gradient(to right,var(--logoloop-fadeColor,#000) 0%,transparent 100%); }
+  .logoloop--fade::after  { right:0; background:linear-gradient(to left,var(--logoloop-fadeColor,#000) 0%,transparent 100%); }
 </style>
 
 <!-- ── PRICING ─────────────────────────────────────── -->
@@ -2553,20 +2576,16 @@
     function type(text, speed, cb) {
       let i = 0;
       (function tick() {
-        if (i <= text.length) {
-          textEl.textContent = text.slice(0, i++);
-          setTimeout(tick, speed);
-        } else cb && cb();
+        if (i <= text.length) { textEl.textContent = text.slice(0, i++); setTimeout(tick, speed); }
+        else if (cb) cb();
       })();
     }
 
     function erase(speed, cb) {
       (function tick() {
         const cur = textEl.textContent;
-        if (cur.length > 0) {
-          textEl.textContent = cur.slice(0, -1);
-          setTimeout(tick, speed);
-        } else cb && cb();
+        if (cur.length > 0) { textEl.textContent = cur.slice(0, -1); setTimeout(tick, speed); }
+        else if (cb) cb();
       })();
     }
 
@@ -2574,12 +2593,11 @@
       if (entry.isIntersecting && !played) {
         played = true;
         io.disconnect();
-        // Type part 1 → pause → erase fast → type part 2 → hide cursor
         type(part1, 40, () => {
           setTimeout(() => {
             erase(18, () => {
               type(part2, 35, () => {
-                setTimeout(() => cursor.classList.add('done'), 800);
+                setTimeout(() => { if (cursor) cursor.classList.add('done'); }, 800);
                 setTimeout(() => {
                   const tag = document.getElementById('about-tagline');
                   if (tag) { tag.style.opacity = '1'; tag.style.transform = 'translateY(0)'; }
@@ -2863,115 +2881,45 @@
     init();
   })();
 
-  // ── Animated Testimonials ──────────────────────────
+  // ── Testimonials marquee ───────────────────────────
   (function() {
     const TESTIMONIALS = [
-      {
-        name: 'James K.',
-        role: 'Retail investor',
-        company: '5 years experience',
-        content: 'I used to spend an hour every morning reading market news. Now I get the same picture in 5 minutes with Stockpilo\'s brief. The AI context is exactly what I was missing.',
-        rating: 5,
-        avatar: 'https://i.pravatar.cc/80?img=11',
-      },
-      {
-        name: 'Sara M.',
-        role: 'Day trader',
-        company: 'London',
-        content: 'I switched from Trading212 and Robinhood. Stockpilo actually tells me why things are moving — not just that they moved. That context is the bit that makes it click.',
-        rating: 5,
-        avatar: 'https://i.pravatar.cc/80?img=32',
-      },
-      {
-        name: 'Alex R.',
-        role: 'Self-directed investor',
-        company: 'Berlin',
-        content: 'Premium feel without the Wall Street stuffiness. It respects that I\'m a beginner but doesn\'t talk down to me. The portfolio tracker alone is worth it.',
-        rating: 5,
-        avatar: 'https://i.pravatar.cc/80?img=47',
-      },
-      {
-        name: 'Nina P.',
-        role: 'Software engineer',
-        company: 'Side investor',
-        content: 'I don\'t have time to watch the markets all day. Stockpilo\'s morning brief and smart alerts keep me informed without the noise. Exactly what I needed.',
-        rating: 5,
-        avatar: 'https://i.pravatar.cc/80?img=56',
-      },
+      { name:'James K.', role:'Retail investor · 5 yrs', avatar:'https://i.pravatar.cc/80?img=11', content:'I used to spend an hour every morning reading market news. Now I get the same picture in 5 minutes. The AI context is exactly what I was missing.' },
+      { name:'Sara M.', role:'Day trader · London', avatar:'https://i.pravatar.cc/80?img=32', content:'Stockpilo actually tells me why things are moving — not just that they moved. That context is the bit that makes it click.' },
+      { name:'Alex R.', role:'Self-directed investor · Berlin', avatar:'https://i.pravatar.cc/80?img=47', content:'Premium feel without the Wall Street stuffiness. It respects that I\'m a beginner but doesn\'t talk down to me.' },
+      { name:'Nina P.', role:'Software engineer · Side investor', avatar:'https://i.pravatar.cc/80?img=56', content:'I don\'t have time to watch the markets all day. Stockpilo\'s morning brief keeps me informed without the noise.' },
+      { name:'Tom W.', role:'Swing trader · New York', avatar:'https://i.pravatar.cc/80?img=15', content:'Finally a tool that combines portfolio tracking with real-time AI reasoning. I\'ve tried six others — this is the one I kept.' },
+      { name:'Lena K.', role:'Long-term investor · Helsinki', avatar:'https://i.pravatar.cc/80?img=25', content:'The earnings calendar with AI context is a game changer. I know what to watch for before market open every single day.' },
+      { name:'Marco D.', role:'Portfolio manager · Milan', avatar:'https://i.pravatar.cc/80?img=53', content:'Clean UI, fast data, smart alerts. Stockpilo cut my daily research time in half. The watchlist is exactly what a busy investor needs.' },
+      { name:'Aisha B.', role:'First-time investor · Dubai', avatar:'https://i.pravatar.cc/80?img=44', content:'As someone new to investing, Stockpilo makes complex market moves understandable. I actually know why my stocks go up or down now.' },
     ];
 
-    const cardsEl = document.getElementById('tst-cards');
-    const dotsEl  = document.getElementById('tst-dots');
-    const root    = document.getElementById('tst-root');
-    if (!cardsEl || !dotsEl || !root) return;
-
-    let active = 0;
-    let timer  = null;
-
-    // Build star SVG
-    function stars(n) {
-      return Array.from({length:n}, () =>
-        `<svg class="tst-star" viewBox="0 0 20 20"><path d="M10 1L12.4 7.3H19.2L13.8 11.2L15.8 17.6L10 13.8L4.2 17.6L6.2 11.2L0.8 7.3H7.6L10 1Z"/></svg>`
-      ).join('');
-    }
-
-    // Build cards
-    TESTIMONIALS.forEach((t, i) => {
-      const card = document.createElement('div');
-      card.className = 'tst-card' + (i === 0 ? ' tst-card-active' : '');
-      card.style.zIndex = i === 0 ? '10' : '0';
-      card.innerHTML = `
-        <div class="tst-stars">${stars(t.rating)}</div>
-        <svg class="tst-quote-icon" width="32" height="32" viewBox="0 0 32 32" fill="white"><path d="M10 8C6.7 8 4 10.7 4 14v10h10V14H7.3C7.3 12.2 8.5 11 10 11V8zm14 0c-3.3 0-6 2.7-6 6v10h10V14h-6.7c0-1.8 1.2-3 2.7-3V8z"/></svg>
-        <p class="tst-content">"${t.content}"</p>
-        <div class="tst-sep"></div>
-        <div class="tst-author">
-          <img class="tst-avatar" src="${t.avatar}" alt="${t.name}" loading="lazy">
+    function makeCard(t) {
+      return `<div class="tst-mcard">
+        <p class="tst-mquote">"${t.content}"</p>
+        <div class="tst-mfooter">
+          <img class="tst-mavatar" src="${t.avatar}" alt="${t.name}" loading="lazy">
           <div>
-            <div class="tst-name">${t.name}</div>
-            <div class="tst-role">${t.role}, ${t.company}</div>
+            <div class="tst-mname">${t.name}</div>
+            <div class="tst-mrole">${t.role}</div>
           </div>
         </div>
-      `;
-      cardsEl.appendChild(card);
-    });
-
-    // Build dots
-    TESTIMONIALS.forEach((_, i) => {
-      const dot = document.createElement('button');
-      dot.className = 'tst-dot' + (i === 0 ? ' active' : '');
-      dot.setAttribute('aria-label', `Testimonial ${i+1}`);
-      dot.addEventListener('click', () => { goTo(i); resetTimer(); });
-      dotsEl.appendChild(dot);
-    });
-
-    function goTo(idx) {
-      const cards = cardsEl.querySelectorAll('.tst-card');
-      const dots  = dotsEl.querySelectorAll('.tst-dot');
-      cards[active].classList.remove('tst-card-active');
-      cards[active].style.zIndex = '0';
-      dots[active].classList.remove('active');
-      active = idx;
-      cards[active].classList.add('tst-card-active');
-      cards[active].style.zIndex = '10';
-      dots[active].classList.add('active');
+      </div>`;
     }
 
-    function resetTimer() {
-      clearInterval(timer);
-      timer = setInterval(() => goTo((active + 1) % TESTIMONIALS.length), 6000);
-    }
-    resetTimer();
+    const row1 = document.getElementById('tst-row-1');
+    const row2 = document.getElementById('tst-row-2');
+    if (!row1 || !row2) return;
 
-    // Scroll reveal
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (!e.isIntersecting) return;
-        root.querySelectorAll('.tst-fade').forEach(el => el.classList.add('tst-in'));
-        io.disconnect();
-      });
-    }, { threshold: 0.15 });
-    io.observe(root);
+    const half = Math.ceil(TESTIMONIALS.length / 2);
+    const group1 = TESTIMONIALS.slice(0, half);
+    const group2 = TESTIMONIALS.slice(half);
+
+    // Duplicate for seamless loop
+    const html1 = [...group1, ...group1].map(makeCard).join('');
+    const html2 = [...group2, ...group2].map(makeCard).join('');
+    row1.innerHTML = html1;
+    row2.innerHTML = html2;
   })();
 
   // ── About section timeline reveal ─────────────────
@@ -3517,6 +3465,82 @@ gl_FragColor=vec4(r,g,b,a);}`;
       requestAnimationFrame(draw);
     }
     requestAnimationFrame(draw);
+  })();
+
+  // ── BorderGlow on cs-cards ─────────────────────────
+  (function() {
+    document.querySelectorAll('.cs-card').forEach(card => {
+      card.addEventListener('pointermove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const cx = rect.width / 2, cy = rect.height / 2;
+        const dx = x - cx, dy = y - cy;
+        // edge proximity
+        const kx = dx !== 0 ? cx / Math.abs(dx) : Infinity;
+        const ky = dy !== 0 ? cy / Math.abs(dy) : Infinity;
+        const edge = Math.min(Math.max(1 / Math.min(kx, ky), 0), 1) * 100;
+        // cursor angle
+        let angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+        if (angle < 0) angle += 360;
+        card.style.setProperty('--edge-proximity', edge.toFixed(2));
+        card.style.setProperty('--cursor-angle', angle.toFixed(2) + 'deg');
+      });
+    });
+  })();
+
+  // ── LogoLoop ───────────────────────────────────────
+  (function() {
+    const track = document.getElementById('logo-loop-track');
+    const seq   = document.getElementById('logo-loop-seq');
+    if (!track || !seq) return;
+
+    // Duplicate sequence for seamless loop
+    let copies = 0;
+    function fillTrack() {
+      const wrap = track.parentElement;
+      const containerW = wrap ? wrap.clientWidth : window.innerWidth;
+      const seqW = seq.scrollWidth;
+      if (seqW === 0) return;
+      const needed = Math.ceil(containerW / seqW) + 2;
+      while (copies < needed) {
+        const clone = seq.cloneNode(true);
+        clone.removeAttribute('id');
+        clone.setAttribute('aria-hidden', 'true');
+        track.appendChild(clone);
+        copies++;
+      }
+    }
+
+    // Wait for images then fill
+    const imgs = seq.querySelectorAll('img');
+    let loaded = 0;
+    const onLoad = () => { if (++loaded >= imgs.length) fillTrack(); };
+    imgs.forEach(img => {
+      if (img.complete) onLoad();
+      else { img.addEventListener('load', onLoad); img.addEventListener('error', onLoad); }
+    });
+    if (imgs.length === 0) fillTrack();
+
+    const SPEED = 80; // px/s
+    let offset = 0, last = null, paused = false;
+
+    track.addEventListener('mouseenter', () => paused = true);
+    track.addEventListener('mouseleave', () => paused = false);
+
+    (function loop(ts) {
+      if (last !== null && !paused) {
+        const dt = (ts - last) / 1000;
+        offset += SPEED * dt;
+        const seqW = seq.scrollWidth;
+        if (seqW > 0) offset = offset % seqW;
+        track.style.transform = `translate3d(${-offset}px,0,0)`;
+      }
+      last = ts;
+      requestAnimationFrame(loop);
+    })(0);
+
+    window.addEventListener('resize', () => { copies = 0; track.querySelectorAll('[aria-hidden]').forEach(e=>e.remove()); fillTrack(); });
   })();
 
   // ── CardSwap ───────────────────────────────────────
