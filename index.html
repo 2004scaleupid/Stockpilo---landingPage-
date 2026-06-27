@@ -1641,7 +1641,7 @@
       <a href="/faqs.html" class="mobile-nav-link">FAQs</a>
       <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;padding:0 4px;">
         <a href="#" class="header-btn-outline" style="width:100%;justify-content:center;">Sign In</a>
-        <a href="#" class="header-btn-solid" style="width:100%;justify-content:center;">Get Started</a>
+        <a href="https://www.stockpiloapp.com/auth" class="header-btn-solid" style="width:100%;justify-content:center;">Get Started</a>
       </div>
     </div>
   </div>
@@ -2154,36 +2154,45 @@
   .tst-mrole { font-family: 'Geist',sans-serif; font-size: 11px; color: rgba(255,255,255,.4); margin-top: 1px; }
 </style>
 
-<!-- ── LOGO LOOP ───────────────────────────────────── -->
-<section style="background:#000;padding:48px 0 64px;overflow:hidden;">
+<!-- ── LOGO CLOUD (efferd/logo-cloud-1 adapted) ──────── -->
+<section style="background:#000;padding:56px 24px 72px;">
   <p style="text-align:center;font-family:'Geist',sans-serif;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin:0 0 32px;">Used by investors at</p>
-  <div class="logoloop logoloop--horizontal logoloop--fade" id="logo-loop-wrap" style="--logoloop-fadeColor:#000;" aria-label="Partner platforms">
-    <div class="logoloop__track" id="logo-loop-track">
-      <ul class="logoloop__list" id="logo-loop-seq" style="--logoloop-gap:56px;--logoloop-logoHeight:28px;">
-        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/bloomberg.svg" alt="Bloomberg" style="filter:invert(1);opacity:0.45;"></li>
-        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/yahoo.svg" alt="Yahoo Finance" style="filter:invert(1);opacity:0.45;"></li>
-        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/tradingview.svg" alt="TradingView" style="filter:invert(1);opacity:0.45;"></li>
-        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/reuters.svg" alt="Reuters" style="filter:invert(1);opacity:0.45;"></li>
-        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/wsj.svg" alt="WSJ" style="filter:invert(1);opacity:0.45;"></li>
-        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/robinhood.svg" alt="Robinhood" style="filter:invert(1);opacity:0.45;"></li>
-        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/coinbase.svg" alt="Coinbase" style="filter:invert(1);opacity:0.45;"></li>
-        <li class="logoloop__item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/ft.svg" alt="Financial Times" style="filter:invert(1);opacity:0.45;"></li>
-      </ul>
-    </div>
+
+  <div class="lc-grid">
+    <div class="lc-cell"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/tradingview.svg" alt="TradingView" class="lc-img"><span class="lc-name">TradingView</span></div>
+    <div class="lc-cell"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/robinhood.svg" alt="Robinhood" class="lc-img"><span class="lc-name">Robinhood</span></div>
+    <div class="lc-cell"><span class="lc-initial">L</span><span class="lc-name">Lightyear</span></div>
+    <div class="lc-cell"><span class="lc-initial">F</span><span class="lc-name">Fey</span></div>
+    <div class="lc-cell"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/coinbase.svg" alt="Coinbase" class="lc-img"><span class="lc-name">Coinbase</span></div>
+    <div class="lc-cell"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/revolut.svg" alt="Revolut" class="lc-img"><span class="lc-name">Revolut</span></div>
+    <div class="lc-cell"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/etoro.svg" alt="eToro" class="lc-img"><span class="lc-name">eToro</span></div>
+    <div class="lc-cell"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/bloomberg.svg" alt="Bloomberg" class="lc-img"><span class="lc-name">Bloomberg</span></div>
   </div>
 </section>
 
 <style>
-  .logoloop { position:relative; }
-  .logoloop__track { display:flex; width:max-content; will-change:transform; user-select:none; }
-  .logoloop__list { display:flex; align-items:center; list-style:none; padding:0; margin:0; }
-  .logoloop__item { flex:0 0 auto; margin-right:var(--logoloop-gap,32px); }
-  .logoloop__item img { height:var(--logoloop-logoHeight,28px); width:auto; display:block; object-fit:contain; }
-  .logoloop--fade::before, .logoloop--fade::after {
-    content:''; position:absolute; top:0; bottom:0; width:clamp(24px,8%,120px); pointer-events:none; z-index:10;
+  .lc-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 640px;
+    margin: 0 auto;
+    gap: 1px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    overflow: hidden;
   }
-  .logoloop--fade::before { left:0; background:linear-gradient(to right,var(--logoloop-fadeColor,#000) 0%,transparent 100%); }
-  .logoloop--fade::after  { right:0; background:linear-gradient(to left,var(--logoloop-fadeColor,#000) 0%,transparent 100%); }
+  @media (min-width: 640px) { .lc-grid { grid-template-columns: repeat(4, 1fr); } }
+  .lc-cell {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 10px;
+    background: rgba(8,8,12,0.98);
+    padding: 28px 16px;
+  }
+  .lc-img { width: 28px; height: 28px; object-fit: contain; filter: invert(1); opacity: 0.45; display: block; }
+  .lc-initial { font-family:'Geist',sans-serif; font-size:22px; font-weight:800; color:rgba(255,255,255,0.4); line-height:1; }
+  .lc-name { font-family:'Geist',sans-serif; font-size:11px; font-weight:500; color:rgba(255,255,255,0.25); letter-spacing:.04em; }
 </style>
 
 <!-- ── PRICING ─────────────────────────────────────── -->
@@ -2790,8 +2799,26 @@
 
   setInterval(cycleHeroWord, 2200);
 
-  // ── Supabase + Stripe integration ──────────────────
+  // ── CTA redirect ────────────────────────────────────
   (function() {
+    const AUTH_URL = 'https://www.stockpiloapp.com/auth';
+    const ALL_IDS  = ['hero-cta', 'hero-cta-nav', 'btn-trial-pricing', 'btn-trial-fi', 'btn-pro-pricing'];
+
+    ALL_IDS.forEach(function(id) {
+      var btn = document.getElementById(id);
+      if (!btn) return;
+      btn.href = AUTH_URL;
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = AUTH_URL;
+      });
+    });
+  })();
+
+  // ── Supabase + Stripe integration (disabled) ────────
+  (function() {
+    return; // redirects now handled above
+
     if (typeof window.supabase === 'undefined') return;
 
     const SUPABASE_URL  = 'https://knurwbloofzchsblzwnr.supabase.co';
@@ -3541,11 +3568,17 @@ gl_FragColor=vec4(r,g,b,a);}`;
 
     function resize() {
       const cardRect = card.getBoundingClientRect();
+      const wrapRect = canvasWrap.getBoundingClientRect();
       W = cardRect.width  + OFFSET*2;
       H = cardRect.height + OFFSET*2;
       canvas.width  = W*dpr; canvas.height = H*dpr;
-      canvas.style.width  = W+'px';
-      canvas.style.height = H+'px';
+      canvas.style.width     = W+'px';
+      canvas.style.height    = H+'px';
+      canvas.style.position  = 'absolute';
+      canvas.style.transform = 'none';
+      // Align canvas so (OFFSET,OFFSET) lands exactly on card top-left
+      canvas.style.left = (cardRect.left - wrapRect.left - OFFSET) + 'px';
+      canvas.style.top  = (cardRect.top  - wrapRect.top  - OFFSET) + 'px';
     }
 
     new ResizeObserver(resize).observe(card);
