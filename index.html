@@ -1892,16 +1892,16 @@
 </style>
 
 <!-- ── SECTION WITH MOCKUP 1 ─────────────────────── -->
-<section class="swm-section" style="position:relative;padding:96px 0 192px;background:#000;overflow:hidden;">
+<section class="swm-section" style="position:relative;padding:160px 0 280px;background:#000;overflow:hidden;min-height:100vh;box-sizing:border-box;display:flex;align-items:center;">
   <div style="max-width:1220px;width:100%;padding:0 40px;margin:0 auto;position:relative;z-index:10;box-sizing:border-box;">
     <div class="swm-inner-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;width:100%;">
 
       <!-- Text -->
       <div class="swm-item" style="display:flex;flex-direction:column;gap:20px;max-width:500px;">
-        <h2 style="font-family:'Geist',sans-serif;font-size:clamp(28px,3.2vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.4;margin:0;display:flex;flex-wrap:nowrap;align-items:center;gap:0.3em;white-space:nowrap;">
-          <span id="rotating-word-wrap" style="display:inline-flex;align-items:center;overflow:hidden;background:var(--accent);border-radius:8px;padding:4px 16px 6px;transition:width 0.3s ease;" aria-live="polite">
+        <h2 style="font-family:'Geist',sans-serif;font-size:clamp(12px,3.1vw,42px);font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.5;margin:0;white-space:nowrap;">
+          <span id="rotating-word-wrap" style="display:inline-flex;align-items:center;justify-content:center;background:var(--accent);border-radius:8px;padding:3px 18px 5px;vertical-align:middle;" aria-live="polite">
             <span id="rotating-word" style="display:inline-flex;color:#fff;white-space:nowrap;"></span>
-          </span><span style="white-space:nowrap;"> delivered to you.</span>
+          </span><span> delivered to you.</span>
         </h2>
         <p id="rotating-sub" style="font-family:'Geist',sans-serif;font-size:15px;color:#868f97;line-height:1.74;margin:0;transition:opacity 0.3s ease;">
           Get a tailored brief directly in your dashboard — crafted by Stockpilo AI, spotlighting essential watchlist moves, earnings and macro signals for the week ahead.
@@ -2017,7 +2017,7 @@
 </section>
 
 <!-- ── SECTION WITH MOCKUP 2 (reversed) ──────────── -->
-<section class="swm-section" style="position:relative;padding:96px 0 192px;background:#000;overflow:hidden;">
+<section class="swm-section" style="position:relative;padding:160px 0 280px;background:#000;overflow:hidden;min-height:100vh;box-sizing:border-box;display:flex;align-items:center;">
 
   <div style="max-width:1220px;width:100%;padding:0 40px;margin:0 auto;position:relative;z-index:10;box-sizing:border-box;">
     <div class="swm-inner-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;width:100%;">
@@ -2154,46 +2154,6 @@
   .tst-mrole { font-family: 'Geist',sans-serif; font-size: 11px; color: rgba(255,255,255,.4); margin-top: 1px; }
 </style>
 
-<!-- ── LOGO CLOUD (efferd/logo-cloud-1 adapted) ──────── -->
-<section style="background:#000;padding:56px 24px 72px;">
-  <p style="text-align:center;font-family:'Geist',sans-serif;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin:0 0 32px;">Used by investors at</p>
-
-  <div class="lc-grid">
-    <div class="lc-cell"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/tradingview.svg" alt="TradingView" class="lc-img"><span class="lc-name">TradingView</span></div>
-    <div class="lc-cell"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/robinhood.svg" alt="Robinhood" class="lc-img"><span class="lc-name">Robinhood</span></div>
-    <div class="lc-cell"><span class="lc-initial">L</span><span class="lc-name">Lightyear</span></div>
-    <div class="lc-cell"><span class="lc-initial">F</span><span class="lc-name">Fey</span></div>
-    <div class="lc-cell"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/coinbase.svg" alt="Coinbase" class="lc-img"><span class="lc-name">Coinbase</span></div>
-    <div class="lc-cell"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/revolut.svg" alt="Revolut" class="lc-img"><span class="lc-name">Revolut</span></div>
-    <div class="lc-cell"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/etoro.svg" alt="eToro" class="lc-img"><span class="lc-name">eToro</span></div>
-    <div class="lc-cell"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/bloomberg.svg" alt="Bloomberg" class="lc-img"><span class="lc-name">Bloomberg</span></div>
-  </div>
-</section>
-
-<style>
-  .lc-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 640px;
-    margin: 0 auto;
-    gap: 1px;
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  @media (min-width: 640px) { .lc-grid { grid-template-columns: repeat(4, 1fr); } }
-  .lc-cell {
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 10px;
-    background: rgba(8,8,12,0.98);
-    padding: 28px 16px;
-  }
-  .lc-img { width: 28px; height: 28px; object-fit: contain; filter: invert(1); opacity: 0.45; display: block; }
-  .lc-initial { font-family:'Geist',sans-serif; font-size:22px; font-weight:800; color:rgba(255,255,255,0.4); line-height:1; }
-  .lc-name { font-family:'Geist',sans-serif; font-size:11px; font-weight:500; color:rgba(255,255,255,0.25); letter-spacing:.04em; }
-</style>
 
 <!-- ── PRICING ─────────────────────────────────────── -->
 <section id="pricing" class="plan-section">
@@ -3760,10 +3720,6 @@ gl_FragColor=vec4(r,g,b,a);}`;
     document.body.appendChild(rtRuler);
 
     function rtShow(text) {
-      // Measure new word width and expand box immediately
-      rtRuler.textContent = text;
-      const newW = rtRuler.offsetWidth + 32; // 16px padding each side
-      rtWrap.style.width = newW + 'px';
 
       const existingChars = Array.from(rtEl.children);
       existingChars.forEach((c, i) => {
@@ -3778,7 +3734,12 @@ gl_FragColor=vec4(r,g,b,a);}`;
         chars.forEach((ch, i) => {
           const s = document.createElement('span');
           s.className = 'rt-char';
-          s.textContent = ch;
+          if (ch === ' ') {
+            s.innerHTML = '&nbsp;';
+            s.style.minWidth = '0.28em';
+          } else {
+            s.textContent = ch;
+          }
           s.style.animation = `rtIn 0.4s cubic-bezier(.34,1.56,.64,1) ${(chars.length-1-i)*0.025}s both`;
           rtEl.appendChild(s);
         });
@@ -4624,6 +4585,5 @@ gl_FragColor=vec4(r,g,b,a);}`;
     obs.observe(heroSection);
   })();
 </script>
-
 </body>
 </html>
