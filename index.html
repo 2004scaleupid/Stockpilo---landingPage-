@@ -7,11 +7,11 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg:     #000000;
@@ -28,7 +28,7 @@
     body {
       background: transparent;
       color: var(--text);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
@@ -42,21 +42,6 @@
       opacity: 0.03;
       pointer-events: none;
       z-index: 9999;
-    }
-
-    /* Hero sparkle strip */
-    #sparkles-strip-wrap {
-      position: relative;
-      width: min(640px, 92vw);
-      height: 160px;
-      flex-shrink: 0;
-    }
-    #sparkles-strip {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
     }
 
     /* ── Shimmer text ───────────────────────────────── */
@@ -122,9 +107,35 @@
       background: transparent !important;
     }
 
+    /* ── Mission typewriter ─────────────────────────── */
+    .about-tt-cursor {
+      display: inline-block;
+      color: var(--accent);
+      font-weight: 300;
+      animation: cursorBlink 0.8s step-end infinite;
+      margin-left: 2px;
+    }
+    .about-tt-cursor.done { animation: none; opacity: 0; }
+    @keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── Footer logo typewriter ────────────────────── */
+    .footer-logo-letter { display: inline-block; opacity: 0; }
+    .footer-logo-letter.in { opacity: 1; }
+    .footer-logo-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: #e8f0fe;
+      margin-left: 1px;
+      vertical-align: middle;
+      animation: ftCursorBlink 0.7s step-end infinite;
+    }
+    .footer-logo-cursor.done { display: none; }
+    @keyframes ftCursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+
     /* ── Logo wordmark ─────────────────────────────── */
     .logo-wordmark {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
       font-style: normal;
       font-weight: 800;
       font-size: 22px;
@@ -177,7 +188,7 @@
 
     /* ── Typography ────────────────────────────────── */
     .display {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
       font-weight: 800;
       letter-spacing: -0.03em;
       line-height: 1.08;
@@ -188,10 +199,10 @@
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--accent);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
     }
     .hero-headline {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
       font-weight: 900;
       letter-spacing: -0.03em;
       line-height: 1.06;
@@ -203,21 +214,6 @@
       color: var(--accent);
     }
 
-    /* ── Sparkles / particles ──────────────────────── */
-    #sparkles-hero {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    /* Everything in the hero sits above the particles */
-    #sparkles-hero ~ * {
-      position: relative;
-      z-index: 1;
-    }
     /* Scroll transition: hero fade + next-section parallax */
     #hero-content {
       position: relative;
@@ -427,7 +423,7 @@
       transition: color 0.18s ease-out;
       cursor: pointer;
       letter-spacing: -0.01em;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -544,7 +540,7 @@
       justify-content: center;
       background: #fff;
       color: #000;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
       font-size: 15px;
       font-weight: 600;
       padding: 14px 32px;
@@ -561,7 +557,7 @@
     .fi-btn:focus-visible { outline: 2px solid rgba(255,255,255,.5); outline-offset: 3px; }
     /* Gradient title (bg-gradient-to-b from-foreground to-foreground/70) */
     .fi-title {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
       font-size: clamp(36px, 6vw, 72px);
       font-weight: 800;
       letter-spacing: -0.03em;
@@ -592,7 +588,7 @@
       justify-content: center;
       padding: 14px 36px;
       border-radius: 999px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
       font-size: 15px;
       font-weight: 600;
       color: #e8f0fe;
@@ -671,7 +667,7 @@
       font-size: 11px;
       font-weight: 600;
       letter-spacing: .04em;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
     }
     .disc-badge-free { background: rgba(107,140,186,.14); color: var(--sub); border: 1px solid rgba(107,140,186,.22); }
     .disc-badge-pro  { background: var(--accent); color: #fff; }
@@ -755,7 +751,7 @@
       border: none;
       cursor: pointer;
       transition: background 0.2s ease-out, color 0.2s ease-out;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
       display: flex;
       align-items: center;
       gap: 7px;
@@ -806,23 +802,23 @@
       border-radius: 999px;
       font-size: 10px; font-weight: 700; letter-spacing: .08em;
       text-transform: uppercase; color: var(--accent);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
     }
-    .plan-name  { font-size: 16px; font-weight: 600; color: #fff; font-family: 'Inter', sans-serif; margin-bottom: 6px; }
-    .plan-desc  { font-size: 13px; color: rgba(255,255,255,.4); line-height: 1.6; font-family: 'Inter', sans-serif; margin-bottom: 28px; }
+    .plan-name  { font-size: 16px; font-weight: 600; color: #fff; font-family: 'Geist', sans-serif; margin-bottom: 6px; }
+    .plan-desc  { font-size: 13px; color: rgba(255,255,255,.4); line-height: 1.6; font-family: 'Geist', sans-serif; margin-bottom: 28px; }
     .plan-price {
       font-size: clamp(28px, 4vw, 40px); font-weight: 800; color: #fff;
-      font-family: 'Inter', sans-serif; letter-spacing: -0.03em; line-height: 1;
+      font-family: 'Geist', sans-serif; letter-spacing: -0.03em; line-height: 1;
       margin-bottom: 28px;
     }
     .plan-price-sub { font-size: 15px; font-weight: 400; color: rgba(255,255,255,.4); letter-spacing: 0; }
     .plan-divider { height: 1px; background: rgba(255,255,255,.07); margin: 0 0 20px; }
-    .plan-what   { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.3); margin-bottom: 14px; font-family: 'Inter', sans-serif; }
+    .plan-what   { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.3); margin-bottom: 14px; font-family: 'Geist', sans-serif; }
     .plan-features { display: flex; flex-direction: column; gap: 10px; flex: 1; margin-bottom: 28px; }
     .plan-feat {
       display: flex; align-items: flex-start; gap: 9px;
       font-size: 13.5px; color: rgba(255,255,255,.65); line-height: 1.45;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
     }
     .plan-feat-check {
       flex-shrink: 0; margin-top: 1px;
@@ -832,7 +828,7 @@
     .plan-cta {
       display: inline-flex; align-items: center; gap: 7px;
       color: rgba(255,255,255,.7); font-size: 14px; font-weight: 500;
-      text-decoration: none; font-family: 'Inter', sans-serif;
+      text-decoration: none; font-family: 'Geist', sans-serif;
       transition: color 0.15s ease-out, gap 0.15s ease-out;
       margin-top: auto;
     }
@@ -841,7 +837,7 @@
       display: flex; align-items: center; justify-content: center; gap: 7px;
       background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14);
       color: #fff; font-size: 14px; font-weight: 600;
-      text-decoration: none; font-family: 'Inter', sans-serif;
+      text-decoration: none; font-family: 'Geist', sans-serif;
       padding: 12px 20px; border-radius: 8px; width: 100%;
       transition: background 0.15s ease-out, transform 0.15s ease-out;
       margin-top: auto;
@@ -957,6 +953,10 @@
       #about-h2 { font-size: clamp(24px, 7vw, 40px) !important; }
       #about-root > div:last-child { flex-direction: column !important; gap: 20px !important; }
 
+      /* Features */
+      #features > div { grid-template-columns: 1fr !important; gap: 48px !important; }
+      #features .reveal:last-child { justify-self: unset !important; max-width: 100% !important; }
+
       /* Footer */
       .footer-links-grid { grid-template-columns: repeat(2, 1fr) !important; margin-top: 20px !important; }
       .footer-grid { grid-template-columns: 1fr !important; }
@@ -1031,7 +1031,7 @@
       gap: 0;
     }
     .footer-tagline {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
       font-size: 14px;
       color: var(--sub);
       margin-top: 16px;
@@ -1047,7 +1047,7 @@
       .footer-links-grid { grid-template-columns: repeat(4, 1fr); margin-top: 0; }
     }
     .footer-section-label {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
       font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.1em;
@@ -1064,7 +1064,7 @@
       gap: 10px;
     }
     .footer-link {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Geist', sans-serif;
       font-size: 14px;
       color: var(--sub);
       text-decoration: none;
@@ -1095,10 +1095,165 @@
       filter: blur(0px);
       transform: translateY(0);
     }
+
+    /* ── Hero-3 block ──────────────────────────────────── */
+    .hero3-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      gap: 48px;
+    }
+    @media (min-width: 768px) {
+      .hero3-grid { grid-template-columns: 55fr 45fr; gap: 56px; }
+    }
+    .hero3-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 10px 4px 4px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.04);
+      border-radius: 4px;
+      text-decoration: none;
+      color: rgba(232,240,254,.6);
+      font-size: 12px;
+      font-family: 'Geist', sans-serif;
+      width: fit-content;
+      transition: background .15s ease-out, border-color .15s ease-out;
+    }
+    .hero3-badge:hover { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.18); }
+    .hero3-badge-pill {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 2px;
+      padding: 2px 7px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #e8f0fe;
+      letter-spacing: .07em;
+      font-family: 'Geist', monospace;
+    }
+    .hero3-badge-sep { display: block; width: 1px; height: 16px; background: rgba(255,255,255,.15); flex-shrink: 0; }
+    .hero3-h1 {
+      font-family: 'Geist', sans-serif;
+      font-weight: 500;
+      font-size: clamp(32px, 4.5vw, 52px);
+      color: #fff;
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+      margin: 0;
+    }
+    .hero3-h1 .hero-word { color: var(--accent); }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(232,240,254,.7);
+      text-decoration: none;
+      font-family: 'Geist', sans-serif;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,.25); color: #e8f0fe; background: rgba(255,255,255,.04); }
+    .hero3-screenshot-col {
+      position: relative;
+      display: none;
+    }
+    @media (min-width: 768px) {
+      .hero3-screenshot-col { display: block; }
+    }
+    .hero3-screenshot-glow {
+      position: absolute;
+      inset: -80px -20px 0;
+      background: radial-gradient(ellipse at center top, rgba(45,107,228,.14), transparent 70%);
+      filter: blur(40px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero3-screenshot-wrap {
+      position: relative;
+      z-index: 1;
+      margin-top: 24px;
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent 100%);
+      mask-image: linear-gradient(to bottom, #000 58%, transparent 100%);
+      animation: fadeUp 1s cubic-bezier(.16,1,.3,1) 0.15s both;
+    }
+    .hero3-screenshot-inner {
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(8,8,18,.95);
+      padding: 8px;
+      box-shadow: 0 32px 80px rgba(0,0,0,.75), inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+    .hero3-screenshot-inner img {
+      border-radius: 5px;
+      border: 1px solid rgba(255,255,255,.07);
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ── Floating logos ────────────────────────────────── */
+    .fl-logo {
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: rgba(20,20,28,0.85);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 8px 32px rgba(0,0,0,.5);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      will-change: transform, opacity;
+    }
+    .fl-logo img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      filter: invert(1) brightness(0.7);
+    }
+
+    /* ── CardSwap ──────────────────────────────────────── */
+    .card-swap-container {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      transform: translate(5%, 18%);
+      transform-origin: bottom right;
+      perspective: 900px;
+      overflow: visible;
+    }
+    .cs-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(8,8,18,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transform-style: preserve-3d;
+      will-change: transform;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      padding: 28px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    @media (max-width: 768px) {
+      .card-swap-container { transform: scale(0.75) translate(25%, 25%); }
+    }
   </style>
 </head>
 <body>
-
 <!-- ── Stars background ─────────────────────────────── -->
 <div id="stars-bg">
   <div id="stars-parallax">
@@ -1186,96 +1341,114 @@
   </defs>
 </svg>
 
-<!-- ── HERO ──────────────────────────────────────────── -->
-<section style="position:relative;z-index:10;background:#000;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:180px 24px 100px;text-align:center;overflow:hidden;">
+<!-- ── HERO (hero-3 layout) ───────────────────────────── -->
+<section id="hero-section" style="position:relative;z-index:10;background:#000;min-height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;">
 
-  <!-- Logo inside hero — scrolls away with page -->
-  <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"
-     style="position:absolute;top:82px;left:50%;transform:translateX(-50%);z-index:11;pointer-events:all;display:flex;justify-content:center;">
-    <img src="brand_assets/logo12-crop.png" alt="Stockpilo" style="height:41px;width:auto;filter:url(#rm-black);display:block;">
-  </a>
+  <!-- DarkVeil background -->
+  <canvas id="darkveil-hero" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0;"></canvas>
 
+  <!-- Main container -->
+  <div style="position:relative;z-index:1;width:100%;max-width:1060px;margin:0 auto;padding:100px 24px 80px;">
+    <div class="hero3-grid" id="hero-content">
 
-  <!-- Hero content wrapper — fades + drifts up on scroll (heroContentRef) -->
-  <div id="hero-content">
+      <!-- Left: text -->
+      <div style="display:flex;flex-direction:column;gap:22px;">
 
-    <!-- Headline -->
-    <h1 class="hero-headline anim-up d1" style="margin-bottom:0;max-width:900px;color:#fff;" aria-label="Invest smarter. Know why before you buy.">
-      Invest <span class="hero-word" aria-live="polite">smarter</span>.<br>Know <span style="color:#2d6be4;">why</span> before you buy.
-    </h1>
+        <!-- H1 -->
+        <h1 class="hero3-h1 anim-up d1" aria-label="Invest smarter. Know why before you buy.">
+          Invest <span class="hero-word" aria-live="polite">smarter</span>.<br>
+          Know <span style="color:#2d6be4;">why</span> before you buy.
+        </h1>
 
-    <!-- Sparkle strip below headline -->
-    <div id="sparkles-strip-wrap" aria-hidden="true">
-      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:75%;height:2px;background:linear-gradient(to right,transparent,rgba(45,107,228,.85),transparent);filter:blur(3px);pointer-events:none;"></div>
-      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:75%;height:1px;background:linear-gradient(to right,transparent,rgba(45,107,228,.9),transparent);pointer-events:none;"></div>
-      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:25%;height:5px;background:linear-gradient(to right,transparent,rgba(96,165,250,.95),transparent);filter:blur(3px);pointer-events:none;"></div>
-      <div id="sparkles-strip"></div>
-    </div>
+        <!-- Subtext -->
+        <p class="anim-up d2" style="font-size:clamp(14px,1.5vw,17px);color:rgba(255,255,255,.5);line-height:1.75;margin:0;max-width:440px;">
+          Investing is complex enough. Your tools shouldn't be. Track every stock you follow from one clean dashboard — powerful insights, zero noise.
+        </p>
 
-    <!-- Subtext -->
-    <p class="anim-up d2" style="font-size:20px;color:rgba(255,255,255,.58);max-width:540px;line-height:1.74;margin-bottom:48px;font-family:'Inter',sans-serif;">
-      Investing is complex enough. Your tools shouldn't be. Track every stock you follow from one clean dashboard — powerful insights, zero noise.
-    </p>
-
-    <!-- CTA -->
-    <div class="anim-up d3" style="display:flex;align-items:center;gap:14px;margin-bottom:28px;flex-wrap:wrap;justify-content:center;">
-      <a href="#" class="hover-btn" id="hero-cta">7-Day Free Trial</a>
-    </div>
-
-    <!-- Avatar social proof -->
-    <div class="anim-up d3" style="display:flex;justify-content:center;">
-      <div style="display:inline-flex;align-items:center;border-radius:999px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);padding:5px 12px 5px 6px;gap:0;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);">
-        <div style="display:flex;margin-right:8px;">
-          <img src="https://i.pravatar.cc/40?img=11" width="24" height="24" alt="" style="border-radius:50%;outline:2px solid #000;margin-right:-7px;display:block;object-fit:cover;">
-          <img src="https://i.pravatar.cc/40?img=32" width="24" height="24" alt="" style="border-radius:50%;outline:2px solid #000;margin-right:-7px;display:block;object-fit:cover;">
-          <img src="https://i.pravatar.cc/40?img=47" width="24" height="24" alt="" style="border-radius:50%;outline:2px solid #000;margin-right:-7px;display:block;object-fit:cover;">
-          <img src="https://i.pravatar.cc/40?img=56" width="24" height="24" alt="" style="border-radius:50%;outline:2px solid #000;display:block;object-fit:cover;">
+        <!-- CTAs -->
+        <div class="anim-up d3" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-top:4px;">
+          <a href="#" class="hover-btn" id="hero-cta">7-Day Free Trial</a>
+          <a href="#features" class="btn-ghost">View Features</a>
         </div>
-        <p style="margin:0;font-size:12px;color:var(--sub);font-family:'Inter',sans-serif;white-space:nowrap;">Trusted by <strong style="font-weight:600;color:var(--text);">2K+</strong> investors.</p>
+
       </div>
+
+      <!-- Right: dashboard screenshot -->
+      <div class="hero3-screenshot-col">
+        <div class="hero3-screenshot-glow"></div>
+        <div class="hero3-screenshot-wrap">
+          <div class="hero3-screenshot-inner">
+            <img src="https://storage.efferd.com/screen/dashboard-dark.webp" alt="Stockpilo dashboard" width="1920" height="1080" loading="eager">
+          </div>
+        </div>
+      </div>
+
     </div>
-
-  </div><!-- /#hero-content -->
-
-  <!-- ── TICKER TAPE — anchored to bottom of hero ── -->
-  <div id="scroll-next" style="position:absolute;bottom:0;left:0;width:100%;z-index:10;overflow:hidden;padding:11px 0;border-top:1px solid rgba(30,58,95,.15);border-bottom:1px solid rgba(30,58,95,.15);background:rgba(0,0,0,.2);backdrop-filter:blur(8px);">
-  <div class="ticker-track" style="display:flex;gap:56px;white-space:nowrap;width:max-content;">
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AAPL</span> <span style="color:var(--sub);opacity:.7;">$189.44</span> <span style="color:var(--green);font-weight:600;">▲ +2.3%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">TSLA</span> <span style="color:var(--sub);opacity:.7;">$173.12</span> <span style="color:var(--red);font-weight:600;">▼ −1.8%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">NVDA</span> <span style="color:var(--sub);opacity:.7;">$891.23</span> <span style="color:var(--green);font-weight:600;">▲ +8.2%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">META</span> <span style="color:var(--sub);opacity:.7;">$509.44</span> <span style="color:var(--red);font-weight:600;">▼ −0.6%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">MSFT</span> <span style="color:var(--sub);opacity:.7;">$415.80</span> <span style="color:var(--green);font-weight:600;">▲ +4.1%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMZN</span> <span style="color:var(--sub);opacity:.7;">$186.17</span> <span style="color:var(--green);font-weight:600;">▲ +1.9%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">GOOGL</span> <span style="color:var(--sub);opacity:.7;">$172.03</span> <span style="color:var(--red);font-weight:600;">▼ −0.3%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMD</span> <span style="color:var(--sub);opacity:.7;">$168.94</span> <span style="color:var(--green);font-weight:600;">▲ +3.7%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">SPY</span> <span style="color:var(--sub);opacity:.7;">$524.10</span> <span style="color:var(--green);font-weight:600;">▲ +1.1%</span></span>
-    <!-- duplicate for loop -->
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AAPL</span> <span style="color:var(--sub);opacity:.7;">$189.44</span> <span style="color:var(--green);font-weight:600;">▲ +2.3%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">TSLA</span> <span style="color:var(--sub);opacity:.7;">$173.12</span> <span style="color:var(--red);font-weight:600;">▼ −1.8%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">NVDA</span> <span style="color:var(--sub);opacity:.7;">$891.23</span> <span style="color:var(--green);font-weight:600;">▲ +8.2%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">META</span> <span style="color:var(--sub);opacity:.7;">$509.44</span> <span style="color:var(--red);font-weight:600;">▼ −0.6%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">MSFT</span> <span style="color:var(--sub);opacity:.7;">$415.80</span> <span style="color:var(--green);font-weight:600;">▲ +4.1%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMZN</span> <span style="color:var(--sub);opacity:.7;">$186.17</span> <span style="color:var(--green);font-weight:600;">▲ +1.9%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">GOOGL</span> <span style="color:var(--sub);opacity:.7;">$172.03</span> <span style="color:var(--red);font-weight:600;">▼ −0.3%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMD</span> <span style="color:var(--sub);opacity:.7;">$168.94</span> <span style="color:var(--green);font-weight:600;">▲ +3.7%</span></span>
-    <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">SPY</span> <span style="color:var(--sub);opacity:.7;">$524.10</span> <span style="color:var(--green);font-weight:600;">▲ +1.1%</span></span>
   </div>
-</div>
+
+  <!-- Ticker tape -->
+  <div id="scroll-next" style="position:absolute;bottom:0;left:0;width:100%;z-index:10;overflow:hidden;padding:11px 0;border-top:1px solid rgba(30,58,95,.15);background:rgba(0,0,0,.2);backdrop-filter:blur(8px);">
+    <div class="ticker-track" style="display:flex;gap:56px;white-space:nowrap;width:max-content;">
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AAPL</span> <span style="color:var(--sub);opacity:.7;">$189.44</span> <span style="color:var(--green);font-weight:600;">▲ +2.3%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">TSLA</span> <span style="color:var(--sub);opacity:.7;">$173.12</span> <span style="color:var(--red);font-weight:600;">▼ −1.8%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">NVDA</span> <span style="color:var(--sub);opacity:.7;">$891.23</span> <span style="color:var(--green);font-weight:600;">▲ +8.2%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">META</span> <span style="color:var(--sub);opacity:.7;">$509.44</span> <span style="color:var(--red);font-weight:600;">▼ −0.6%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">MSFT</span> <span style="color:var(--sub);opacity:.7;">$415.80</span> <span style="color:var(--green);font-weight:600;">▲ +4.1%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMZN</span> <span style="color:var(--sub);opacity:.7;">$186.17</span> <span style="color:var(--green);font-weight:600;">▲ +1.9%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">GOOGL</span> <span style="color:var(--sub);opacity:.7;">$172.03</span> <span style="color:var(--red);font-weight:600;">▼ −0.3%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMD</span> <span style="color:var(--sub);opacity:.7;">$168.94</span> <span style="color:var(--green);font-weight:600;">▲ +3.7%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">SPY</span> <span style="color:var(--sub);opacity:.7;">$524.10</span> <span style="color:var(--green);font-weight:600;">▲ +1.1%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AAPL</span> <span style="color:var(--sub);opacity:.7;">$189.44</span> <span style="color:var(--green);font-weight:600;">▲ +2.3%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">TSLA</span> <span style="color:var(--sub);opacity:.7;">$173.12</span> <span style="color:var(--red);font-weight:600;">▼ −1.8%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">NVDA</span> <span style="color:var(--sub);opacity:.7;">$891.23</span> <span style="color:var(--green);font-weight:600;">▲ +8.2%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">META</span> <span style="color:var(--sub);opacity:.7;">$509.44</span> <span style="color:var(--red);font-weight:600;">▼ −0.6%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">MSFT</span> <span style="color:var(--sub);opacity:.7;">$415.80</span> <span style="color:var(--green);font-weight:600;">▲ +4.1%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMZN</span> <span style="color:var(--sub);opacity:.7;">$186.17</span> <span style="color:var(--green);font-weight:600;">▲ +1.9%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">GOOGL</span> <span style="color:var(--sub);opacity:.7;">$172.03</span> <span style="color:var(--red);font-weight:600;">▼ −0.3%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">AMD</span> <span style="color:var(--sub);opacity:.7;">$168.94</span> <span style="color:var(--green);font-weight:600;">▲ +3.7%</span></span>
+      <span class="tabnum" style="font-size:13px;"><span style="color:var(--text);font-weight:500;">SPY</span> <span style="color:var(--sub);opacity:.7;">$524.10</span> <span style="color:var(--green);font-weight:600;">▲ +1.1%</span></span>
+    </div>
+  </div>
 
 </section>
 
 <!-- ── FEATURES ────────────────────────────────────── -->
-<section id="features" style="position:relative;z-index:10;background:#000;overflow:hidden;">
-  <div style="position:relative;z-index:1;padding:140px 24px;display:flex;align-items:center;justify-content:center;min-height:520px;">
+<section id="features" data-inner style="position:relative;z-index:10;background:#000;overflow:hidden;">
+  <div style="position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:140px 24px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
 
-    <!-- Stock grid card — centered, expanded -->
-    <div class="reveal" style="width:100%;max-width:440px;background:rgba(8,8,12,0.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:36px 40px;">
+    <!-- Left: text -->
+    <div class="reveal" style="display:flex;flex-direction:column;gap:20px;">
+      <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);opacity:.8;">Features</div>
+      <h2 data-whisper style="font-size:clamp(28px,4vw,44px);font-weight:700;color:#fff;line-height:1.1;letter-spacing:-0.025em;margin:0;">
+        See what's moving the market — live
+      </h2>
+      <p style="font-size:16px;color:rgba(255,255,255,.5);line-height:1.75;margin:0;max-width:380px;">
+        Real-time top gainers and losers, updated every 15 seconds. Know which stocks are on the move before the crowd catches on.
+      </p>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:12px;margin:8px 0 0;padding:0;">
+        <li style="display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,.6);">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></span>
+          Live top gainers &amp; losers, updated every 15s
+        </li>
+        <li style="display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,.6);">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></span>
+          AI explanation behind every significant price move
+        </li>
+        <li style="display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,.6);">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></span>
+          Filter by sector, market cap, and volatility
+        </li>
+      </ul>
+    </div>
+
+    <!-- Right: card -->
+    <div class="reveal" style="width:100%;max-width:440px;justify-self:end;background:rgba(8,8,12,0.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:36px 40px;">
 
       <!-- Header row -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
         <div>
           <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:6px;">Today's Movers</div>
-          <h3 style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.02em;font-family:'Inter',sans-serif;margin:0;">Top Gainers &amp; Losers</h3>
+          <h3 style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.02em;font-family:'Geist',sans-serif;margin:0;">Top Gainers &amp; Losers</h3>
         </div>
         <div style="width:40px;height:40px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;">
           <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><path d="M11 3L14.5 8H7.5L11 3Z" fill="#10b981"/><path d="M11 19L7.5 14H14.5L11 19Z" fill="#ef4444"/><line x1="3" y1="11" x2="19" y2="11" stroke="rgba(107,140,186,.35)" stroke-width="1.2"/></svg>
@@ -1287,41 +1460,41 @@
       <div style="display:flex;flex-direction:column;gap:0;margin-bottom:16px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);">
           <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">N</div>
+            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">N</div>
             <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;letter-spacing:.02em;">NVDA</div>
-              <div style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">Nvidia Corp</div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;letter-spacing:.02em;">NVDA</div>
+              <div style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">Nvidia Corp</div>
             </div>
           </div>
           <div style="text-align:right;">
-            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--green);font-family:'Inter',sans-serif;">+8.2%</div>
-            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">$887.40</div>
+            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--green);font-family:'Geist',sans-serif;">+8.2%</div>
+            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">$887.40</div>
           </div>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);">
           <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">A</div>
+            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">A</div>
             <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;letter-spacing:.02em;">AAPL</div>
-              <div style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">Apple Inc</div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;letter-spacing:.02em;">AAPL</div>
+              <div style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">Apple Inc</div>
             </div>
           </div>
           <div style="text-align:right;">
-            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--green);font-family:'Inter',sans-serif;">+5.7%</div>
-            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">$214.80</div>
+            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--green);font-family:'Geist',sans-serif;">+5.7%</div>
+            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">$214.80</div>
           </div>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;">
           <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">M</div>
+            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">M</div>
             <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;letter-spacing:.02em;">MSFT</div>
-              <div style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">Microsoft Corp</div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;letter-spacing:.02em;">MSFT</div>
+              <div style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">Microsoft Corp</div>
             </div>
           </div>
           <div style="text-align:right;">
-            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--green);font-family:'Inter',sans-serif;">+3.1%</div>
-            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">$420.15</div>
+            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--green);font-family:'Geist',sans-serif;">+3.1%</div>
+            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">$420.15</div>
           </div>
         </div>
       </div>
@@ -1334,34 +1507,34 @@
       <div style="display:flex;flex-direction:column;gap:0;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);">
           <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">T</div>
+            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">T</div>
             <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;letter-spacing:.02em;">TSLA</div>
-              <div style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">Tesla Inc</div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;letter-spacing:.02em;">TSLA</div>
+              <div style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">Tesla Inc</div>
             </div>
           </div>
           <div style="text-align:right;">
-            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--red);font-family:'Inter',sans-serif;">−1.8%</div>
-            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">$174.20</div>
+            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--red);font-family:'Geist',sans-serif;">−1.8%</div>
+            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">$174.20</div>
           </div>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;">
           <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">M</div>
+            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">M</div>
             <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;letter-spacing:.02em;">META</div>
-              <div style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">Meta Platforms</div>
+              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;letter-spacing:.02em;">META</div>
+              <div style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">Meta Platforms</div>
             </div>
           </div>
           <div style="text-align:right;">
-            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--red);font-family:'Inter',sans-serif;">−0.6%</div>
-            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Inter',sans-serif;">$492.65</div>
+            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--red);font-family:'Geist',sans-serif;">−0.6%</div>
+            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">$492.65</div>
           </div>
         </div>
       </div>
 
       <!-- Footer note -->
-      <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,.06);font-size:12px;color:var(--sub);font-family:'Inter',sans-serif;display:flex;align-items:center;gap:7px;">
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,.06);font-size:12px;color:var(--sub);font-family:'Geist',sans-serif;display:flex;align-items:center;gap:7px;">
         <div style="width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);flex-shrink:0;"></div>
         Live data · AI reason on every move
       </div>
@@ -1371,26 +1544,19 @@
 </section>
 
 
+
 <!-- ── ABOUT / TIMELINE SECTION ──────────────────── -->
 <section id="about" style="background:#000;padding:120px 24px 140px;overflow:hidden;scroll-margin-top:80px;">
   <div style="max-width:900px;margin:0 auto;" id="about-root">
 
-    <h2 id="about-h2" class="about-reveal" data-delay="0"
-      style="font-family:'Inter',sans-serif;font-size:clamp(28px,5vw,58px);font-weight:700;color:#fff;line-height:1.12;letter-spacing:-.03em;margin-bottom:48px;">
-      We are&nbsp;<span class="about-word about-word-blue about-reveal" data-delay="150">eliminating</span>&nbsp;the chaos of everyday investing. Market data, news, portfolio tracking, AI insights — all in one place, so you can&nbsp;<span class="about-word about-word-green about-reveal" data-delay="300">save time</span>&nbsp;and&nbsp;<span class="about-word about-word-accent about-reveal" data-delay="450">invest with confidence.</span>
+    <h2 id="about-h2"
+      style="font-family:'Geist',sans-serif;font-size:clamp(28px,5vw,58px);font-weight:700;color:#fff;line-height:1.12;letter-spacing:-.03em;margin-bottom:48px;min-height:1.3em;">
+      <span id="about-tt-text"></span><span class="about-tt-cursor" id="about-tt-cursor">|</span>
     </h2>
 
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;">
-      <div class="about-reveal" data-delay="600">
-        <div style="font-family:'Inter',sans-serif;font-size:15px;font-weight:500;color:rgba(255,255,255,.5);margin-bottom:5px;letter-spacing:.01em;">
-          We Are <span style="color:var(--sub);font-weight:600;font-size:15px;">Stockpilo</span> And We Will
-        </div>
-        <div style="font-family:'Inter',sans-serif;font-size:16px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.1em;">Clear The Noise</div>
-      </div>
-      <a href="#" class="about-reveal about-btn" data-magnetic data-delay="750">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L4.09 12.26a1 1 0 0 0 0 1.14L13 22M13 2l6.85 10.26a1 1 0 0 1 0 1.48L13 22" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M3 12h18" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
-        Start free trial
-      </a>
+    <div id="about-tagline" style="opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease;">
+      <p style="font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;margin:0 0 8px;">We are <span style="color:#2d6be4;font-weight:700;">Stockpilo</span> — and we will</p>
+      <p style="font-family:'Geist',sans-serif;font-size:clamp(18px,2vw,26px);font-weight:700;color:#fff;letter-spacing:.12em;text-transform:uppercase;line-height:1.2;margin:0;">Clear The Noise.</p>
     </div>
 
   </div>
@@ -1404,7 +1570,7 @@
   .about-reveal { opacity:0; filter:blur(10px); transform:translateY(32px); transition:opacity .7s ease,filter .7s ease,transform .7s ease; }
   span.about-reveal { transform:none; transition:opacity .7s ease,filter .7s ease; }
   .about-reveal.about-in { opacity:1; filter:blur(0); transform:translateY(0); }
-  .about-btn { display:inline-flex; align-items:center; gap:8px; background:var(--accent,#2d6be4); color:#fff; font-family:'Inter',sans-serif; font-size:14px; font-weight:600; padding:12px 24px; border-radius:999px; text-decoration:none; box-shadow:0 8px 24px rgba(45,107,228,.45); transition:transform .15s ease,box-shadow .15s ease,opacity .7s ease,filter .7s ease; }
+  .about-btn { display:inline-flex; align-items:center; gap:8px; background:var(--accent,#2d6be4); color:#fff; font-family:'Geist',sans-serif; font-size:14px; font-weight:600; padding:12px 24px; border-radius:999px; text-decoration:none; box-shadow:0 8px 24px rgba(45,107,228,.45); transition:transform .15s ease,box-shadow .15s ease,opacity .7s ease,filter .7s ease; }
   .about-btn:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(45,107,228,.6); }
 </style>
 
@@ -1415,44 +1581,115 @@
 
       <!-- Text -->
       <div class="swm-item" style="display:flex;flex-direction:column;gap:20px;max-width:500px;">
-        <h2 style="font-family:'Inter',sans-serif;font-size:clamp(28px,3.2vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.3;margin:0;">
-          Intelligence,<br>delivered to you.
+        <h2 data-whisper style="font-family:'Geist',sans-serif;font-size:clamp(28px,3.2vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.3;margin:0;">
+          Intelligence, delivered to you.
         </h2>
-        <p style="font-family:'Inter',sans-serif;font-size:15px;color:#868f97;line-height:1.74;margin:0;">
+        <p style="font-family:'Geist',sans-serif;font-size:15px;color:#868f97;line-height:1.74;margin:0;">
           Get a tailored brief directly in your dashboard — crafted by Stockpilo AI, spotlighting essential watchlist moves, earnings and macro signals for the week ahead.
         </p>
       </div>
 
-      <!-- Mockup -->
+      <!-- CardSwap -->
       <div class="swm-item" style="position:relative;min-height:540px;">
-        <div class="swm-bg1" style="position:absolute;top:8%;left:-16%;width:100%;height:460px;background:#0a0a0f;border-radius:32px;z-index:0;filter:blur(3px);"></div>
-        <div class="swm-card1" style="position:relative;width:100%;height:540px;background:rgba(255,255,255,0.04);border-radius:32px;backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.07);z-index:10;overflow:hidden;box-sizing:border-box;padding:32px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+        <div class="card-swap-container" id="card-swap-wrap">
+
+          <!-- Card 0: Morning Brief -->
+          <div class="cs-card" id="cs-card-0">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+              <div>
+                <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:4px;">Stockpilo AI</div>
+                <div style="font-size:17px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;letter-spacing:-0.02em;">Morning Brief</div>
+              </div>
+              <div style="font-size:12px;color:var(--sub);font-family:'Geist',sans-serif;">Mon, May 16</div>
+            </div>
+            <div style="height:1px;background:rgba(255,255,255,.06);margin-bottom:18px;"></div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div style="background:rgba(45,107,228,.08);border:1px solid rgba(45,107,228,.15);border-radius:10px;padding:12px 14px;">
+                <div style="font-size:10px;font-weight:600;color:var(--accent);letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px;">Market Mood</div>
+                <div style="font-size:12px;color:var(--text);line-height:1.6;font-family:'Geist',sans-serif;">Futures pointing higher after Fed signals pause. Tech outperforming — NVDA leads pre-market.</div>
+              </div>
+              <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.14);border-radius:10px;padding:12px 14px;">
+                <div style="font-size:10px;font-weight:600;color:var(--green);letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px;">Your Watchlist</div>
+                <div style="font-size:12px;color:var(--text);line-height:1.6;font-family:'Geist',sans-serif;">AAPL earnings Thursday — consensus EPS $1.53. MSFT cloud beat could lift the sector.</div>
+              </div>
+              <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.13);border-radius:10px;padding:12px 14px;">
+                <div style="font-size:10px;font-weight:600;color:var(--red);letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px;">Watch Out</div>
+                <div style="font-size:12px;color:var(--text);line-height:1.6;font-family:'Geist',sans-serif;">CPI data at 8:30 AM ET. Higher print = volatility. TSLA short interest elevated.</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;padding-top:14px;margin-top:14px;border-top:1px solid rgba(255,255,255,.05);">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);flex-shrink:0;"></div>
+              <span style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">Generated by Stockpilo AI · 6:02 AM</span>
+            </div>
+          </div>
+
+          <!-- Card 1: Top Movers -->
+          <div class="cs-card" id="cs-card-1">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+              <div>
+                <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:4px;">Today's Movers</div>
+                <div style="font-size:17px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;letter-spacing:-0.02em;">Top Gainers</div>
+              </div>
+              <div style="width:32px;height:32px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                <svg width="16" height="16" viewBox="0 0 22 22" fill="none"><path d="M11 3L14.5 8H7.5L11 3Z" fill="#10b981"/></svg>
+              </div>
+            </div>
+            <div style="height:1px;background:rgba(255,255,255,.06);margin-bottom:18px;"></div>
+            <div style="display:flex;flex-direction:column;gap:0;">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);">N</div>
+                  <div><div style="font-size:13px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">NVDA</div><div style="font-size:11px;color:var(--sub);">Nvidia Corp</div></div>
+                </div>
+                <div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:var(--green);">+8.2%</div><div class="tabnum" style="font-size:11px;color:var(--sub);">$887.40</div></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);">A</div>
+                  <div><div style="font-size:13px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">AAPL</div><div style="font-size:11px;color:var(--sub);">Apple Inc</div></div>
+                </div>
+                <div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:var(--green);">+5.7%</div><div class="tabnum" style="font-size:11px;color:var(--sub);">$214.80</div></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);">M</div>
+                  <div><div style="font-size:13px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">MSFT</div><div style="font-size:11px;color:var(--sub);">Microsoft</div></div>
+                </div>
+                <div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:var(--green);">+3.1%</div><div class="tabnum" style="font-size:11px;color:var(--sub);">$420.15</div></div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;padding-top:14px;margin-top:14px;border-top:1px solid rgba(255,255,255,.05);">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);flex-shrink:0;animation:pulseDot 2.4s ease-in-out infinite;"></div>
+              <span style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">Live · Updated every 15s</span>
+            </div>
+          </div>
+
+          <!-- Card 2: AI Insight -->
+          <div class="cs-card" id="cs-card-2">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+              <div>
+                <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:4px;">AI Insight</div>
+                <div style="font-size:17px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;letter-spacing:-0.02em;">Why NVDA is up 8.2%</div>
+              </div>
+              <div style="width:32px;height:32px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M9 2C9 2 5 5 5 9.5C5 12 6.8 14 9 14C11.2 14 13 12 13 9.5C13 5 9 2 9 2Z" stroke="#a855f7" stroke-width="1.5" stroke-linejoin="round"/><circle cx="9" cy="16" r="1" fill="#a855f7"/></svg>
+              </div>
+            </div>
+            <div style="height:1px;background:rgba(255,255,255,.06);margin-bottom:18px;"></div>
+            <div style="background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.15);border-radius:10px;padding:12px 14px;margin-bottom:16px;">
+              <p style="font-size:12px;color:rgba(232,240,254,.8);line-height:1.65;margin:0;font-style:italic;">"Strong Q2 earnings beat by 18%. Data center revenue surged 141% YoY driven by AI chip demand. Multiple analyst upgrades followed."</p>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+              <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:12px;color:var(--sub);">Q2 revenue +122% YoY — beat by $2.1B</span></div>
+              <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:12px;color:var(--sub);">Data center: $18.4B (↑ 141%)</span></div>
+              <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:12px;color:var(--sub);">12 analyst upgrades post-earnings</span></div>
+            </div>
             <div>
-              <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:4px;">Stockpilo AI</div>
-              <div style="font-size:17px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;letter-spacing:-0.02em;">Morning Brief</div>
-            </div>
-            <div style="font-size:12px;color:var(--sub);font-family:'Inter',sans-serif;">Mon, May 16</div>
-          </div>
-          <div style="height:1px;background:rgba(255,255,255,.06);margin-bottom:22px;"></div>
-          <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:24px;">
-            <div style="background:rgba(45,107,228,.08);border:1px solid rgba(45,107,228,.15);border-radius:12px;padding:14px 16px;">
-              <div style="font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;">Market Mood</div>
-              <div style="font-size:13px;color:var(--text);line-height:1.6;font-family:'Inter',sans-serif;">Futures pointing higher after Fed signals pause. Tech outperforming — NVDA leads pre-market.</div>
-            </div>
-            <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.14);border-radius:12px;padding:14px 16px;">
-              <div style="font-size:11px;font-weight:600;color:var(--green);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;">Your Watchlist</div>
-              <div style="font-size:13px;color:var(--text);line-height:1.6;font-family:'Inter',sans-serif;">AAPL earnings Thursday — consensus expects $1.53 EPS. MSFT cloud revenue beat could drive sector.</div>
-            </div>
-            <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.13);border-radius:12px;padding:14px 16px;">
-              <div style="font-size:11px;font-weight:600;color:var(--red);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;">Watch Out</div>
-              <div style="font-size:13px;color:var(--text);line-height:1.6;font-family:'Inter',sans-serif;">CPI data drops at 8:30 AM ET. Higher print = volatility. TSLA short interest elevated.</div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:11px;color:var(--sub);">AI Confidence</span><span style="font-size:11px;color:#a855f7;font-weight:600;">94%</span></div>
+              <div style="height:4px;background:rgba(255,255,255,.07);border-radius:3px;"><div style="width:94%;height:100%;background:linear-gradient(to right,#7c3aed,#a855f7);border-radius:3px;"></div></div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:7px;padding-top:16px;border-top:1px solid rgba(255,255,255,.05);">
-            <div style="width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);flex-shrink:0;"></div>
-            <span style="font-size:12px;color:var(--sub);font-family:'Inter',sans-serif;">Generated by Stockpilo AI · updated 6:02 AM</span>
-          </div>
+
         </div>
       </div>
     </div>
@@ -1462,6 +1699,7 @@
 
 <!-- ── SECTION WITH MOCKUP 2 (reversed) ──────────── -->
 <section class="swm-section" style="position:relative;padding:96px 0 192px;background:#000;overflow:hidden;">
+
   <div style="max-width:1220px;width:100%;padding:0 40px;margin:0 auto;position:relative;z-index:10;box-sizing:border-box;">
     <div class="swm-inner-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;width:100%;">
 
@@ -1472,9 +1710,9 @@
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
             <div>
               <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:4px;">Portfolio</div>
-              <div style="font-size:17px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;letter-spacing:-0.02em;">Overview</div>
+              <div style="font-size:17px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;letter-spacing:-0.02em;">Overview</div>
             </div>
-            <div style="font-family:'Inter',sans-serif;text-align:right;">
+            <div style="font-family:'Geist',sans-serif;text-align:right;">
               <div class="tabnum" style="font-size:22px;font-weight:800;color:var(--text);letter-spacing:-0.03em;">$24,812</div>
               <div class="tabnum" style="font-size:13px;color:var(--green);font-weight:600;">+$342.80 today</div>
             </div>
@@ -1493,8 +1731,8 @@
           <div style="display:flex;flex-direction:column;gap:0;">
             <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);">
               <div style="display:flex;align-items:center;gap:10px;">
-                <div style="width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">N</div>
-                <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'Inter',sans-serif;">NVDA</div>
+                <div style="width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">N</div>
+                <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'Geist',sans-serif;">NVDA</div>
               </div>
               <div style="text-align:right;">
                 <div class="tabnum" style="font-size:13px;font-weight:700;color:var(--green);">+$218.40</div>
@@ -1503,8 +1741,8 @@
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);">
               <div style="display:flex;align-items:center;gap:10px;">
-                <div style="width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">A</div>
-                <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'Inter',sans-serif;">AAPL</div>
+                <div style="width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">A</div>
+                <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'Geist',sans-serif;">AAPL</div>
               </div>
               <div style="text-align:right;">
                 <div class="tabnum" style="font-size:13px;font-weight:700;color:var(--green);">+$104.60</div>
@@ -1513,8 +1751,8 @@
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;">
               <div style="display:flex;align-items:center;gap:10px;">
-                <div style="width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text);font-family:'Inter',sans-serif;">T</div>
-                <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'Inter',sans-serif;">TSLA</div>
+                <div style="width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">T</div>
+                <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'Geist',sans-serif;">TSLA</div>
               </div>
               <div style="text-align:right;">
                 <div class="tabnum" style="font-size:13px;font-weight:700;color:var(--red);">−$20.40</div>
@@ -1527,10 +1765,10 @@
 
       <!-- Text (right in reversed) -->
       <div class="swm-item" style="display:flex;flex-direction:column;gap:20px;max-width:500px;justify-self:end;">
-        <h2 style="font-family:'Inter',sans-serif;font-size:clamp(28px,3.2vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.3;margin:0;">
-          Your portfolio,<br>one clear view.
+        <h2 data-whisper style="font-family:'Geist',sans-serif;font-size:clamp(28px,3.2vw,40px);font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.3;margin:0;">
+          Your portfolio, one clear view.
         </h2>
-        <p style="font-family:'Inter',sans-serif;font-size:15px;color:#868f97;line-height:1.74;margin:0;">
+        <p style="font-family:'Geist',sans-serif;font-size:15px;color:#868f97;line-height:1.74;margin:0;">
           Add your holdings manually or via import. See real-time P&amp;L, allocation by sector, and AI-powered rebalancing suggestions — all in one clean dashboard.
         </p>
       </div>
@@ -1538,7 +1776,6 @@
   </div>
   <div style="position:absolute;bottom:0;left:0;width:100%;height:1px;background:radial-gradient(50% 50% at 50% 50%,rgba(255,255,255,.2) 0%,rgba(255,255,255,0) 100%);"></div>
 </section>
-
 <!-- ── TESTIMONIALS ───────────────────────────────── -->
 <section id="testimonials" style="position:relative;z-index:10;background:#000;padding:120px 48px;overflow:hidden;">
   <div style="max-width:1160px;margin:0 auto;">
@@ -1552,11 +1789,11 @@
           <span style="font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.05em;">Trusted by investors</span>
         </div>
 
-        <h2 style="font-family:'Inter',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-.03em;line-height:1.1;color:#fff;margin:0;">
+        <h2 style="font-family:'Geist',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-.03em;line-height:1.1;color:#fff;margin:0;">
           Loved by the<br>community
         </h2>
 
-        <p style="font-size:16px;color:var(--sub);line-height:1.7;max-width:400px;font-family:'Inter',sans-serif;margin:0;">
+        <p style="font-size:16px;color:var(--sub);line-height:1.7;max-width:400px;font-family:'Geist',sans-serif;margin:0;">
           Don't just take our word for it. See what investors have to say about Stockpilo.
         </p>
 
@@ -1630,7 +1867,7 @@
     margin-bottom: 6px;
   }
   .tst-content {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Geist', sans-serif;
     font-size: 16px;
     font-weight: 500;
     color: var(--text);
@@ -1651,8 +1888,8 @@
     border: 2px solid rgba(255,255,255,.1);
     flex-shrink: 0;
   }
-  .tst-name { font-size: 14px; font-weight: 700; color: #fff; font-family: 'Inter', sans-serif; }
-  .tst-role { font-size: 12px; color: var(--sub); font-family: 'Inter', sans-serif; margin-top: 2px; }
+  .tst-name { font-size: 14px; font-weight: 700; color: #fff; font-family: 'Geist', sans-serif; }
+  .tst-role { font-size: 12px; color: var(--sub); font-family: 'Geist', sans-serif; margin-top: 2px; }
 
   .tst-dot {
     height: 8px;
@@ -1672,8 +1909,7 @@
 
   <!-- Header -->
   <div class="reveal" style="position:relative;z-index:1;text-align:center;margin-bottom:56px;">
-    <h2 style="font-family:'Inter',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:800;letter-spacing:-.03em;color:#fff;margin-bottom:14px;line-height:1.06;">Pricing</h2>
-    <p style="font-size:16px;color:rgba(255,255,255,.45);max-width:420px;margin:0 auto 36px;line-height:1.7;font-family:'Inter',sans-serif;">Start free for 7 days. No credit card required. Upgrade anytime.</p>
+    <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">Pricing</h2>
 
     <!-- Monthly / Yearly toggle -->
     <div class="plan-toggle" id="plan-toggle">
@@ -1729,8 +1965,7 @@
     </div><!-- /.plan-grid -->
 
     <!-- Trust line -->
-    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;font-size:13px;color:rgba(255,255,255,.3);font-family:'Inter',sans-serif;position:relative;z-index:1;">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2L8.5 5.5L12 6L9.5 8.5L10.2 12L7 10.5L3.8 12L4.5 8.5L2 6L5.5 5.5L7 2Z" stroke="rgba(45,107,228,.6)" stroke-width="1.2" stroke-linejoin="round"/></svg>
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;font-size:13px;color:rgba(255,255,255,.3);font-family:'Geist',sans-serif;position:relative;z-index:1;">
       Cancel any time · No credit card required
     </div>
   </div>
@@ -1738,7 +1973,7 @@
 </section>
 
 <!-- ── FLOATING ICONS CTA ─────────────────────────── -->
-<section class="fi-section" id="fi-section">
+<section class="fi-section" id="fi-section" data-no-jump>
 
   <!-- Financial data & news source logos -->
 
@@ -1849,7 +2084,7 @@
     <h2 class="fi-title" style="margin-bottom:24px;max-width:700px;">
       No need to jump<br>between sites.
     </h2>
-    <p style="font-size:18px;color:rgba(255,255,255,.55);max-width:520px;margin:0 auto 40px;line-height:1.72;font-family:'Inter',sans-serif;">
+    <p style="font-size:18px;color:rgba(255,255,255,.55);max-width:520px;margin:0 auto 40px;line-height:1.72;font-family:'Geist',sans-serif;">
       Stockpilo brings it all together — real-time market data, AI-powered insights, and portfolio tracking in one place.
     </p>
     <a href="#" id="btn-trial-fi" class="fi-btn" data-magnetic>7-Day Free Trial</a>
@@ -1865,8 +2100,8 @@
     <div class="footer-grid">
       <!-- Brand column -->
       <div class="footer-brand footer-anim" style="transition-delay:0.1s;">
-        <a href="/" class="logo-wordmark" style="display:inline-flex;">
-          <span class="white">stock</span><span class="logo-p-wrap"><span class="logo-p-accent"></span><span class="logo-p">p</span></span><span class="white">ilo</span>
+        <a href="/" class="logo-wordmark" id="footer-logo" style="display:inline-flex;">
+          <span class="footer-logo-letter white">s</span><span class="footer-logo-letter white">t</span><span class="footer-logo-letter white">o</span><span class="footer-logo-letter white">c</span><span class="footer-logo-letter white">k</span><span class="logo-p-wrap"><span class="logo-p-accent"></span><span class="footer-logo-letter logo-p">p</span></span><span class="footer-logo-letter white">i</span><span class="footer-logo-letter white">l</span><span class="footer-logo-letter white">o</span><span class="footer-logo-cursor" id="footer-cursor"></span>
         </a>
         <p class="footer-tagline">© 2026 Stockpilo. All rights reserved.</p>
       </div>
@@ -2137,6 +2372,92 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.footer-anim').forEach(el => footerIo.observe(el));
 
+  // ── Mission typewriter ─────────────────────────────
+  (function() {
+    const textEl = document.getElementById('about-tt-text');
+    const cursor = document.getElementById('about-tt-cursor');
+    const h2     = document.getElementById('about-h2');
+    if (!textEl || !h2) return;
+
+    const part1 = 'We are eliminating the chaos of everyday investing.';
+    const part2 = 'Market data, AI insights, portfolio tracking — all in one place, so you can invest with confidence.';
+
+    let played = false;
+
+    function type(text, speed, cb) {
+      let i = 0;
+      (function tick() {
+        if (i <= text.length) {
+          textEl.textContent = text.slice(0, i++);
+          setTimeout(tick, speed);
+        } else cb && cb();
+      })();
+    }
+
+    function erase(speed, cb) {
+      (function tick() {
+        const cur = textEl.textContent;
+        if (cur.length > 0) {
+          textEl.textContent = cur.slice(0, -1);
+          setTimeout(tick, speed);
+        } else cb && cb();
+      })();
+    }
+
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !played) {
+        played = true;
+        io.disconnect();
+        // Type part 1 → pause → erase fast → type part 2 → hide cursor
+        type(part1, 40, () => {
+          setTimeout(() => {
+            erase(18, () => {
+              type(part2, 35, () => {
+                setTimeout(() => cursor.classList.add('done'), 800);
+                setTimeout(() => {
+                  const tag = document.getElementById('about-tagline');
+                  if (tag) { tag.style.opacity = '1'; tag.style.transform = 'translateY(0)'; }
+                }, 1000);
+              });
+            });
+          }, 600);
+        });
+      }
+    }, { threshold: 0.3 });
+    io.observe(h2);
+  })();
+
+  // ── Footer logo typewriter ─────────────────────────
+  (function() {
+    const logo    = document.getElementById('footer-logo');
+    const cursor  = document.getElementById('footer-cursor');
+    if (!logo || !cursor) return;
+
+    const letters = Array.from(logo.querySelectorAll('.footer-logo-letter'));
+    let played = false;
+
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !played) {
+        played = true;
+        io.disconnect();
+
+        letters.forEach((el, i) => {
+          setTimeout(() => {
+            el.classList.add('in');
+            // Move cursor after this letter
+            el.parentNode.insertBefore(cursor, el.nextSibling);
+          }, i * 500);
+        });
+
+        // Hide cursor after last letter
+        setTimeout(() => {
+          cursor.classList.add('done');
+        }, letters.length * 500 + 1200);
+      }
+    }, { threshold: 0.5 });
+
+    io.observe(logo);
+  })();
 
   // Hero word cycle (matches animated-hero component behaviour)
   const heroWords = ['smarter', 'faster', 'clearer', 'informed', 'bolder'];
@@ -2182,7 +2503,7 @@
       el.style.cssText = [
         'position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(20px)',
         'z-index:999997;max-width:420px;width:calc(100vw - 48px)',
-        'padding:14px 20px;border-radius:12px;font-family:Inter,sans-serif',
+        'padding:14px 20px;border-radius:12px;font-family:Geist,sans-serif',
         'font-size:14px;font-weight:500;line-height:1.5',
         'opacity:0;transition:opacity .3s ease,transform .3s ease',
         type === 'error'
@@ -2529,74 +2850,232 @@
     });
   })();
 
-  // ── Hero sparkle strip ─────────────────────────────
-  tsParticles.load('sparkles-strip', {
-    background:   { color: { value: 'transparent' } },
-    fullScreen:   { enable: false },
-    fpsLimit:     120,
-    detectRetina: true,
-    interactivity: { events: { resize: true } },
-    particles: {
-      color:  { value: '#ffffff' },
-      shape:  { type: 'circle' },
-      move: {
-        enable:    true,
-        direction: 'none',
-        random:    false,
-        straight:  false,
-        speed:     { min: 0.1, max: 1 },
-        outModes:  { default: 'out' },
-      },
-      number: {
-        density: { enable: true, width: 400, height: 400 },
-        value: 120,
-      },
-      opacity: {
-        value: { min: 0.1, max: 1 },
-        animation: { enable: true, speed: 4, sync: false, startValue: 'random' },
-      },
-      size: {
-        value: { min: 1, max: 3 },
-      },
-    },
-  });
 
-  // ── Stars background ───────────────────────────────
+
+  // ── DarkVeil hero background ───────────────────────
   (function() {
-    function genStars(count) {
-      const s = [];
-      for (let i = 0; i < count; i++) {
-        const x = Math.floor(Math.random() * 4000) - 2000;
-        const y = Math.floor(Math.random() * 4000) - 2000;
-        s.push(`${x}px ${y}px #fff`);
-      }
-      return s.join(',');
+    const canvas = document.getElementById('darkveil-hero');
+    if (!canvas) return;
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (!gl) return;
+
+    const VS = `attribute vec2 position;void main(){gl_Position=vec4(position,0.0,1.0);}`;
+    const FS = `
+#ifdef GL_ES
+precision lowp float;
+#endif
+uniform vec2 uResolution;
+uniform float uTime;
+uniform float uHueShift;
+uniform float uNoise;
+uniform float uScan;
+uniform float uScanFreq;
+uniform float uWarp;
+#define iTime uTime
+#define iResolution uResolution
+vec4 buf[8];
+float rand(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}
+mat3 rgb2yiq=mat3(0.299,0.587,0.114,0.596,-0.274,-0.322,0.211,-0.523,0.312);
+mat3 yiq2rgb=mat3(1.0,0.956,0.621,1.0,-0.272,-0.647,1.0,-1.106,1.703);
+vec3 hueShiftRGB(vec3 col,float deg){
+  vec3 yiq=rgb2yiq*col;float rad=radians(deg);float cosh=cos(rad),sinh=sin(rad);
+  return clamp(yiq2rgb*vec3(yiq.x,yiq.y*cosh-yiq.z*sinh,yiq.y*sinh+yiq.z*cosh),0.0,1.0);}
+vec4 sigmoid(vec4 x){return 1./(1.+exp(-x));}
+vec4 cppn_fn(vec2 coordinate,float in0,float in1,float in2){
+  buf[6]=vec4(coordinate.x,coordinate.y,0.3948333106474662+in0,0.36+in1);
+  buf[7]=vec4(0.14+in2,sqrt(coordinate.x*coordinate.x+coordinate.y*coordinate.y),0.,0.);
+  buf[0]=mat4(vec4(6.5404263,-3.6126034,0.7590882,-1.13613),vec4(2.4582713,3.1660357,1.2219609,0.06276096),vec4(-5.478085,-6.159632,1.8701609,-4.7742867),vec4(6.039214,-5.542865,-0.90925294,3.251348))*buf[6]+mat4(vec4(0.8473259,-5.722911,3.975766,1.6522468),vec4(-0.24321538,0.5839259,-1.7661959,-5.350116),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(0.21808943,1.1243913,-1.7969975,5.0294676);
+  buf[1]=mat4(vec4(-3.3522482,-6.0612736,0.55641043,-4.4719114),vec4(0.8631464,1.7432913,5.643898,1.6106541),vec4(2.4941394,-3.5012043,1.7184316,6.357333),vec4(3.310376,8.209261,1.1355612,-1.165539))*buf[6]+mat4(vec4(5.24046,-13.034365,0.009859298,15.870829),vec4(2.987511,3.129433,-0.89023495,-1.6822904),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-5.9457836,-6.573602,-0.8812491,1.5436668);
+  buf[0]=sigmoid(buf[0]);buf[1]=sigmoid(buf[1]);
+  buf[2]=mat4(vec4(-15.219568,8.095543,-2.429353,-1.9381982),vec4(-5.951362,4.3115187,2.6393783,1.274315),vec4(-7.3145227,6.7297835,5.2473326,5.9411426),vec4(5.0796127,8.979051,-1.7278991,-1.158976))*buf[6]+mat4(vec4(-11.967154,-11.608155,6.1486754,11.237008),vec4(2.124141,-6.263192,-1.7050359,-0.7021966),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-4.17164,-3.2281182,-4.576417,-3.6401186);
+  buf[3]=mat4(vec4(3.1832156,-13.738922,1.879223,3.233465),vec4(0.64300746,12.768129,1.9141049,0.50990224),vec4(-0.049295485,4.4807224,1.4733979,1.801449),vec4(5.0039253,13.000481,3.3991797,-4.5561905))*buf[6]+mat4(vec4(-0.1285731,7.720628,-3.1425676,4.742367),vec4(0.6393625,3.714393,-0.8108378,-0.39174938),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-1.1811101,-21.621881,0.7851888,1.2329718);
+  buf[2]=sigmoid(buf[2]);buf[3]=sigmoid(buf[3]);
+  buf[4]=mat4(vec4(5.214916,-7.183024,2.7228765,2.6592617),vec4(-5.601878,-25.3591,4.067988,0.4602802),vec4(-10.57759,24.286327,21.102104,37.546658),vec4(4.3024497,-1.9625226,2.3458803,-1.372816))*buf[0]+mat4(vec4(-17.6526,-10.507558,2.2587414,12.462782),vec4(6.265566,-502.75443,-12.642513,0.9112289),vec4(-10.983244,20.741234,-9.701768,-0.7635988),vec4(5.383626,1.4819539,-4.1911616,-4.8444734))*buf[1]+mat4(vec4(12.785233,-16.345072,-0.39901125,1.7955981),vec4(-30.48365,-1.8345358,1.4542528,-1.1118771),vec4(19.872723,-7.337935,-42.941723,-98.52709),vec4(8.337645,-2.7312303,-2.2927687,-36.142323))*buf[2]+mat4(vec4(-16.298317,3.5471997,-0.44300047,-9.444417),vec4(57.5077,-35.609753,16.163465,-4.1534753),vec4(-0.07470326,-3.8656476,-7.0901804,3.1523974),vec4(-12.559385,-7.077619,1.490437,-0.8211543))*buf[3]+vec4(-7.67914,15.927437,1.3207729,-1.6686112);
+  buf[5]=mat4(vec4(-1.4109162,-0.372762,-3.770383,-21.367174),vec4(-6.2103205,-9.35908,0.92529047,8.82561),vec4(11.460242,-22.348068,13.625772,-18.693201),vec4(-0.3429052,-3.9905605,-2.4626114,-0.45033523))*buf[0]+mat4(vec4(7.3481627,-4.3661838,-6.3037653,-3.868115),vec4(1.5462853,6.5488915,1.9701879,-0.58291394),vec4(6.5858274,-2.2180402,3.7127688,-1.3730392),vec4(-5.7973905,10.134961,-2.3395722,-5.965605))*buf[1]+mat4(vec4(-2.5132585,-6.6685553,-1.4029363,-0.16285264),vec4(-0.37908727,0.53738135,4.389061,-1.3024765),vec4(-0.70647055,2.0111287,-5.1659346,-3.728635),vec4(-13.562562,10.487719,-0.9173751,-2.6487076))*buf[2]+mat4(vec4(-8.645013,6.5546675,-6.3944063,-5.5933375),vec4(-0.57783127,-1.077275,36.91025,5.736769),vec4(14.283112,3.7146652,7.1452246,-4.5958776),vec4(2.7192075,3.6021907,-4.366337,-2.3653464))*buf[3]+vec4(-5.9000807,-4.329569,1.2427121,8.59503);
+  buf[4]=sigmoid(buf[4]);buf[5]=sigmoid(buf[5]);
+  buf[6]=mat4(vec4(-1.61102,0.7970257,1.4675229,0.20917463),vec4(-28.793737,-7.1390953,1.5025433,4.656581),vec4(-10.94861,39.66238,0.74318546,-10.095605),vec4(-0.7229728,-1.5483948,0.7301322,2.1687684))*buf[0]+mat4(vec4(3.2547753,21.489103,-1.0194173,-3.3100595),vec4(-3.7316632,-3.3792162,-7.223193,-0.23685838),vec4(13.1804495,0.7916005,5.338587,5.687114),vec4(-4.167605,-17.798311,-6.815736,-1.6451967))*buf[1]+mat4(vec4(0.604885,-7.800309,-7.213122,-2.741014),vec4(-3.522382,-0.12359311,-0.5258442,0.43852118),vec4(9.6752825,-22.853785,2.062431,0.099892326),vec4(-4.3196306,-17.730087,2.5184598,5.30267))*buf[2]+mat4(vec4(-6.545563,-15.790176,-6.0438633,-5.415399),vec4(-43.591583,28.551912,-16.00161,18.84728),vec4(4.212382,8.394307,3.0958717,8.657522),vec4(-5.0237565,-4.450633,-4.4768,-5.5010443))*buf[3]+mat4(vec4(1.6985557,-67.05806,6.897715,1.9004834),vec4(1.8680354,2.3915145,2.5231109,4.081538),vec4(11.158006,1.7294737,2.0738268,7.386411),vec4(-4.256034,-306.24686,8.258898,-17.132736))*buf[4]+mat4(vec4(1.6889864,-4.5852966,3.8534803,-6.3482175),vec4(1.3543309,-1.2640043,9.932754,2.9079645),vec4(-5.2770967,0.07150358,-0.13962056,3.3269649),vec4(28.34703,-4.918278,6.1044083,4.085355))*buf[5]+vec4(6.6818056,12.522166,-3.7075126,-4.104386);
+  buf[7]=mat4(vec4(-8.265602,-4.7027016,5.098234,0.7509808),vec4(8.6507845,-17.15949,16.51939,-8.884479),vec4(-4.036479,-2.3946867,-2.6055532,-1.9866527),vec4(-2.2167742,-1.8135649,-5.9759874,4.8846445))*buf[0]+mat4(vec4(6.7790847,3.5076547,-2.8191125,-2.7028968),vec4(-5.743024,-0.27844876,1.4958696,-5.0517144),vec4(13.122226,15.735168,-2.9397483,-4.101023),vec4(-14.375265,-5.030483,-6.2599335,2.9848232))*buf[1]+mat4(vec4(4.0950394,-0.94011575,-5.674733,4.755022),vec4(4.3809423,4.8310084,1.7425908,-3.437416),vec4(2.117492,0.16342592,-104.56341,16.949184),vec4(-5.22543,-2.994248,3.8350096,-1.9364246))*buf[2]+mat4(vec4(-5.900337,1.7946124,-13.604192,-3.8060522),vec4(6.6583457,31.911177,25.164474,91.81147),vec4(11.840538,4.1503043,-0.7314397,6.768467),vec4(-6.3967767,4.034772,6.1714606,-0.32874924))*buf[3]+mat4(vec4(3.4992442,-196.91893,-8.923708,2.8142626),vec4(3.4806502,-3.1846354,5.1725626,5.1804223),vec4(-2.4009497,15.585794,1.2863957,2.0252278),vec4(-71.25271,-62.441242,-8.138444,0.50670296))*buf[4]+mat4(vec4(-12.291733,-11.176166,-7.3474145,4.390294),vec4(10.805477,5.6337385,-0.9385842,-4.7348723),vec4(-12.869276,-7.039391,5.3029537,7.5436664),vec4(1.4593618,8.91898,3.5101583,5.840625))*buf[5]+vec4(2.2415268,-6.705987,-0.98861027,-2.117676);
+  buf[6]=sigmoid(buf[6]);buf[7]=sigmoid(buf[7]);
+  buf[0]=mat4(vec4(1.6794263,1.3817469,2.9625452,0.),vec4(-1.8834411,-1.4806935,-3.5924516,0.),vec4(-1.3279216,-1.0918057,-2.3124623,0.),vec4(0.2662234,0.23235129,0.44178495,0.))*buf[0]+mat4(vec4(-0.6299101,-0.5945583,-0.9125601,0.),vec4(0.17828953,0.18300213,0.18182953,0.),vec4(-2.96544,-2.5819945,-4.9001055,0.),vec4(1.4195864,1.1868085,2.5176322,0.))*buf[1]+mat4(vec4(-1.2584374,-1.0552157,-2.1688404,0.),vec4(-0.7200217,-0.52666044,-1.438251,0.),vec4(0.15345335,0.15196142,0.272854,0.),vec4(0.945728,0.8861938,1.2766753,0.))*buf[2]+mat4(vec4(-2.4218085,-1.968602,-4.35166,0.),vec4(-22.683098,-18.0544,-41.954372,0.),vec4(0.63792,0.5470648,1.1078634,0.),vec4(-1.5489894,-1.3075932,-2.6444845,0.))*buf[3]+mat4(vec4(-0.49252132,-0.39877754,-0.91366625,0.),vec4(0.95609266,0.7923952,1.640221,0.),vec4(0.30616966,0.15693925,0.8639857,0.),vec4(1.1825981,0.94504964,2.176963,0.))*buf[4]+mat4(vec4(0.35446745,0.3293795,0.59547555,0.),vec4(-0.58784515,-0.48177817,-1.0614829,0.),vec4(2.5271258,1.9991658,4.6846647,0.),vec4(0.13042648,0.08864098,0.30187556,0.))*buf[5]+mat4(vec4(-1.7718065,-1.4033192,-3.3355875,0.),vec4(3.1664357,2.638297,5.378702,0.),vec4(-3.1724713,-2.6107926,-5.549295,0.),vec4(-2.851368,-2.249092,-5.3013067,0.))*buf[6]+mat4(vec4(1.5203838,1.2212278,2.8404984,0.),vec4(1.5210563,1.2651345,2.683903,0.),vec4(2.9789467,2.4364579,5.2347264,0.),vec4(2.2270417,1.8825914,3.8028636,0.))*buf[7]+vec4(-1.5468478,-3.6171484,0.24762098,0.);
+  buf[0]=sigmoid(buf[0]);
+  return vec4(buf[0].x,buf[0].y,buf[0].z,1.);}
+void mainImage(out vec4 fragColor,in vec2 fragCoord){
+  vec2 uv=fragCoord/uResolution.xy*2.-1.; uv.y*=-1.;
+  uv+=uWarp*vec2(sin(uv.y*6.283+uTime*0.5),cos(uv.x*6.283+uTime*0.5))*0.05;
+  fragColor=cppn_fn(uv,0.1*sin(0.3*uTime),0.1*sin(0.69*uTime),0.1*sin(0.44*uTime));}
+void main(){
+  vec4 col; mainImage(col,gl_FragCoord.xy);
+  col.rgb=hueShiftRGB(col.rgb,uHueShift);
+  float sv=sin(gl_FragCoord.y*uScanFreq)*0.5+0.5;
+  col.rgb*=1.-(sv*sv)*uScan;
+  col.rgb+=(rand(gl_FragCoord.xy+uTime)-0.5)*uNoise;
+  gl_FragColor=vec4(clamp(col.rgb,0.0,1.0),1.0);}`;
+
+    function compile(type, src) {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src); gl.compileShader(s); return s;
+    }
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
+    gl.linkProgram(prog); gl.useProgram(prog);
+
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,3,-1,-1,3]), gl.STATIC_DRAW);
+    const pos = gl.getAttribLocation(prog, 'position');
+    gl.enableVertexAttribArray(pos);
+    gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+    const uTime     = gl.getUniformLocation(prog, 'uTime');
+    const uRes      = gl.getUniformLocation(prog, 'uResolution');
+    const uHue      = gl.getUniformLocation(prog, 'uHueShift');
+    const uNoise    = gl.getUniformLocation(prog, 'uNoise');
+    const uScan     = gl.getUniformLocation(prog, 'uScan');
+    const uScanFreq = gl.getUniformLocation(prog, 'uScanFreq');
+    const uWarp     = gl.getUniformLocation(prog, 'uWarp');
+
+    gl.uniform1f(uHue,      43);
+    gl.uniform1f(uNoise,    0.05);
+    gl.uniform1f(uScan,     1);
+    gl.uniform1f(uScanFreq, 1.8);
+    gl.uniform1f(uWarp,     2.3);
+
+    function resize() {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      const section = canvas.parentElement;
+      const w = section.clientWidth, h = section.clientHeight;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform2f(uRes, w, h);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const start = performance.now();
+    (function loop() {
+      gl.uniform1f(uTime, (performance.now() - start) / 1000 * 0.5);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      requestAnimationFrame(loop);
+    })();
+  })();
+
+  // ── CardSwap ───────────────────────────────────────
+  (function() {
+    if (typeof gsap === 'undefined') return;
+    const container = document.getElementById('card-swap-wrap');
+    if (!container) return;
+
+    const W = 380, H = 420, distX = 55, distY = 65, skew = 6, delay = 4000;
+    container.style.width = W + 'px';
+    container.style.height = H + 'px';
+
+    const cards = Array.from(container.querySelectorAll('.cs-card'));
+    const total = cards.length;
+    cards.forEach(c => { c.style.width = W + 'px'; c.style.height = H + 'px'; });
+
+    const makeSlot = i => ({ x: i*distX, y: -i*distY, z: -i*distX*1.5, zi: total-i });
+    const place = (el, s) => gsap.set(el, { x:s.x, y:s.y, z:s.z, xPercent:-50, yPercent:-50, skewY:skew, transformOrigin:'center center', zIndex:s.zi, force3D:true });
+
+    const order = cards.map((_,i) => i);
+    cards.forEach((c,i) => place(c, makeSlot(i)));
+
+    const cfg = { ease:'elastic.out(0.6,0.9)', durDrop:2, durMove:2, durReturn:2, overlap:0.9, retDelay:0.05 };
+
+    function swap() {
+      if (order.length < 2) return;
+      const front = order[0], rest = order.slice(1);
+      const elFront = cards[front];
+      const tl = gsap.timeline();
+
+      tl.to(elFront, { y:'+=500', duration:cfg.durDrop, ease:cfg.ease });
+      tl.addLabel('promote', `-=${cfg.durDrop * cfg.overlap}`);
+
+      rest.forEach((idx, i) => {
+        const s = makeSlot(i);
+        tl.set(cards[idx], { zIndex:s.zi }, 'promote');
+        tl.to(cards[idx], { x:s.x, y:s.y, z:s.z, duration:cfg.durMove, ease:cfg.ease }, `promote+=${i*0.15}`);
+      });
+
+      const back = makeSlot(total - 1);
+      tl.addLabel('return', `promote+=${cfg.durMove * cfg.retDelay}`);
+      tl.call(() => gsap.set(elFront, { zIndex:back.zi }), undefined, 'return');
+      tl.to(elFront, { x:back.x, y:back.y, z:back.z, duration:cfg.durReturn, ease:cfg.ease }, 'return');
+      tl.call(() => { order.push(order.shift()); });
     }
 
-    const small = genStars(1000);
-    const med   = genStars(400);
-    const large = genStars(200);
+    swap();
+    setInterval(swap, delay);
+  })();
 
-    ['sd-s1','sd-s2'].forEach(id => { const e = document.getElementById(id); if (e) e.style.boxShadow = small; });
-    ['sd-m1','sd-m2'].forEach(id => { const e = document.getElementById(id); if (e) e.style.boxShadow = med;   });
-    ['sd-l1','sd-l2'].forEach(id => { const e = document.getElementById(id); if (e) e.style.boxShadow = large; });
+  // ── Fi-section logos scatter animation ─────────────
+  (function() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    const section = document.getElementById('fi-section');
+    if (!section) return;
+    const items = Array.from(section.querySelectorAll('.fi-icon'));
+    if (!items.length) return;
 
-    // Mouse parallax (spring lerp)
-    const parallax = document.getElementById('stars-parallax');
-    let tx = 0, ty = 0, cx = 0, cy = 0;
-    const factor = 0.05;
+    const offsets = [
+      { x: -160, y: -120 }, { x: 80,   y: -150 }, { x: -140, y: 120 },
+      { x: 150,  y: 100  }, { x: -60,  y: -160 }, { x: 120,  y: -80 },
+      { x: -120, y: 80   }, { x: 160,  y: -120 }, { x: -80,  y: 140 },
+      { x: 60,   y: 160  }, { x: 180,  y: 40   }, { x: -170, y: 20  },
+    ];
 
-    window.addEventListener('mousemove', (e) => {
-      tx = -(e.clientX - window.innerWidth  / 2) * factor;
-      ty = -(e.clientY - window.innerHeight / 2) * factor;
-    }, { passive: true });
+    items.forEach((el, i) => {
+      const off = offsets[i % offsets.length];
+      gsap.set(el, { x: off.x, y: off.y, opacity: 0, scale: 0.7 });
+    });
 
-    (function tick() {
-      requestAnimationFrame(tick);
-      cx += (tx - cx) * 0.05;
-      cy += (ty - cy) * 0.05;
-      if (parallax) parallax.style.transform = `translate(${cx.toFixed(2)}px,${cy.toFixed(2)}px)`;
-    })();
+    gsap.to(items, {
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 85%',
+        end: 'top 10%',
+        scrub: 1.4,
+      },
+      x: 0, y: 0, opacity: 1, scale: 1,
+      ease: 'power2.out',
+      stagger: 0.06,
+    });
+  })();
+
+  // ── WhisperText ────────────────────────────────────
+  (function() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.querySelectorAll('[data-whisper]').forEach(el => {
+      const delay    = parseFloat(el.dataset.delay    || 0.08);
+      const duration = parseFloat(el.dataset.duration || 0.45);
+      const x        = parseFloat(el.dataset.x        || -20);
+      const y        = parseFloat(el.dataset.y        || 0);
+
+      // Split text into word spans
+      const text = el.textContent.trim();
+      el.innerHTML = text
+        .split(/\s+/)
+        .map(w => `<span data-word style="display:inline-block;white-space:nowrap">${w}</span>`)
+        .join(' ');
+
+      const words = el.querySelectorAll('[data-word]');
+      gsap.set(words, { opacity: 0, x, y });
+      gsap.to(words, {
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 90%',
+          toggleActions: 'play none none none',
+          once: true,
+        },
+        opacity: 1,
+        x: 0,
+        y: 0,
+        duration,
+        ease: 'power2.out',
+        stagger: delay,
+      });
+    });
   })();
 
   // ── Magnetic Cursor ────────────────────────────────
@@ -2728,24 +3207,24 @@
   <!-- Header row -->
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
     <span style="font-size:22px;line-height:1;">🍪</span>
-    <span style="font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:#fff;letter-spacing:-.01em;">Cookie Notice</span>
+    <span style="font-family:'Geist',sans-serif;font-size:15px;font-weight:700;color:#fff;letter-spacing:-.01em;">Cookie Notice</span>
   </div>
 
   <!-- Body text -->
-  <p style="font-family:'Inter',sans-serif;font-size:13px;color:rgba(255,255,255,.55);line-height:1.65;margin-bottom:18px;">
+  <p style="font-family:'Geist',sans-serif;font-size:13px;color:rgba(255,255,255,.55);line-height:1.65;margin-bottom:18px;">
     We use Google reCAPTCHA to protect against bots. This loads a third-party script that may set cookies (<code style="font-size:11px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:4px;">_GRECAPTCHA</code>). We have no analytics or tracking pixels. <a href="/privacy.html" style="color:#2d6be4;text-decoration:none;">Privacy Policy</a>.
   </p>
 
   <!-- Actions -->
   <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
     <button id="cookie-decline" style="
-      font-family:'Inter',sans-serif;font-size:13px;font-weight:500;
+      font-family:'Geist',sans-serif;font-size:13px;font-weight:500;
       color:rgba(255,255,255,.4);background:none;border:none;
       cursor:pointer;padding:0;text-decoration:underline;
       text-underline-offset:3px;transition:color .2s;
     ">Decline</button>
     <button id="cookie-accept" style="
-      font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
+      font-family:'Geist',sans-serif;font-size:13px;font-weight:600;
       color:#fff;background:#2d6be4;border:none;
       padding:9px 22px;border-radius:999px;cursor:pointer;
       box-shadow:0 4px 16px rgba(45,107,228,.4);
