@@ -420,6 +420,105 @@
     .tabnum { font-variant-numeric: tabular-nums; }
     .mono { font-family: 'SF Mono', 'Fira Code', monospace; }
 
+    /* ── GooeyNav ──────────────────────────────────── */
+    .gooey-nav-container { position: relative; }
+    .gooey-nav-container nav { display:flex;position:relative;transform:translate3d(0,0,.01px); }
+    .gooey-nav-container nav ul {
+      display:flex;gap:0;list-style:none;padding:0 .5em;margin:0;
+      position:relative;z-index:3;
+    }
+    .gooey-nav-container nav ul li {
+      border-radius:100vw;position:relative;cursor:pointer;
+      transition:color .3s ease;
+      color:rgba(232,240,254,.65);
+      font-family:'Geist',sans-serif;font-size:13px;font-weight:500;
+    }
+    .gooey-nav-container nav ul li a {
+      display:inline-block;padding:.45em .85em;text-decoration:none;color:inherit;
+    }
+    .gooey-nav-container nav ul li::after {
+      content:'';position:absolute;inset:0;border-radius:100vw;
+      background:white;opacity:0;transform:scale(0);
+      transition:all .3s ease;z-index:-1;
+    }
+    .gooey-nav-container nav ul li.active { color:#000;text-shadow:none; }
+    .gooey-nav-container nav ul li.active::after { opacity:1;transform:scale(1); }
+    .gooey-nav-container .effect {
+      position:absolute;left:0;top:0;width:0;height:0;
+      opacity:1;pointer-events:none;display:grid;place-items:center;z-index:1;
+    }
+    .gooey-nav-container .effect.text { color:white;transition:color .3s ease; }
+    .gooey-nav-container .effect.text.active { color:#000; }
+    .gooey-nav-container .effect.filter {
+      filter:blur(7px) contrast(100) blur(0);
+      mix-blend-mode:lighten;
+      overflow:hidden;
+      border-radius:100vw;
+    }
+    .gooey-nav-container .effect.filter::before {
+      content:'';position:absolute;inset:-4px;z-index:-2;background:#000;border-radius:100vw;
+    }
+    .gooey-nav-container .effect.filter::after {
+      content:'';position:absolute;inset:0;background:white;
+      transform:scale(0);opacity:0;z-index:-1;border-radius:100vw;
+    }
+    .gooey-nav-container .effect.active::after {
+      animation:gnav-pill .3s ease both;
+    }
+    @keyframes gnav-pill { to { transform:scale(1);opacity:1; } }
+    .gooey-nav-container --color-1:#fff;
+    :root {
+      --color-1:#fff;
+      --color-2:#a5c8ff;
+      --color-3:#6ba3ff;
+      --color-4:#3b7ff5;
+      --linear-ease:linear(0,.068,.19 2.7%,.804 8.1%,1.037,1.199 13.2%,1.245,1.27 15.8%,1.274,1.272 17.4%,1.249 19.1%,.996 28%,.949,.928 33.3%,.926,.933 36.8%,1.001 45.6%,1.013,1.019 50.8%,1.018 54.4%,1 63.1%,.995 68%,1.001 85%,1);
+    }
+    .particle,.point { display:block;opacity:0;width:20px;height:20px;border-radius:100%;transform-origin:center; }
+    .particle {
+      --time:5s;position:absolute;
+      top:calc(50% - 8px);left:calc(50% - 8px);
+      animation:gnav-particle calc(var(--time)) ease 1 -350ms;
+    }
+    .point { background:var(--color);opacity:1;animation:gnav-point calc(var(--time)) ease 1 -350ms; }
+    @keyframes gnav-particle {
+      0%   { transform:rotate(0deg) translate(var(--start-x),var(--start-y));opacity:1;animation-timing-function:cubic-bezier(.55,0,1,.45); }
+      70%  { transform:rotate(calc(var(--rotate)*.5)) translate(calc(var(--end-x)*1.2),calc(var(--end-y)*1.2));opacity:1;animation-timing-function:ease; }
+      85%  { transform:rotate(calc(var(--rotate)*.66)) translate(var(--end-x),var(--end-y));opacity:1; }
+      100% { transform:rotate(calc(var(--rotate)*1.2)) translate(calc(var(--end-x)*.5),calc(var(--end-y)*.5));opacity:1; }
+    }
+    @keyframes gnav-point {
+      0%  { transform:scale(0);opacity:0;animation-timing-function:cubic-bezier(.55,0,1,.45); }
+      25% { transform:scale(calc(var(--scale)*.25)); }
+      38% { opacity:1; }
+      65% { transform:scale(var(--scale));opacity:1;animation-timing-function:ease; }
+      85% { transform:scale(var(--scale));opacity:1; }
+      100%{ transform:scale(0);opacity:0; }
+    }
+
+    /* ── Header trail border ───────────────────────── */
+    .header-trail { position: relative; }
+    .header-trail::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 8px;
+      background: conic-gradient(from var(--trail-a),
+        transparent 0%, transparent 32%,
+        rgba(45,107,228,.4) 43%,
+        rgba(180,215,255,.96) 50%,
+        rgba(45,107,228,.4) 57%,
+        transparent 68%, transparent 100%
+      );
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: spin-trail 4.5s linear infinite;
+      pointer-events: none;
+      z-index: 3;
+    }
+
     /* ── Header (efferd/header-2 adapted) ─────────────── */
     #site-header {
       position: sticky;
@@ -1504,14 +1603,24 @@
 
     <!-- Desktop nav -->
     <div class="hidden md:flex" style="align-items:center;gap:8px;">
-      <div style="display:flex;">
-        <a href="#features" class="header-nav-link">Features</a>
-        <a href="#pricing" class="header-nav-link">Pricing</a>
-        <a href="#about" class="header-nav-link">About</a>
-        <a href="/blog.html" class="header-nav-link">Blog</a>
+      <div class="gooey-nav-container" id="gooey-nav">
+        <nav>
+          <ul id="gooey-nav-ul">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="/blog.html">Blog</a></li>
+          </ul>
+        </nav>
+        <span class="effect filter" id="gnav-filter"></span>
+        <span class="effect text" id="gnav-text"></span>
       </div>
-      <a href="#" class="header-btn-outline">Sign In</a>
-      <a href="#" class="header-btn-solid" id="hero-cta-nav">Get Started</a>
+      <div style="position:relative;display:inline-block;" id="cta-eb-wrap">
+        <div style="position:absolute;inset:0;overflow:visible;pointer-events:none;z-index:2;">
+          <canvas id="cta-eb-canvas" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);"></canvas>
+        </div>
+        <a href="#" class="header-btn-solid" id="hero-cta-nav" style="background:#07071a;position:relative;z-index:1;">Get Started</a>
+      </div>
     </div>
 
     <!-- Mobile hamburger -->
@@ -1756,11 +1865,15 @@
       <span id="about-tt-text"></span><span class="about-tt-cursor" id="about-tt-cursor">|</span>
     </h2>
 
-    <div id="about-tagline" style="opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease;">
-      <p style="font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;margin:0 0 10px;">We are</p>
-      <img src="brand_assets/logo12-crop.png" alt="Stockpilo" style="height:32px;width:auto;opacity:0.85;display:block;margin-bottom:10px;">
-      <p style="font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px;">and we will</p>
-      <p style="font-family:'Geist',sans-serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:.14em;text-transform:uppercase;line-height:1.2;margin:0;">Clear The Noise.</p>
+    <div id="about-tagline" style="opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease;display:flex;flex-direction:column;gap:2px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;">We are</span>
+        <img src="brand_assets/logo12-crop.png" alt="Stockpilo" style="height:18px;width:auto;opacity:0.75;">
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;">We will</span>
+        <span id="clear-noise-text" style="font-family:'Geist',sans-serif;font-size:clamp(13px,1.2vw,16px);font-weight:700;color:#fff;letter-spacing:.08em;text-transform:uppercase;display:inline-flex;gap:0.3em;flex-wrap:wrap;align-items:center;"></span>
+      </div>
     </div>
 
   </div>
@@ -3693,6 +3806,201 @@ gl_FragColor=vec4(r,g,b,a);}`;
     });
   })();
 
+  // ── ElectricBorder (Get Started btn) ──────────────
+  (function() {
+    const canvas = document.getElementById('cta-eb-canvas');
+    const btn    = document.getElementById('hero-cta-nav');
+    if (!canvas || !btn) return;
+
+    const ctx = canvas.getContext('2d');
+    const SPEED = 0.35, CHAOS = 0.28, BORDER_RADIUS = 7;
+    const OFFSET = 18, DISP = 16;
+    const COLOR  = '#2d6be4';
+    const dpr    = Math.min(window.devicePixelRatio || 1, 2);
+
+    let W = 0, H = 0, time = 0, lastT = 0;
+
+    function rand(x) { return ((Math.sin(x * 12.9898) * 43758.5453) % 1 + 1) % 1; }
+
+    function noise2D(x, y) {
+      const i=Math.floor(x), j=Math.floor(y), fx=x-i, fy=y-j;
+      const a=rand(i+j*57), b=rand(i+1+j*57), c=rand(i+(j+1)*57), d=rand(i+1+(j+1)*57);
+      const ux=fx*fx*(3-2*fx), uy=fy*fy*(3-2*fy);
+      return a*(1-ux)*(1-uy)+b*ux*(1-uy)+c*(1-ux)*uy+d*ux*uy;
+    }
+
+    function octNoise(x, t, seed) {
+      let y=0, amp=CHAOS, freq=10;
+      for (let i=0; i<10; i++) {
+        if (i>0) y += amp * noise2D(freq*x + seed*100, t*freq*0.3);
+        freq *= 1.6; amp *= 0.7;
+      }
+      return y;
+    }
+
+    function corner(cx,cy,r,sa,al,p){ const a=sa+p*al; return {x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)}; }
+
+    function rectPoint(t,l,top,w,h,r) {
+      const sw=w-2*r,sh=h-2*r,ca=Math.PI*r/2;
+      const perim=2*sw+2*sh+4*ca; let d=t*perim, acc=0;
+      if(d<=acc+sw){return{x:l+r+(d-acc)/sw*sw,y:top};} acc+=sw;
+      if(d<=acc+ca){return corner(l+w-r,top+r,r,-Math.PI/2,Math.PI/2,(d-acc)/ca);} acc+=ca;
+      if(d<=acc+sh){return{x:l+w,y:top+r+(d-acc)/sh*sh};} acc+=sh;
+      if(d<=acc+ca){return corner(l+w-r,top+h-r,r,0,Math.PI/2,(d-acc)/ca);} acc+=ca;
+      if(d<=acc+sw){return{x:l+w-r-(d-acc)/sw*sw,y:top+h};} acc+=sw;
+      if(d<=acc+ca){return corner(l+r,top+h-r,r,Math.PI/2,Math.PI/2,(d-acc)/ca);} acc+=ca;
+      if(d<=acc+sh){return{x:l,y:top+h-r-(d-acc)/sh*sh};} acc+=sh;
+      return corner(l+r,top+r,r,Math.PI,Math.PI/2,(d-acc)/ca);
+    }
+
+    function resize() {
+      const r = btn.getBoundingClientRect();
+      W = r.width  + OFFSET*2;
+      H = r.height + OFFSET*2;
+      canvas.width  = W*dpr; canvas.height = H*dpr;
+      canvas.style.width  = W+'px'; canvas.style.height = H+'px';
+    }
+    new ResizeObserver(resize).observe(btn);
+    resize();
+
+    function draw(now) {
+      const dt = (now - lastT) / 1000;
+      time += dt * SPEED; lastT = now;
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.scale(dpr,dpr);
+      ctx.strokeStyle = COLOR;
+      ctx.lineWidth   = 1.5;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      const l=OFFSET, top=OFFSET;
+      const bw=W-2*OFFSET, bh=H-2*OFFSET;
+      const r=Math.min(BORDER_RADIUS, Math.min(bw,bh)/2);
+      const samples = Math.floor((2*(bw+bh)+2*Math.PI*r)/2);
+      ctx.beginPath();
+      for (let i=0; i<=samples; i++) {
+        const p=i/samples;
+        const pt=rectPoint(p,l,top,bw,bh,r);
+        const dx=octNoise(p*8,time,0)*DISP;
+        const dy=octNoise(p*8,time,1)*DISP;
+        i===0 ? ctx.moveTo(pt.x+dx,pt.y+dy) : ctx.lineTo(pt.x+dx,pt.y+dy);
+      }
+      ctx.closePath(); ctx.stroke();
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  })();
+
+  // ── GooeyNav ───────────────────────────────────────
+  (function () {
+    const container  = document.getElementById('gooey-nav');
+    const navUl      = document.getElementById('gooey-nav-ul');
+    const filterEl   = document.getElementById('gnav-filter');
+    const textEl     = document.getElementById('gnav-text');
+    if (!container || !navUl || !filterEl || !textEl) return;
+
+    const ANIMATION_TIME   = 600;
+    const PARTICLE_COUNT   = 15;
+    const PARTICLE_DIST    = [90, 10];
+    const PARTICLE_R       = 100;
+    const TIME_VARIANCE    = 300;
+    const COLORS           = [1, 2, 3, 1, 2, 3, 1, 4];
+
+    let activeIndex = -1;
+
+    const noise = n => n / 2 - Math.random() * n;
+
+    function getXY(distance, pointIndex, total) {
+      const angle = ((360 + noise(8)) / total) * pointIndex * (Math.PI / 180);
+      return [distance * Math.cos(angle), distance * Math.sin(angle)];
+    }
+
+    function createParticle(i, t) {
+      const rotate = noise(PARTICLE_R / 10);
+      return {
+        start: getXY(PARTICLE_DIST[0], PARTICLE_COUNT - i, PARTICLE_COUNT),
+        end:   getXY(PARTICLE_DIST[1] + noise(7), PARTICLE_COUNT - i, PARTICLE_COUNT),
+        time:  t,
+        scale: 1 + noise(0.2),
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        rotate: rotate > 0 ? (rotate + PARTICLE_R / 20) * 10 : (rotate - PARTICLE_R / 20) * 10,
+      };
+    }
+
+    function makeParticles(el) {
+      const bubbleTime = ANIMATION_TIME * 2 + TIME_VARIANCE;
+      el.style.setProperty('--time', `${bubbleTime}ms`);
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const t = ANIMATION_TIME * 2 + noise(TIME_VARIANCE * 2);
+        const p = createParticle(i, t);
+        el.classList.remove('active');
+        setTimeout(() => {
+          const particle = document.createElement('span');
+          const point    = document.createElement('span');
+          particle.classList.add('particle');
+          particle.style.setProperty('--start-x', `${p.start[0]}px`);
+          particle.style.setProperty('--start-y', `${p.start[1]}px`);
+          particle.style.setProperty('--end-x',   `${p.end[0]}px`);
+          particle.style.setProperty('--end-y',   `${p.end[1]}px`);
+          particle.style.setProperty('--time',    `${p.time}ms`);
+          particle.style.setProperty('--scale',   `${p.scale}`);
+          particle.style.setProperty('--color',   `var(--color-${p.color}, white)`);
+          particle.style.setProperty('--rotate',  `${p.rotate}deg`);
+          point.classList.add('point');
+          particle.appendChild(point);
+          el.appendChild(particle);
+          requestAnimationFrame(() => el.classList.add('active'));
+          setTimeout(() => { try { el.removeChild(particle); } catch {} }, t);
+        }, 30);
+      }
+    }
+
+    function updateEffectPosition(li) {
+      const cRect = container.getBoundingClientRect();
+      const pos   = li.getBoundingClientRect();
+      const styles = {
+        left:   `${pos.x - cRect.x}px`,
+        top:    `${pos.y - cRect.y}px`,
+        width:  `${pos.width}px`,
+        height: `${pos.height}px`,
+      };
+      Object.assign(filterEl.style, styles);
+      Object.assign(textEl.style, styles);
+      textEl.innerText = li.querySelector('a')?.innerText || '';
+    }
+
+    function activate(li, index) {
+      if (activeIndex === index) return;
+      activeIndex = index;
+
+      navUl.querySelectorAll('li').forEach((el, i) => {
+        el.classList.toggle('active', i === index);
+      });
+
+      updateEffectPosition(li);
+
+      filterEl.querySelectorAll('.particle').forEach(p => filterEl.removeChild(p));
+
+      textEl.classList.remove('active');
+      void textEl.offsetWidth;
+      textEl.classList.add('active');
+
+      makeParticles(filterEl);
+    }
+
+    navUl.querySelectorAll('li').forEach((li, index) => {
+      li.addEventListener('click', () => activate(li, index));
+    });
+
+    // Init position on first paint
+    requestAnimationFrame(() => {
+      const ro = new ResizeObserver(() => {
+        const activeLi = navUl.querySelectorAll('li')[activeIndex];
+        if (activeLi) updateEffectPosition(activeLi);
+      });
+      ro.observe(container);
+    });
+  })();
+
   // ── Header (efferd/header-2) ───────────────────────
   (function() {
     const header = document.getElementById('site-header');
@@ -3978,9 +4286,38 @@ gl_FragColor=vec4(r,g,b,a);}`;
   btnDecline.addEventListener('mouseleave', () => { btnDecline.style.color = 'rgba(255,255,255,.4)'; });
 })();
 
-  // ── FallingText (about/mission H2) ────────────────
+  // ── SplittingText (Clear The Noise) ───────────────
   (function () {
-    const h2 = document.getElementById('about-h2');
+    const container = document.getElementById('clear-noise-text');
+    if (!container) return;
+
+    const words = ['Clear', 'The', 'Noise.'];
+    const els = words.map(w => {
+      const span = document.createElement('span');
+      span.textContent = w;
+      span.style.cssText =
+        'display:inline-block;opacity:0;transform:translateX(150px);' +
+        'will-change:transform,opacity;';
+      container.appendChild(span);
+      return span;
+    });
+
+    window.addEventListener('aboutTaglineReveal', function handler() {
+      window.removeEventListener('aboutTaglineReveal', handler);
+      els.forEach((el, i) => {
+        setTimeout(() => {
+          el.style.transition = 'transform 0.7s ease-out, opacity 0.7s ease-out';
+          el.style.transform  = 'translateX(0)';
+          el.style.opacity    = '1';
+        }, i * 200);
+      });
+    });
+  })();
+
+  // ── FallingText (H2 + tagline, simultaneous) ──────
+  (function () {
+    const h2     = document.getElementById('about-h2');
+    const tagline = document.getElementById('about-tagline');
     if (!h2) return;
 
     window.addEventListener('aboutTypewriterDone', function handler() {
@@ -3991,89 +4328,113 @@ gl_FragColor=vec4(r,g,b,a);}`;
       }
     });
 
-    function runFall() {
-      const { Engine, Bodies, Body, World, Runner } = Matter;
-      const textEl = document.getElementById('about-tt-text');
-      if (!textEl) return;
-
-      // Wrap text node words in spans for measurement
-      function wrapWords(node) {
-        if (node.nodeType === 3) {
-          const parts = node.textContent.split(/(\s+)/);
-          const frag = document.createDocumentFragment();
-          parts.forEach(p => {
-            if (/\S/.test(p)) {
-              const s = document.createElement('span');
-              s.dataset.fw = '1';
-              s.style.display = 'inline-block';
-              s.textContent = p;
-              frag.appendChild(s);
-            } else if (p) {
-              frag.appendChild(document.createTextNode(p));
-            }
-          });
-          node.parentNode.replaceChild(frag, node);
-        } else if (node.nodeType === 1) {
-          Array.from(node.childNodes).forEach(wrapWords);
-        }
-      }
-
-      const savedHTML = h2.innerHTML;
-      wrapWords(textEl);
-
-      const data = Array.from(h2.querySelectorAll('[data-fw]')).map(s => {
-        const r = s.getBoundingClientRect();
-        const cs = window.getComputedStyle(s);
-        return {
-          text: s.textContent,
+    // Generic: measure elements, return data array + fixed overlay divs/imgs
+    function measure(domEls) {
+      return domEls.map(source => {
+        const r   = source.getBoundingClientRect();
+        if (r.width < 1 || r.height < 1) return null;
+        const cs  = window.getComputedStyle(source);
+        const isImg = source.tagName === 'IMG';
+        const d = {
           cx: r.left + r.width / 2,
-          cy: r.top + r.height / 2,
-          w: Math.max(r.width, 1),
-          h: Math.max(r.height, 1),
-          color: cs.color,
-          fontSize: cs.fontSize,
+          cy: r.top  + r.height / 2,
+          w:  r.width,
+          h:  r.height,
+          isImg,
+          src:        isImg ? source.src : null,
+          text:       isImg ? null : source.textContent,
+          color:      cs.color,
+          fontSize:   cs.fontSize,
           fontWeight: cs.fontWeight,
           fontFamily: cs.fontFamily,
         };
-      });
+        return d;
+      }).filter(Boolean);
+    }
 
-      h2.innerHTML = savedHTML;
-      h2.style.visibility = 'hidden';
-
-      const els = data.map(d => {
-        const el = document.createElement('div');
-        el.textContent = d.text;
-        el.style.cssText =
-          'position:fixed;pointer-events:none;z-index:9999;user-select:none;' +
-          'display:flex;align-items:center;justify-content:center;' +
-          'transform-origin:center center;will-change:transform;' +
-          `left:${d.cx - d.w / 2}px;top:${d.cy - d.h / 2}px;` +
-          `width:${d.w}px;height:${d.h}px;` +
-          `color:${d.color};font-size:${d.fontSize};` +
-          `font-weight:${d.fontWeight};font-family:${d.fontFamily};`;
+    function makeOverlays(data) {
+      return data.map(d => {
+        const el = d.isImg ? document.createElement('img') : document.createElement('div');
+        if (d.isImg) {
+          el.src = d.src;
+          el.style.cssText =
+            'position:fixed;pointer-events:none;z-index:9999;' +
+            'transform-origin:center center;will-change:transform;object-fit:contain;' +
+            `left:${d.cx - d.w/2}px;top:${d.cy - d.h/2}px;` +
+            `width:${d.w}px;height:${d.h}px;opacity:0.75;`;
+        } else {
+          el.textContent = d.text;
+          el.style.cssText =
+            'position:fixed;pointer-events:none;z-index:9999;user-select:none;' +
+            'display:flex;align-items:center;justify-content:center;' +
+            'transform-origin:center center;will-change:transform;' +
+            `left:${d.cx - d.w/2}px;top:${d.cy - d.h/2}px;` +
+            `width:${d.w}px;height:${d.h}px;` +
+            `color:${d.color};font-size:${d.fontSize};` +
+            `font-weight:${d.fontWeight};font-family:${d.fontFamily};`;
+        }
         document.body.appendChild(el);
         return el;
       });
+    }
 
+    function wrapWords(node) {
+      if (node.nodeType === 3) {
+        const parts = node.textContent.split(/(\s+)/);
+        const frag  = document.createDocumentFragment();
+        parts.forEach(p => {
+          if (/\S/.test(p)) {
+            const s = document.createElement('span');
+            s.dataset.fw = '1'; s.style.display = 'inline-block'; s.textContent = p;
+            frag.appendChild(s);
+          } else if (p) frag.appendChild(document.createTextNode(p));
+        });
+        node.parentNode.replaceChild(frag, node);
+      } else if (node.nodeType === 1) {
+        Array.from(node.childNodes).forEach(wrapWords);
+      }
+    }
+
+    function runFall() {
+      const { Engine, Bodies, Body, World, Runner } = Matter;
+
+      // ── H2 elements ──────────────────────────────
+      const textEl    = document.getElementById('about-tt-text');
+      const savedHTML = h2.innerHTML;
+      if (textEl) wrapWords(textEl);
+      const h2Data = measure(Array.from(h2.querySelectorAll('[data-fw]')));
+      h2.innerHTML = savedHTML;
+      h2.style.visibility = 'hidden';
+
+      // ── Tagline elements ──────────────────────────
+      // Collect visible leaf elements: text spans + logo img
+      const taglineEls = tagline
+        ? Array.from(tagline.querySelectorAll('span, img')).filter(el => {
+            const r = el.getBoundingClientRect();
+            return r.width > 1 && r.height > 1;
+          })
+        : [];
+      const tagData = measure(taglineEls);
+      if (tagline) tagline.style.visibility = 'hidden';
+
+      // ── All data + overlays ───────────────────────
+      const allData = [...h2Data, ...tagData];
+      const allEls  = makeOverlays(allData);
+
+      // ── Physics ───────────────────────────────────
       const engine = Engine.create({ gravity: { x: 0, y: 0.8 } });
-
-      const bodies = data.map(d => {
+      const bodies = allData.map(d => {
         const b = Bodies.rectangle(d.cx, d.cy, d.w, d.h, {
-          restitution: 0.6,
-          frictionAir: 0.02,
-          friction: 0.3,
+          restitution: 0.6, frictionAir: 0.02, friction: 0.3,
         });
         Body.setVelocity(b, { x: (Math.random() - 0.5) * 5, y: Math.random() * -2 });
         Body.setAngularVelocity(b, (Math.random() - 0.5) * 0.1);
         return b;
       });
-
       const ground = Bodies.rectangle(
-        window.innerWidth / 2, window.innerHeight + 40,
-        window.innerWidth * 3, 60,
+        window.innerWidth / 2, window.innerHeight + 40, window.innerWidth * 3, 60,
         { isStatic: true }
       );
-
       World.add(engine.world, [...bodies, ground]);
       const runner = Runner.create();
       Runner.run(runner, engine);
@@ -4081,9 +4442,9 @@ gl_FragColor=vec4(r,g,b,a);}`;
       let raf;
       (function tick() {
         bodies.forEach((b, i) => {
-          const dx = b.position.x - data[i].cx;
-          const dy = b.position.y - data[i].cy;
-          els[i].style.transform = `translate(${dx}px,${dy}px) rotate(${b.angle}rad)`;
+          const dx = b.position.x - allData[i].cx;
+          const dy = b.position.y - allData[i].cy;
+          allEls[i].style.transform = `translate(${dx}px,${dy}px) rotate(${b.angle}rad)`;
         });
         raf = requestAnimationFrame(tick);
       })();
@@ -4091,13 +4452,11 @@ gl_FragColor=vec4(r,g,b,a);}`;
       setTimeout(() => {
         cancelAnimationFrame(raf);
         Runner.stop(runner);
-        els.forEach(el => {
-          el.style.transition = 'opacity 0.4s ease';
-          el.style.opacity = '0';
-        });
+        allEls.forEach(el => { el.style.transition = 'opacity 0.4s ease'; el.style.opacity = '0'; });
         setTimeout(() => {
-          els.forEach(el => el.remove());
+          allEls.forEach(el => el.remove());
           h2.style.visibility = '';
+          if (tagline) tagline.style.visibility = '';
         }, 400);
       }, 1200);
     }
@@ -4150,7 +4509,7 @@ gl_FragColor=vec4(r,g,b,a);}`;
       requestAnimationFrame(() => {
         const tw = wrap.offsetWidth;
         const th = wrap.offsetHeight;
-        const px = 14, py = 10;
+        const px = 28, py = 10;
         const W = tw + px * 2;
         const H = th + py * 2;
 
