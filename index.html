@@ -1670,12 +1670,7 @@
         <span class="effect filter" id="gnav-filter"></span>
         <span class="effect text" id="gnav-text"></span>
       </div>
-      <div style="position:relative;display:inline-block;" id="cta-eb-wrap">
-        <div style="position:absolute;inset:0;overflow:visible;pointer-events:none;z-index:2;">
-          <canvas id="cta-eb-canvas" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);"></canvas>
-        </div>
-        <a href="#" class="header-btn-solid" id="hero-cta-nav" style="background:#07071a;position:relative;z-index:1;">Get Started</a>
-      </div>
+      <a href="#" class="header-btn-solid" id="hero-cta-nav">Get Started</a>
     </div>
 
     <!-- Mobile hamburger -->
@@ -3861,90 +3856,6 @@ gl_FragColor=vec4(r,g,b,a);}`;
       ease: 'power2.out',
       stagger: 0.06,
     });
-  })();
-
-  // ── ElectricBorder (Get Started btn) ──────────────
-  (function() {
-    const canvas = document.getElementById('cta-eb-canvas');
-    const btn    = document.getElementById('hero-cta-nav');
-    if (!canvas || !btn) return;
-
-    const ctx = canvas.getContext('2d');
-    const SPEED = 0.35, CHAOS = 0.28, BORDER_RADIUS = 7;
-    const OFFSET = 18, DISP = 16;
-    const COLOR  = '#2d6be4';
-    const dpr    = Math.min(window.devicePixelRatio || 1, 2);
-
-    let W = 0, H = 0, time = 0, lastT = 0;
-
-    function rand(x) { return ((Math.sin(x * 12.9898) * 43758.5453) % 1 + 1) % 1; }
-
-    function noise2D(x, y) {
-      const i=Math.floor(x), j=Math.floor(y), fx=x-i, fy=y-j;
-      const a=rand(i+j*57), b=rand(i+1+j*57), c=rand(i+(j+1)*57), d=rand(i+1+(j+1)*57);
-      const ux=fx*fx*(3-2*fx), uy=fy*fy*(3-2*fy);
-      return a*(1-ux)*(1-uy)+b*ux*(1-uy)+c*(1-ux)*uy+d*ux*uy;
-    }
-
-    function octNoise(x, t, seed) {
-      let y=0, amp=CHAOS, freq=10;
-      for (let i=0; i<10; i++) {
-        if (i>0) y += amp * noise2D(freq*x + seed*100, t*freq*0.3);
-        freq *= 1.6; amp *= 0.7;
-      }
-      return y;
-    }
-
-    function corner(cx,cy,r,sa,al,p){ const a=sa+p*al; return {x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)}; }
-
-    function rectPoint(t,l,top,w,h,r) {
-      const sw=w-2*r,sh=h-2*r,ca=Math.PI*r/2;
-      const perim=2*sw+2*sh+4*ca; let d=t*perim, acc=0;
-      if(d<=acc+sw){return{x:l+r+(d-acc)/sw*sw,y:top};} acc+=sw;
-      if(d<=acc+ca){return corner(l+w-r,top+r,r,-Math.PI/2,Math.PI/2,(d-acc)/ca);} acc+=ca;
-      if(d<=acc+sh){return{x:l+w,y:top+r+(d-acc)/sh*sh};} acc+=sh;
-      if(d<=acc+ca){return corner(l+w-r,top+h-r,r,0,Math.PI/2,(d-acc)/ca);} acc+=ca;
-      if(d<=acc+sw){return{x:l+w-r-(d-acc)/sw*sw,y:top+h};} acc+=sw;
-      if(d<=acc+ca){return corner(l+r,top+h-r,r,Math.PI/2,Math.PI/2,(d-acc)/ca);} acc+=ca;
-      if(d<=acc+sh){return{x:l,y:top+h-r-(d-acc)/sh*sh};} acc+=sh;
-      return corner(l+r,top+r,r,Math.PI,Math.PI/2,(d-acc)/ca);
-    }
-
-    function resize() {
-      const r = btn.getBoundingClientRect();
-      W = r.width  + OFFSET*2;
-      H = r.height + OFFSET*2;
-      canvas.width  = W*dpr; canvas.height = H*dpr;
-      canvas.style.width  = W+'px'; canvas.style.height = H+'px';
-    }
-    new ResizeObserver(resize).observe(btn);
-    resize();
-
-    function draw(now) {
-      const dt = (now - lastT) / 1000;
-      time += dt * SPEED; lastT = now;
-      ctx.setTransform(1,0,0,1,0,0);
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.scale(dpr,dpr);
-      ctx.strokeStyle = COLOR;
-      ctx.lineWidth   = 1.5;
-      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-      const l=OFFSET, top=OFFSET;
-      const bw=W-2*OFFSET, bh=H-2*OFFSET;
-      const r=Math.min(BORDER_RADIUS, Math.min(bw,bh)/2);
-      const samples = Math.floor((2*(bw+bh)+2*Math.PI*r)/2);
-      ctx.beginPath();
-      for (let i=0; i<=samples; i++) {
-        const p=i/samples;
-        const pt=rectPoint(p,l,top,bw,bh,r);
-        const dx=octNoise(p*8,time,0)*DISP;
-        const dy=octNoise(p*8,time,1)*DISP;
-        i===0 ? ctx.moveTo(pt.x+dx,pt.y+dy) : ctx.lineTo(pt.x+dx,pt.y+dy);
-      }
-      ctx.closePath(); ctx.stroke();
-      requestAnimationFrame(draw);
-    }
-    requestAnimationFrame(draw);
   })();
 
   // ── GooeyNav ───────────────────────────────────────
