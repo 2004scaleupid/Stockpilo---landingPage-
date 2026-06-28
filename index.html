@@ -1459,6 +1459,61 @@
       display: block;
     }
 
+    /* ── Hero 3-card fan mockup ──────────────────────── */
+    .hero3-cards-fan {
+      position: relative;
+      z-index: 1;
+      margin-top: 24px;
+      overflow: visible;
+      -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+      mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+      animation: fadeUp 1s cubic-bezier(.16,1,.3,1) 0.15s both;
+    }
+    .hero3-fan-card {
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(8,8,18,.95);
+      padding: 5px;
+      overflow: hidden;
+      will-change: transform;
+    }
+    .hero3-fan-card img {
+      border-radius: 5px;
+      border: 1px solid rgba(255,255,255,.07);
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+    }
+    .hero3-fan-left {
+      position: absolute;
+      top: 0;
+      left: -28%;
+      width: 100%;
+      transform: perspective(900px) rotateY(-18deg) scale(0.9);
+      transform-origin: center center;
+      z-index: 1;
+      opacity: 0.4;
+      box-shadow: -6px 20px 50px rgba(0,0,0,.6);
+    }
+    .hero3-fan-center {
+      position: relative;
+      width: 100%;
+      z-index: 3;
+      box-shadow: 0 20px 60px rgba(0,0,0,.75), inset 0 0 0 1px rgba(255,255,255,.07);
+    }
+    .hero3-fan-right {
+      position: absolute;
+      top: 0;
+      right: -28%;
+      width: 100%;
+      transform: perspective(900px) rotateY(18deg) scale(0.9);
+      transform-origin: center center;
+      z-index: 1;
+      opacity: 0.4;
+      box-shadow: 6px 20px 50px rgba(0,0,0,.6);
+    }
+
     /* ── Floating logos ────────────────────────────────── */
     .fl-logo {
       position: absolute;
@@ -1705,12 +1760,18 @@
 
       </div>
 
-      <!-- Right: dashboard screenshot -->
+      <!-- Right: 3-card dashboard fan -->
       <div class="hero3-screenshot-col">
         <div class="hero3-screenshot-glow"></div>
-        <div class="hero3-screenshot-wrap">
-          <div class="hero3-screenshot-inner">
+        <div class="hero3-cards-fan">
+          <div class="hero3-fan-card hero3-fan-left">
+            <img src="https://storage.efferd.com/screen/dashboard-dark.webp" alt="Stockpilo dashboard preview" width="1920" height="1080" loading="eager">
+          </div>
+          <div class="hero3-fan-card hero3-fan-center">
             <img src="https://storage.efferd.com/screen/dashboard-dark.webp" alt="Stockpilo dashboard" width="1920" height="1080" loading="eager">
+          </div>
+          <div class="hero3-fan-card hero3-fan-right">
+            <img src="https://storage.efferd.com/screen/dashboard-dark.webp" alt="Stockpilo dashboard preview" width="1920" height="1080" loading="eager">
           </div>
         </div>
       </div>
@@ -3722,7 +3783,9 @@ gl_FragColor=vec4(r,g,b,a);}`;
     Object.assign(rtRuler.style, {
       position:'absolute', visibility:'hidden', whiteSpace:'nowrap',
       fontFamily:'Geist,sans-serif', fontWeight:'700',
-      fontSize: getComputedStyle(rtWrap.closest('h2')||document.body).fontSize || '36px'
+      fontSize: getComputedStyle(rtWrap.closest('h2')||document.body).fontSize || '36px',
+      letterSpacing: getComputedStyle(rtWrap.closest('h2')||document.body).letterSpacing,
+      boxSizing: 'content-box',
     });
     document.body.appendChild(rtRuler);
 
@@ -4092,110 +4155,6 @@ gl_FragColor=vec4(r,g,b,a);}`;
     });
   })();
 
-  // ── Magnetic Cursor ────────────────────────────────
-  (function() {
-    if (typeof gsap === 'undefined') return;
-
-    // Minimal Vec2
-    function vec2(x, y) {
-      return {
-        x, y,
-        clone()       { return vec2(this.x, this.y); },
-        copy(v)       { this.x = v.x; this.y = v.y; return this; },
-        sub(v)        { this.x -= v.x; this.y -= v.y; return this; },
-        lerp(v, t)    { this.x += (v.x - this.x) * t; this.y += (v.y - this.y) * t; return this; },
-      };
-    }
-
-    const CFG = { lerp: 0.1, magnetic: 0.2, pad: 12, size: 24, speed: 0.02, maxSX: 1, maxSY: 0.3 };
-
-    // Create cursor div
-    const el = document.createElement('div');
-    el.style.cssText = `position:fixed;top:0;left:0;z-index:9999;pointer-events:none;will-change:transform;
-      background:white;mix-blend-mode:exclusion;width:${CFG.size}px;height:${CFG.size}px;border-radius:50%;
-      opacity:0;backdrop-filter:contrast(1.5);-webkit-backdrop-filter:contrast(1.5);`;
-    document.body.appendChild(el);
-    gsap.set(el, { xPercent: -50, yPercent: -50 });
-
-    const pos = { cur: vec2(-100,-100), tgt: vec2(-100,-100), prv: vec2(-100,-100) };
-    let hovered = false, detaching = false, ready = false;
-
-    // RAF loop
-    gsap.ticker.add(() => {
-      if (hovered || !ready) return;
-      pos.cur.lerp(pos.tgt, CFG.lerp);
-      const dx = pos.cur.x - pos.prv.x, dy = pos.cur.y - pos.prv.y;
-      pos.prv.copy(pos.cur);
-      const spd = Math.sqrt(dx*dx + dy*dy) * CFG.speed;
-      if (detaching) {
-        gsap.set(el, { x: pos.cur.x, y: pos.cur.y, scaleX:1, scaleY:1, rotate:0 });
-      } else {
-        gsap.set(el, {
-          x: pos.cur.x, y: pos.cur.y,
-          rotate: Math.atan2(dy, dx) * (180/Math.PI),
-          scaleX: 1 + Math.min(spd, CFG.maxSX),
-          scaleY: 1 - Math.min(spd, CFG.maxSY),
-        });
-      }
-    });
-
-    window.addEventListener('pointermove', (e) => {
-      if (!ready) {
-        pos.cur.x = pos.tgt.x = pos.prv.x = e.clientX;
-        pos.cur.y = pos.tgt.y = pos.prv.y = e.clientY;
-        gsap.set(el, { x: e.clientX, y: e.clientY, opacity: 1 });
-        ready = true;
-      }
-      pos.tgt.x = e.clientX;
-      pos.tgt.y = e.clientY;
-      gsap.to(el, { opacity: 1, duration: 0.2, overwrite: 'auto' });
-    }, { passive: true });
-
-    document.addEventListener('mouseleave', () => gsap.to(el, { opacity: 0, duration: 0.3 }));
-    document.addEventListener('mouseenter', () => gsap.to(el, { opacity: 1, duration: 0.3 }));
-
-    // Magnetic elements
-    document.querySelectorAll('[data-magnetic]').forEach(target => {
-      const xTo = gsap.quickTo(target, 'x', { duration: 1, ease: 'elastic.out(1,0.3)' });
-      const yTo = gsap.quickTo(target, 'y', { duration: 1, ease: 'elastic.out(1,0.3)' });
-
-      target.addEventListener('pointerenter', () => {
-        hovered = true; detaching = false;
-        const b = target.getBoundingClientRect();
-        const pad = CFG.pad * (1 + CFG.magnetic);
-        gsap.killTweensOf(el);
-        gsap.to(el, {
-          x: b.left + b.width/2, y: b.top + b.height/2,
-          width: b.width + pad*2, height: b.height + pad*2,
-          borderRadius: window.getComputedStyle(target).borderRadius || '50%',
-          scaleX:1, scaleY:1, rotate:0,
-          duration: 0.3, ease: 'power3.out', overwrite: 'all',
-        });
-      });
-
-      target.addEventListener('pointerleave', () => {
-        pos.cur.x = pos.prv.x = gsap.getProperty(el,'x');
-        pos.cur.y = pos.prv.y = gsap.getProperty(el,'y');
-        hovered = false; detaching = true;
-        gsap.killTweensOf(el);
-        gsap.to(el, {
-          width: CFG.size, height: CFG.size, borderRadius:'50%',
-          scaleX:1, scaleY:1,
-          duration: 0.35, ease: 'power3.out', overwrite: 'all',
-          onComplete: () => { detaching = false; },
-        });
-        xTo(0); yTo(0);
-      });
-
-      target.addEventListener('pointermove', (e) => {
-        const b = target.getBoundingClientRect();
-        xTo((e.clientX - (b.left + b.width/2))  * CFG.magnetic);
-        yTo((e.clientY - (b.top  + b.height/2)) * CFG.magnetic);
-      });
-
-      target.addEventListener('pointerout', () => { xTo(0); yTo(0); });
-    });
-  })();
 
 </script>
 
