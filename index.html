@@ -25,7 +25,10 @@
       --red:    #ef4444;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-snap-type: y proximity; }
+    #hero-section, #features, #about, #fscroll, #testimonials, #pricing, .fi-section {
+      scroll-snap-align: start;
+    }
     body {
       background: transparent;
       color: var(--text);
@@ -1954,7 +1957,7 @@
 
 
 <!-- ── ABOUT / TIMELINE SECTION ──────────────────── -->
-<section id="about" style="background:#000;padding:120px 24px 140px;overflow:hidden;scroll-margin-top:80px;">
+<section id="about" style="background:#000;padding:120px 24px 72px;overflow:hidden;scroll-margin-top:80px;">
   <div style="max-width:900px;margin:0 auto;" id="about-root">
 
     <h2 id="about-h2"
@@ -1992,7 +1995,7 @@
 <style>
   /* fscroll: sticky-scroll feature section */
   .fscroll-section { background:#000; position:relative; height:400vh; }
-  .fscroll-sticky { height:100vh; display:flex; align-items:flex-start; padding-top:clamp(72px,9vh,110px); background:#000; z-index:20; }
+  .fscroll-sticky { height:100vh; display:flex; align-items:center; background:#000; z-index:20; }
   .fscroll-inner { max-width:1140px; margin:0 auto; padding:0 48px; display:flex; gap:100px; align-items:center; width:100%; box-sizing:border-box; }
   .fscroll-left { width:300px; flex-shrink:0; }
   .fscroll-eyebrow { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#2d6be4; margin-bottom:12px; }
@@ -4602,57 +4605,7 @@ gl_FragColor=vec4(r,g,b,a);}`;
     revealSection('.fi-section', '.fi-section .fi-title, .fi-section .fi-btn', { stagger: 0.12, y: 36 });
   })();
 
-  // ── Global section autolock (scroll snap) ────────────────────────────
-  (function() {
-    var SNAP_SELECTORS = [
-      '#hero-section', '#features', '#about',
-      '#testimonials', '#pricing', '.fi-section',
-    ];
-    var fscrollEl = document.getElementById('fscroll');
-    var snapTimer;
-    var isSnapping = false;
-
-    function getSnapTargets() {
-      var targets = SNAP_SELECTORS
-        .map(function(s) { return document.querySelector(s); })
-        .filter(Boolean)
-        .map(function(el) { return el.offsetTop; });
-
-      // Insert 4 panel snaps inside the fscroll section
-      if (fscrollEl) {
-        var fTop = fscrollEl.offsetTop;
-        var panelH = fscrollEl.offsetHeight / 4;
-        for (var i = 0; i < 4; i++) {
-          targets.push(fTop + i * panelH);
-        }
-      }
-      return targets.sort(function(a, b) { return a - b; });
-    }
-
-    function snapNow() {
-      if (isSnapping) return;
-      var targets = getSnapTargets();
-      var sy = window.scrollY;
-
-      // Find nearest snap target
-      var nearest = targets.reduce(function(prev, curr) {
-        return Math.abs(curr - sy) < Math.abs(prev - sy) ? curr : prev;
-      });
-
-      // Only snap if within 45% viewport height from a target
-      if (Math.abs(nearest - sy) < window.innerHeight * 0.45 && Math.abs(nearest - sy) > 8) {
-        isSnapping = true;
-        window.scrollTo({ top: nearest, behavior: 'smooth' });
-        setTimeout(function() { isSnapping = false; }, 900);
-      }
-    }
-
-    window.addEventListener('scroll', function() {
-      if (isSnapping) return;
-      clearTimeout(snapTimer);
-      snapTimer = setTimeout(snapNow, 140);
-    }, { passive: true });
-  })();
+  // Section autolock handled by CSS scroll-snap-type: y proximity (see <html> styles)
 </script>
 </body>
 </html>
