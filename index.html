@@ -1990,18 +1990,27 @@
 
 
 <style>
-  .cscroll-section { background:#000; padding:120px 0 140px; overflow:hidden; }
-  .cscroll-track { position:relative; display:flex; flex-direction:column; gap:18px; }
-  .cscroll-mask-l, .cscroll-mask-r { position:absolute; top:0; bottom:0; width:220px; z-index:10; pointer-events:none; }
-  .cscroll-mask-l { left:0; background:linear-gradient(to right,#000 0%,transparent 100%); }
-  .cscroll-mask-r { right:0; background:linear-gradient(to left,#000 0%,transparent 100%); }
-  .cscroll-row-wrap { overflow:hidden; }
-  .cscroll-row { display:flex; gap:18px; width:max-content; }
-  .cscroll-row-l { animation:cscroll-l 50s linear infinite; }
-  .cscroll-row-r { animation:cscroll-r 50s linear infinite; }
-  .cscroll-row:hover { animation-play-state:paused; }
-  @keyframes cscroll-l { from { transform:translateX(0); } to { transform:translateX(-50%); } }
-  @keyframes cscroll-r { from { transform:translateX(-50%); } to { transform:translateX(0); } }
+  /* fscroll: sticky-scroll feature section */
+  .fscroll-section { background:#000; position:relative; height:400vh; }
+  .fscroll-sticky { height:100vh; display:flex; align-items:flex-start; padding-top:clamp(72px,9vh,110px); background:#000; z-index:20; }
+  .fscroll-inner { max-width:1140px; margin:0 auto; padding:0 48px; display:flex; gap:100px; align-items:center; width:100%; box-sizing:border-box; }
+  .fscroll-left { width:300px; flex-shrink:0; }
+  .fscroll-eyebrow { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#2d6be4; margin-bottom:12px; }
+  .fscroll-heading { font-family:'Geist',sans-serif; font-size:clamp(24px,3vw,38px); font-weight:700; color:#e8f0fe; letter-spacing:-0.03em; margin:0 0 44px; line-height:1.2; }
+  .fscroll-steps { display:flex; flex-direction:column; }
+  .fscroll-step { display:flex; align-items:flex-start; gap:16px; padding:18px 0; border-top:1px solid rgba(255,255,255,.06); opacity:.32; transition:opacity 0.4s ease; cursor:default; }
+  .fscroll-step-body { display:flex; flex-direction:column; gap:5px; }
+  .fscroll-step-desc { font-family:'Geist',sans-serif; font-size:13px; color:#6b8cba; line-height:1.6; margin:0; max-height:0; overflow:hidden; opacity:0; transition:max-height 0.45s ease, opacity 0.35s ease 0.05s; }
+  .fscroll-step.fs-active .fscroll-step-desc { max-height:72px; opacity:1; }
+  .fscroll-num { margin-top:2px; }
+  .fscroll-step:last-child { border-bottom:1px solid rgba(255,255,255,.06); }
+  .fscroll-step.fs-active { opacity:1; }
+  .fscroll-num { font-family:'Geist',sans-serif; font-size:11px; font-weight:700; color:#2d6be4; letter-spacing:.1em; min-width:22px; }
+  .fscroll-step-label { font-family:'Geist',sans-serif; font-size:15px; font-weight:600; color:#e8f0fe; }
+  .fscroll-right { flex:1; position:relative; height:440px; }
+  .fscroll-panel { position:absolute; top:0; left:0; right:0; opacity:0; pointer-events:none; will-change:opacity,transform; }
+  .fscroll-panel.fp-live { pointer-events:auto; }
+  .fscroll-panel .csc { width:100%; box-sizing:border-box; }
   .csc {
     flex-shrink:0; width:340px;
     background:#0a1628;
@@ -2025,317 +2034,145 @@
 </style>
 
 <!-- ── CARDS SCROLLING ──────────────────────────────── -->
-<section class="cscroll-section">
-  <!-- Heading -->
-  <div style="text-align:center;padding:0 24px;margin-bottom:60px;">
-    <div style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#2d6be4;margin-bottom:12px;">See it in action</div>
-    <h2 style="font-family:'Geist',sans-serif;font-size:clamp(26px,3.5vw,42px);font-weight:700;color:#e8f0fe;letter-spacing:-0.03em;margin:0;line-height:1.2;">Everything you need, in one place.</h2>
-  </div>
+<section class="fscroll-section" id="fscroll">
+  <div class="fscroll-sticky">
+    <div class="fscroll-inner">
 
-  <div class="cscroll-track">
-    <div class="cscroll-mask-l"></div>
-    <div class="cscroll-mask-r"></div>
-
-    <!-- Row 1 — scrolls left -->
-    <div class="cscroll-row-wrap">
-      <div class="cscroll-row cscroll-row-l">
-
-        <!-- Morning Brief -->
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">Stockpilo AI</div><div class="csc-title">Morning Brief</div></div>
-            <div style="font-size:12px;color:#6b8cba;font-family:'Geist',sans-serif;">Mon, May 16</div>
-          </div>
-          <div class="csc-divider"></div>
-          <div style="display:flex;flex-direction:column;gap:9px;">
-            <div style="background:rgba(45,107,228,.08);border:1px solid rgba(45,107,228,.15);border-radius:10px;padding:11px 13px;">
-              <div style="font-size:9px;font-weight:600;color:#2d6be4;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Market Mood</div>
-              <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">Futures pointing higher after Fed signals pause. Tech outperforming — NVDA leads pre-market.</div>
-            </div>
-            <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.14);border-radius:10px;padding:11px 13px;">
-              <div style="font-size:9px;font-weight:600;color:#10b981;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Your Watchlist</div>
-              <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">AAPL earnings Thursday — consensus EPS $1.53. MSFT cloud beat could lift the sector.</div>
-            </div>
-            <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.13);border-radius:10px;padding:11px 13px;">
-              <div style="font-size:9px;font-weight:600;color:#ef4444;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Watch Out</div>
-              <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">CPI data at 8:30 AM ET. Higher print = volatility. TSLA short interest elevated.</div>
+      <!-- Left rail -->
+      <div class="fscroll-left">
+        <div class="fscroll-eyebrow">See it in action</div>
+        <h2 class="fscroll-heading">Everything you need,<br>in one place.</h2>
+        <nav class="fscroll-steps">
+          <div class="fscroll-step fs-active" data-step="0">
+            <span class="fscroll-num">01</span>
+            <div class="fscroll-step-body">
+              <span class="fscroll-step-label">Top Movers</span>
+              <p class="fscroll-step-desc">Real-time gainers and losers, refreshed every 15 seconds. Know what's moving before the crowd catches on.</p>
             </div>
           </div>
-          <div class="csc-footer"><div class="csc-dot"></div>Generated by Stockpilo AI · 6:02 AM</div>
-        </div>
-
-        <!-- Top Gainers -->
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">Today's Movers</div><div class="csc-title">Top Gainers</div></div>
-            <div style="width:32px;height:32px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-              <svg width="14" height="14" viewBox="0 0 22 22" fill="none"><path d="M11 3L14.5 8H7.5L11 3Z" fill="#10b981"/></svg>
+          <div class="fscroll-step" data-step="1">
+            <span class="fscroll-num">02</span>
+            <div class="fscroll-step-body">
+              <span class="fscroll-step-label">AI Insight</span>
+              <p class="fscroll-step-desc">Deep-dive AI analysis behind every significant price move. Understand the why, not just the what.</p>
             </div>
           </div>
-          <div class="csc-divider"></div>
-          <div style="display:flex;flex-direction:column;">
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">N</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">NVDA</div><div style="font-size:11px;color:#6b8cba;">Nvidia Corp</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+8.2%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$887.40</div></div></div>
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">A</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">AAPL</div><div style="font-size:11px;color:#6b8cba;">Apple Inc</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+5.7%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$214.80</div></div></div>
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">M</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">MSFT</div><div style="font-size:11px;color:#6b8cba;">Microsoft</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+3.1%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$420.15</div></div></div>
-            <div class="csc-row" style="border-bottom:none;"><div class="csc-ticker-wrap"><div class="csc-avatar">G</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">GOOGL</div><div style="font-size:11px;color:#6b8cba;">Alphabet Inc</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+2.4%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$175.30</div></div></div>
-          </div>
-          <div class="csc-footer"><div class="csc-dot csc-dot-live"></div>Live · Updated every 15s</div>
-        </div>
-
-        <!-- AI Insight -->
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">AI Insight</div><div class="csc-title">Why NVDA is up 8.2%</div></div>
-            <div style="width:32px;height:32px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-              <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M9 2C9 2 5 5 5 9.5C5 12 6.8 14 9 14C11.2 14 13 12 13 9.5C13 5 9 2 9 2Z" stroke="#a855f7" stroke-width="1.5" stroke-linejoin="round"/><circle cx="9" cy="16" r="1" fill="#a855f7"/></svg>
+          <div class="fscroll-step" data-step="2">
+            <span class="fscroll-num">03</span>
+            <div class="fscroll-step-body">
+              <span class="fscroll-step-label">Portfolio</span>
+              <p class="fscroll-step-desc">Track your holdings and performance in real time. Clear P&L, weighted exposure, and daily change at a glance.</p>
             </div>
           </div>
-          <div class="csc-divider"></div>
-          <div style="background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.15);border-radius:10px;padding:12px 13px;margin-bottom:14px;">
-            <p style="font-size:11px;color:rgba(232,240,254,.85);line-height:1.65;margin:0;font-style:italic;">"Strong Q2 earnings beat by 18%. Data center revenue surged 141% YoY driven by AI chip demand. Multiple analyst upgrades followed."</p>
+          <div class="fscroll-step" data-step="3">
+            <span class="fscroll-num">04</span>
+            <div class="fscroll-step-body">
+              <span class="fscroll-step-label">Morning Brief</span>
+              <p class="fscroll-step-desc">Start every trading day with a personalised AI briefing — key signals, watchlist moves, and macro context.</p>
+            </div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">Q2 revenue +122% YoY — beat by $2.1B</span></div>
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">Data center: $18.4B (↑ 141%)</span></div>
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">12 analyst upgrades post-earnings</span></div>
-          </div>
-          <div><div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:11px;color:#6b8cba;">AI Confidence</span><span style="font-size:11px;color:#a855f7;font-weight:600;">94%</span></div><div style="height:4px;background:rgba(255,255,255,.07);border-radius:3px;"><div style="width:94%;height:100%;background:linear-gradient(to right,#7c3aed,#a855f7);border-radius:3px;"></div></div></div>
-        </div>
+        </nav>
+      </div>
 
-        <!-- Portfolio -->
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">Portfolio</div><div class="csc-title">Overview</div></div>
-            <div style="font-family:'Geist',sans-serif;text-align:right;"><div class="tabnum" style="font-size:20px;font-weight:800;color:#e8f0fe;letter-spacing:-0.03em;">$24,812</div><div class="tabnum" style="font-size:12px;color:#10b981;font-weight:600;">+$342.80 today</div></div>
-          </div>
-          <div class="csc-divider"></div>
-          <div style="display:flex;gap:3px;align-items:flex-end;height:64px;margin-bottom:18px;">
-            <div style="flex:1;height:45%;background:rgba(45,107,228,.3);border-radius:3px 3px 0 0;"></div>
-            <div style="flex:1;height:60%;background:rgba(45,107,228,.4);border-radius:3px 3px 0 0;"></div>
-            <div style="flex:1;height:50%;background:rgba(45,107,228,.35);border-radius:3px 3px 0 0;"></div>
-            <div style="flex:1;height:75%;background:rgba(45,107,228,.5);border-radius:3px 3px 0 0;"></div>
-            <div style="flex:1;height:65%;background:rgba(45,107,228,.45);border-radius:3px 3px 0 0;"></div>
-            <div style="flex:1;height:55%;background:rgba(45,107,228,.4);border-radius:3px 3px 0 0;"></div>
-            <div style="flex:1;height:80%;background:rgba(45,107,228,.55);border-radius:3px 3px 0 0;"></div>
-            <div style="flex:1;height:100%;background:#10b981;border-radius:3px 3px 0 0;box-shadow:0 0 8px rgba(16,185,129,.4);"></div>
-          </div>
-          <div style="display:flex;flex-direction:column;">
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">N</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">NVDA</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#10b981;">+$218.40</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">+8.2%</div></div></div>
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">A</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">AAPL</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#10b981;">+$104.60</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">+5.7%</div></div></div>
-            <div class="csc-row" style="border-bottom:none;"><div class="csc-ticker-wrap"><div class="csc-avatar">T</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">TSLA</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#ef4444;">−$20.40</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">−1.8%</div></div></div>
+      <!-- Right: 4 overlapping panels, one visible at a time -->
+      <div class="fscroll-right">
+
+        <!-- Panel 0: Top Movers -->
+        <div class="fscroll-panel fp-live" data-panel="0">
+          <div class="csc">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+              <div><div class="csc-label">Today's Movers</div><div class="csc-title">Top Gainers</div></div>
+              <div style="width:32px;height:32px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                <svg width="14" height="14" viewBox="0 0 22 22" fill="none"><path d="M11 3L14.5 8H7.5L11 3Z" fill="#10b981"/></svg>
+              </div>
+            </div>
+            <div class="csc-divider"></div>
+            <div style="display:flex;flex-direction:column;">
+              <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">N</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">NVDA</div><div style="font-size:11px;color:#6b8cba;">Nvidia Corp</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+8.2%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$887.40</div></div></div>
+              <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">A</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">AAPL</div><div style="font-size:11px;color:#6b8cba;">Apple Inc</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+5.7%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$214.80</div></div></div>
+              <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">M</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">MSFT</div><div style="font-size:11px;color:#6b8cba;">Microsoft</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+3.1%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$420.15</div></div></div>
+              <div class="csc-row" style="border-bottom:none;"><div class="csc-ticker-wrap"><div class="csc-avatar">G</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">GOOGL</div><div style="font-size:11px;color:#6b8cba;">Alphabet Inc</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+2.4%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$175.30</div></div></div>
+            </div>
+            <div class="csc-footer"><div class="csc-dot csc-dot-live"></div>Live · Updated every 15s</div>
           </div>
         </div>
 
-        <!-- ── DUPLICATE ROW 1 for seamless loop ── -->
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">Stockpilo AI</div><div class="csc-title">Morning Brief</div></div>
-            <div style="font-size:12px;color:#6b8cba;font-family:'Geist',sans-serif;">Mon, May 16</div>
-          </div>
-          <div class="csc-divider"></div>
-          <div style="display:flex;flex-direction:column;gap:9px;">
-            <div style="background:rgba(45,107,228,.08);border:1px solid rgba(45,107,228,.15);border-radius:10px;padding:11px 13px;">
-              <div style="font-size:9px;font-weight:600;color:#2d6be4;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Market Mood</div>
-              <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">Futures pointing higher after Fed signals pause. Tech outperforming — NVDA leads pre-market.</div>
+        <!-- Panel 1: AI Insight -->
+        <div class="fscroll-panel" data-panel="1">
+          <div class="csc">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+              <div><div class="csc-label">AI Insight</div><div class="csc-title">Why NVDA is up 8.2%</div></div>
+              <div style="width:32px;height:32px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M9 2C9 2 5 5 5 9.5C5 12 6.8 14 9 14C11.2 14 13 12 13 9.5C13 5 9 2 9 2Z" stroke="#a855f7" stroke-width="1.5" stroke-linejoin="round"/><circle cx="9" cy="16" r="1" fill="#a855f7"/></svg>
+              </div>
             </div>
-            <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.14);border-radius:10px;padding:11px 13px;">
-              <div style="font-size:9px;font-weight:600;color:#10b981;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Your Watchlist</div>
-              <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">AAPL earnings Thursday — consensus EPS $1.53. MSFT cloud beat could lift the sector.</div>
+            <div class="csc-divider"></div>
+            <div style="background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.15);border-radius:10px;padding:12px 13px;margin-bottom:14px;">
+              <p style="font-size:11px;color:rgba(232,240,254,.85);line-height:1.65;margin:0;font-style:italic;">"Strong Q2 earnings beat by 18%. Data center revenue surged 141% YoY driven by AI chip demand. Multiple analyst upgrades followed."</p>
             </div>
-            <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.13);border-radius:10px;padding:11px 13px;">
-              <div style="font-size:9px;font-weight:600;color:#ef4444;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Watch Out</div>
-              <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">CPI data at 8:30 AM ET. Higher print = volatility. TSLA short interest elevated.</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+              <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">Q2 revenue +122% YoY — beat by $2.1B</span></div>
+              <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">Data center: $18.4B (&#x2191; 141%)</span></div>
+              <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">12 analyst upgrades post-earnings</span></div>
+            </div>
+            <div><div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:11px;color:#6b8cba;">AI Confidence</span><span style="font-size:11px;color:#a855f7;font-weight:600;">94%</span></div><div style="height:4px;background:rgba(255,255,255,.07);border-radius:3px;"><div style="width:94%;height:100%;background:linear-gradient(to right,#7c3aed,#a855f7);border-radius:3px;"></div></div></div>
+          </div>
+        </div>
+
+        <!-- Panel 2: Portfolio -->
+        <div class="fscroll-panel" data-panel="2">
+          <div class="csc">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+              <div><div class="csc-label">Portfolio</div><div class="csc-title">Overview</div></div>
+              <div style="font-family:'Geist',sans-serif;text-align:right;"><div class="tabnum" style="font-size:20px;font-weight:800;color:#e8f0fe;letter-spacing:-0.03em;">$24,812</div><div class="tabnum" style="font-size:12px;color:#10b981;font-weight:600;">+$342.80 today</div></div>
+            </div>
+            <div class="csc-divider"></div>
+            <div style="display:flex;gap:3px;align-items:flex-end;height:64px;margin-bottom:18px;">
+              <div style="flex:1;height:45%;background:rgba(45,107,228,.3);border-radius:3px 3px 0 0;"></div>
+              <div style="flex:1;height:60%;background:rgba(45,107,228,.4);border-radius:3px 3px 0 0;"></div>
+              <div style="flex:1;height:50%;background:rgba(45,107,228,.35);border-radius:3px 3px 0 0;"></div>
+              <div style="flex:1;height:75%;background:rgba(45,107,228,.5);border-radius:3px 3px 0 0;"></div>
+              <div style="flex:1;height:65%;background:rgba(45,107,228,.45);border-radius:3px 3px 0 0;"></div>
+              <div style="flex:1;height:55%;background:rgba(45,107,228,.4);border-radius:3px 3px 0 0;"></div>
+              <div style="flex:1;height:80%;background:rgba(45,107,228,.55);border-radius:3px 3px 0 0;"></div>
+              <div style="flex:1;height:100%;background:#10b981;border-radius:3px 3px 0 0;box-shadow:0 0 8px rgba(16,185,129,.4);"></div>
+            </div>
+            <div style="display:flex;flex-direction:column;">
+              <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">N</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">NVDA</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#10b981;">+$218.40</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">+8.2%</div></div></div>
+              <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">A</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">AAPL</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#10b981;">+$104.60</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">+5.7%</div></div></div>
+              <div class="csc-row" style="border-bottom:none;"><div class="csc-ticker-wrap"><div class="csc-avatar">T</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">TSLA</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#ef4444;">&#x2212;$20.40</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">&#x2212;1.8%</div></div></div>
             </div>
           </div>
-          <div class="csc-footer"><div class="csc-dot"></div>Generated by Stockpilo AI · 6:02 AM</div>
         </div>
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">Today's Movers</div><div class="csc-title">Top Gainers</div></div>
-            <div style="width:32px;height:32px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 22 22" fill="none"><path d="M11 3L14.5 8H7.5L11 3Z" fill="#10b981"/></svg></div>
-          </div>
-          <div class="csc-divider"></div>
-          <div style="display:flex;flex-direction:column;">
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">N</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">NVDA</div><div style="font-size:11px;color:#6b8cba;">Nvidia Corp</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+8.2%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$887.40</div></div></div>
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">A</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">AAPL</div><div style="font-size:11px;color:#6b8cba;">Apple Inc</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+5.7%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$214.80</div></div></div>
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">M</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">MSFT</div><div style="font-size:11px;color:#6b8cba;">Microsoft</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+3.1%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$420.15</div></div></div>
-            <div class="csc-row" style="border-bottom:none;"><div class="csc-ticker-wrap"><div class="csc-avatar">G</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">GOOGL</div><div style="font-size:11px;color:#6b8cba;">Alphabet Inc</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+2.4%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$175.30</div></div></div>
-          </div>
-          <div class="csc-footer"><div class="csc-dot csc-dot-live"></div>Live · Updated every 15s</div>
-        </div>
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">AI Insight</div><div class="csc-title">Why NVDA is up 8.2%</div></div>
-            <div style="width:32px;height:32px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M9 2C9 2 5 5 5 9.5C5 12 6.8 14 9 14C11.2 14 13 12 13 9.5C13 5 9 2 9 2Z" stroke="#a855f7" stroke-width="1.5" stroke-linejoin="round"/><circle cx="9" cy="16" r="1" fill="#a855f7"/></svg></div>
-          </div>
-          <div class="csc-divider"></div>
-          <div style="background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.15);border-radius:10px;padding:12px 13px;margin-bottom:14px;"><p style="font-size:11px;color:rgba(232,240,254,.85);line-height:1.65;margin:0;font-style:italic;">"Strong Q2 earnings beat by 18%. Data center revenue surged 141% YoY driven by AI chip demand. Multiple analyst upgrades followed."</p></div>
-          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">Q2 revenue +122% YoY — beat by $2.1B</span></div>
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">Data center: $18.4B (↑ 141%)</span></div>
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">12 analyst upgrades post-earnings</span></div>
-          </div>
-          <div><div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:11px;color:#6b8cba;">AI Confidence</span><span style="font-size:11px;color:#a855f7;font-weight:600;">94%</span></div><div style="height:4px;background:rgba(255,255,255,.07);border-radius:3px;"><div style="width:94%;height:100%;background:linear-gradient(to right,#7c3aed,#a855f7);border-radius:3px;"></div></div></div>
-        </div>
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">Portfolio</div><div class="csc-title">Overview</div></div>
-            <div style="font-family:'Geist',sans-serif;text-align:right;"><div class="tabnum" style="font-size:20px;font-weight:800;color:#e8f0fe;letter-spacing:-0.03em;">$24,812</div><div class="tabnum" style="font-size:12px;color:#10b981;font-weight:600;">+$342.80 today</div></div>
-          </div>
-          <div class="csc-divider"></div>
-          <div style="display:flex;gap:3px;align-items:flex-end;height:64px;margin-bottom:18px;">
-            <div style="flex:1;height:45%;background:rgba(45,107,228,.3);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:60%;background:rgba(45,107,228,.4);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:50%;background:rgba(45,107,228,.35);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:75%;background:rgba(45,107,228,.5);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:65%;background:rgba(45,107,228,.45);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:55%;background:rgba(45,107,228,.4);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:80%;background:rgba(45,107,228,.55);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:100%;background:#10b981;border-radius:3px 3px 0 0;box-shadow:0 0 8px rgba(16,185,129,.4);"></div>
-          </div>
-          <div style="display:flex;flex-direction:column;">
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">N</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">NVDA</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#10b981;">+$218.40</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">+8.2%</div></div></div>
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">A</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">AAPL</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#10b981;">+$104.60</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">+5.7%</div></div></div>
-            <div class="csc-row" style="border-bottom:none;"><div class="csc-ticker-wrap"><div class="csc-avatar">T</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">TSLA</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#ef4444;">−$20.40</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">−1.8%</div></div></div>
+
+        <!-- Panel 3: Morning Brief -->
+        <div class="fscroll-panel" data-panel="3">
+          <div class="csc">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+              <div><div class="csc-label">Stockpilo AI</div><div class="csc-title">Morning Brief</div></div>
+              <div style="font-size:12px;color:#6b8cba;font-family:'Geist',sans-serif;">Mon, May 16</div>
+            </div>
+            <div class="csc-divider"></div>
+            <div style="display:flex;flex-direction:column;gap:9px;">
+              <div style="background:rgba(45,107,228,.08);border:1px solid rgba(45,107,228,.15);border-radius:10px;padding:11px 13px;">
+                <div style="font-size:9px;font-weight:600;color:#2d6be4;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Market Mood</div>
+                <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">Futures pointing higher after Fed signals pause. Tech outperforming &#x2014; NVDA leads pre-market.</div>
+              </div>
+              <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.14);border-radius:10px;padding:11px 13px;">
+                <div style="font-size:9px;font-weight:600;color:#10b981;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Your Watchlist</div>
+                <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">AAPL earnings Thursday &#x2014; consensus EPS $1.53. MSFT cloud beat could lift the sector.</div>
+              </div>
+              <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.13);border-radius:10px;padding:11px 13px;">
+                <div style="font-size:9px;font-weight:600;color:#ef4444;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Watch Out</div>
+                <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">CPI data at 8:30 AM ET. Higher print = volatility. TSLA short interest elevated.</div>
+              </div>
+            </div>
+            <div class="csc-footer"><div class="csc-dot"></div>Generated by Stockpilo AI &#xb7; 6:02 AM</div>
           </div>
         </div>
 
       </div>
-    </div><!-- end row 1 -->
-
-    <!-- Row 2 — scrolls right (reversed order) -->
-    <div class="cscroll-row-wrap">
-      <div class="cscroll-row cscroll-row-r">
-
-        <!-- Portfolio first in row 2 -->
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">Portfolio</div><div class="csc-title">Overview</div></div>
-            <div style="font-family:'Geist',sans-serif;text-align:right;"><div class="tabnum" style="font-size:20px;font-weight:800;color:#e8f0fe;letter-spacing:-0.03em;">$24,812</div><div class="tabnum" style="font-size:12px;color:#10b981;font-weight:600;">+$342.80 today</div></div>
-          </div>
-          <div class="csc-divider"></div>
-          <div style="display:flex;gap:3px;align-items:flex-end;height:64px;margin-bottom:18px;">
-            <div style="flex:1;height:45%;background:rgba(45,107,228,.3);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:60%;background:rgba(45,107,228,.4);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:50%;background:rgba(45,107,228,.35);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:75%;background:rgba(45,107,228,.5);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:65%;background:rgba(45,107,228,.45);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:55%;background:rgba(45,107,228,.4);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:80%;background:rgba(45,107,228,.55);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:100%;background:#10b981;border-radius:3px 3px 0 0;box-shadow:0 0 8px rgba(16,185,129,.4);"></div>
-          </div>
-          <div style="display:flex;flex-direction:column;">
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">N</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">NVDA</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#10b981;">+$218.40</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">+8.2%</div></div></div>
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">A</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">AAPL</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#10b981;">+$104.60</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">+5.7%</div></div></div>
-            <div class="csc-row" style="border-bottom:none;"><div class="csc-ticker-wrap"><div class="csc-avatar">T</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">TSLA</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#ef4444;">−$20.40</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">−1.8%</div></div></div>
-          </div>
-        </div>
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">AI Insight</div><div class="csc-title">Why NVDA is up 8.2%</div></div>
-            <div style="width:32px;height:32px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M9 2C9 2 5 5 5 9.5C5 12 6.8 14 9 14C11.2 14 13 12 13 9.5C13 5 9 2 9 2Z" stroke="#a855f7" stroke-width="1.5" stroke-linejoin="round"/><circle cx="9" cy="16" r="1" fill="#a855f7"/></svg></div>
-          </div>
-          <div class="csc-divider"></div>
-          <div style="background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.15);border-radius:10px;padding:12px 13px;margin-bottom:14px;"><p style="font-size:11px;color:rgba(232,240,254,.85);line-height:1.65;margin:0;font-style:italic;">"Strong Q2 earnings beat by 18%. Data center revenue surged 141% YoY driven by AI chip demand. Multiple analyst upgrades followed."</p></div>
-          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">Q2 revenue +122% YoY — beat by $2.1B</span></div>
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">Data center: $18.4B (↑ 141%)</span></div>
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">12 analyst upgrades post-earnings</span></div>
-          </div>
-          <div><div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:11px;color:#6b8cba;">AI Confidence</span><span style="font-size:11px;color:#a855f7;font-weight:600;">94%</span></div><div style="height:4px;background:rgba(255,255,255,.07);border-radius:3px;"><div style="width:94%;height:100%;background:linear-gradient(to right,#7c3aed,#a855f7);border-radius:3px;"></div></div></div>
-        </div>
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">Today's Movers</div><div class="csc-title">Top Gainers</div></div>
-            <div style="width:32px;height:32px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 22 22" fill="none"><path d="M11 3L14.5 8H7.5L11 3Z" fill="#10b981"/></svg></div>
-          </div>
-          <div class="csc-divider"></div>
-          <div style="display:flex;flex-direction:column;">
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">N</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">NVDA</div><div style="font-size:11px;color:#6b8cba;">Nvidia Corp</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+8.2%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$887.40</div></div></div>
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">A</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">AAPL</div><div style="font-size:11px;color:#6b8cba;">Apple Inc</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+5.7%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$214.80</div></div></div>
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">M</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">MSFT</div><div style="font-size:11px;color:#6b8cba;">Microsoft</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+3.1%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$420.15</div></div></div>
-            <div class="csc-row" style="border-bottom:none;"><div class="csc-ticker-wrap"><div class="csc-avatar">G</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">GOOGL</div><div style="font-size:11px;color:#6b8cba;">Alphabet Inc</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+2.4%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$175.30</div></div></div>
-          </div>
-          <div class="csc-footer"><div class="csc-dot csc-dot-live"></div>Live · Updated every 15s</div>
-        </div>
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">Stockpilo AI</div><div class="csc-title">Morning Brief</div></div>
-            <div style="font-size:12px;color:#6b8cba;font-family:'Geist',sans-serif;">Mon, May 16</div>
-          </div>
-          <div class="csc-divider"></div>
-          <div style="display:flex;flex-direction:column;gap:9px;">
-            <div style="background:rgba(45,107,228,.08);border:1px solid rgba(45,107,228,.15);border-radius:10px;padding:11px 13px;">
-              <div style="font-size:9px;font-weight:600;color:#2d6be4;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Market Mood</div>
-              <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">Futures pointing higher after Fed signals pause. Tech outperforming — NVDA leads pre-market.</div>
-            </div>
-            <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.14);border-radius:10px;padding:11px 13px;">
-              <div style="font-size:9px;font-weight:600;color:#10b981;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Your Watchlist</div>
-              <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">AAPL earnings Thursday — consensus EPS $1.53. MSFT cloud beat could lift the sector.</div>
-            </div>
-            <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.13);border-radius:10px;padding:11px 13px;">
-              <div style="font-size:9px;font-weight:600;color:#ef4444;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Watch Out</div>
-              <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">CPI data at 8:30 AM ET. Higher print = volatility. TSLA short interest elevated.</div>
-            </div>
-          </div>
-          <div class="csc-footer"><div class="csc-dot"></div>Generated by Stockpilo AI · 6:02 AM</div>
-        </div>
-        <!-- duplicates row 2 -->
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">Portfolio</div><div class="csc-title">Overview</div></div>
-            <div style="font-family:'Geist',sans-serif;text-align:right;"><div class="tabnum" style="font-size:20px;font-weight:800;color:#e8f0fe;letter-spacing:-0.03em;">$24,812</div><div class="tabnum" style="font-size:12px;color:#10b981;font-weight:600;">+$342.80 today</div></div>
-          </div>
-          <div class="csc-divider"></div>
-          <div style="display:flex;gap:3px;align-items:flex-end;height:64px;margin-bottom:18px;">
-            <div style="flex:1;height:45%;background:rgba(45,107,228,.3);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:60%;background:rgba(45,107,228,.4);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:50%;background:rgba(45,107,228,.35);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:75%;background:rgba(45,107,228,.5);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:65%;background:rgba(45,107,228,.45);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:55%;background:rgba(45,107,228,.4);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:80%;background:rgba(45,107,228,.55);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:100%;background:#10b981;border-radius:3px 3px 0 0;box-shadow:0 0 8px rgba(16,185,129,.4);"></div>
-          </div>
-          <div style="display:flex;flex-direction:column;">
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">N</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">NVDA</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#10b981;">+$218.40</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">+8.2%</div></div></div>
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">A</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">AAPL</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#10b981;">+$104.60</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">+5.7%</div></div></div>
-            <div class="csc-row" style="border-bottom:none;"><div class="csc-ticker-wrap"><div class="csc-avatar">T</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">TSLA</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#ef4444;">−$20.40</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">−1.8%</div></div></div>
-          </div>
-        </div>
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">AI Insight</div><div class="csc-title">Why NVDA is up 8.2%</div></div>
-            <div style="width:32px;height:32px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M9 2C9 2 5 5 5 9.5C5 12 6.8 14 9 14C11.2 14 13 12 13 9.5C13 5 9 2 9 2Z" stroke="#a855f7" stroke-width="1.5" stroke-linejoin="round"/><circle cx="9" cy="16" r="1" fill="#a855f7"/></svg></div>
-          </div>
-          <div class="csc-divider"></div>
-          <div style="background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.15);border-radius:10px;padding:12px 13px;margin-bottom:14px;"><p style="font-size:11px;color:rgba(232,240,254,.85);line-height:1.65;margin:0;font-style:italic;">"Strong Q2 earnings beat by 18%. Data center revenue surged 141% YoY driven by AI chip demand. Multiple analyst upgrades followed."</p></div>
-          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">Q2 revenue +122% YoY — beat by $2.1B</span></div>
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">Data center: $18.4B (↑ 141%)</span></div>
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">12 analyst upgrades post-earnings</span></div>
-          </div>
-          <div><div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:11px;color:#6b8cba;">AI Confidence</span><span style="font-size:11px;color:#a855f7;font-weight:600;">94%</span></div><div style="height:4px;background:rgba(255,255,255,.07);border-radius:3px;"><div style="width:94%;height:100%;background:linear-gradient(to right,#7c3aed,#a855f7);border-radius:3px;"></div></div></div>
-        </div>
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">Today's Movers</div><div class="csc-title">Top Gainers</div></div>
-            <div style="width:32px;height:32px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 22 22" fill="none"><path d="M11 3L14.5 8H7.5L11 3Z" fill="#10b981"/></svg></div>
-          </div>
-          <div class="csc-divider"></div>
-          <div style="display:flex;flex-direction:column;">
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">N</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">NVDA</div><div style="font-size:11px;color:#6b8cba;">Nvidia Corp</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+8.2%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$887.40</div></div></div>
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">A</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">AAPL</div><div style="font-size:11px;color:#6b8cba;">Apple Inc</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+5.7%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$214.80</div></div></div>
-            <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">M</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">MSFT</div><div style="font-size:11px;color:#6b8cba;">Microsoft</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+3.1%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$420.15</div></div></div>
-            <div class="csc-row" style="border-bottom:none;"><div class="csc-ticker-wrap"><div class="csc-avatar">G</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">GOOGL</div><div style="font-size:11px;color:#6b8cba;">Alphabet Inc</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+2.4%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$175.30</div></div></div>
-          </div>
-          <div class="csc-footer"><div class="csc-dot csc-dot-live"></div>Live · Updated every 15s</div>
-        </div>
-        <div class="csc">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div><div class="csc-label">Stockpilo AI</div><div class="csc-title">Morning Brief</div></div>
-            <div style="font-size:12px;color:#6b8cba;font-family:'Geist',sans-serif;">Mon, May 16</div>
-          </div>
-          <div class="csc-divider"></div>
-          <div style="display:flex;flex-direction:column;gap:9px;">
-            <div style="background:rgba(45,107,228,.08);border:1px solid rgba(45,107,228,.15);border-radius:10px;padding:11px 13px;">
-              <div style="font-size:9px;font-weight:600;color:#2d6be4;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Market Mood</div>
-              <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">Futures pointing higher after Fed signals pause. Tech outperforming — NVDA leads pre-market.</div>
-            </div>
-            <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.14);border-radius:10px;padding:11px 13px;">
-              <div style="font-size:9px;font-weight:600;color:#10b981;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Your Watchlist</div>
-              <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">AAPL earnings Thursday — consensus EPS $1.53. MSFT cloud beat could lift the sector.</div>
-            </div>
-            <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.13);border-radius:10px;padding:11px 13px;">
-              <div style="font-size:9px;font-weight:600;color:#ef4444;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Watch Out</div>
-              <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">CPI data at 8:30 AM ET. Higher print = volatility. TSLA short interest elevated.</div>
-            </div>
-          </div>
-          <div class="csc-footer"><div class="csc-dot"></div>Generated by Stockpilo AI · 6:02 AM</div>
-        </div>
-
-      </div>
-    </div><!-- end row 2 -->
-
+    </div>
   </div>
 </section>
 
@@ -2692,49 +2529,64 @@
     });
   })();
 
-  // ── Hero → Features scroll transition ──────────────
-  // Matches the component's heroContentRef fade + screenshotRef parallax
+  // ── Hero → Features scroll transition (GSAP scrub) ──
   (function() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
     const heroContent = document.getElementById('hero-content');
-    const scrollNext  = document.getElementById('scroll-next'); // ticker tape
+    const heroMockup  = document.getElementById('hero-mockup');
+    const scrollNext  = document.getElementById('scroll-next');
     const featSection = document.getElementById('features');
 
-    if (!heroContent) return;
+    if (!heroContent || !featSection) return;
 
-    let ticking = false;
+    // Features starts 80px below natural position — slides up into place.
+    gsap.set(featSection, { y: 80 });
 
-    window.addEventListener('scroll', () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const scrollY  = window.pageYOffset;
-        const heroH    = window.innerHeight; // hero is 100vh
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#hero-section',
+        start: 'top top',
+        end: '+=680',
+        scrub: 1.2,
+      },
+    });
 
-        // Hero content: fades + drifts up
-        const maxScroll = 400;
-        const opacity   = Math.max(0, 1 - scrollY / maxScroll);
-        heroContent.style.opacity   = opacity;
-        heroContent.style.transform = `translateY(-${(scrollY * 0.15).toFixed(2)}px)`;
+    // ── Phase 1: hero content crushes and exits ──────────
+    // scaleY compresses toward the bottom edge (origin: center bottom),
+    // y pushes the block upward, opacity fades out.
+    tl.to(heroContent, {
+      opacity: 0,
+      y: -64,
+      scaleY: 0.84,
+      transformOrigin: 'center bottom',
+      ease: 'power2.in',
+      duration: 0.62,
+    }, 0);
 
-        // Mockup strip: slower parallax, no fade
-        const heroMockup = document.getElementById('hero-mockup');
-        if (heroMockup) {
-          heroMockup.style.transform = `translateY(-${(scrollY * 0.08).toFixed(2)}px)`;
-        }
+    if (scrollNext) {
+      tl.to(scrollNext, { opacity: 0, duration: 0.3, ease: 'power1.in' }, 0);
+    }
 
-        // Ticker: fades out same as hero
-        if (scrollNext) scrollNext.style.opacity = opacity;
+    if (heroMockup) {
+      tl.to(heroMockup, {
+        y: -48,
+        opacity: 0.15,
+        ease: 'power1.in',
+        duration: 0.62,
+      }, 0);
+    }
 
-        // Top Gainers: parallax slide up (stays visible, no fade)
-        const shift = Math.min(scrollY * 0.35, heroH * 0.25);
-        if (featSection) {
-          featSection.style.opacity   = '1';
-          featSection.style.transform = `translateY(-${shift.toFixed(2)}px)`;
-        }
-
-        ticking = false;
-      });
-    }, { passive: true });
+    // ── Phase 2: features slides up with back.out overshoot ─
+    // Starts at 0.28 into the timeline so it overlaps the hero exit.
+    // back.out(1.5) makes features briefly overshoot y:0 (go ~12px too far)
+    // before settling — baked into the scroll position map via the ease curve.
+    tl.to(featSection, {
+      y: 0,
+      ease: 'back.out(1.5)',
+      duration: 0.72,
+    }, 0.28);
   })();
 
   // ── Floating icons mouse repulsion (spring physics) ─
@@ -4649,6 +4501,157 @@ gl_FragColor=vec4(r,g,b,a);}`;
     }, { threshold: 0.5 });
 
     obs.observe(heroSection);
+  })();
+
+  // fscroll: sticky-scroll section
+  (function() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    var section = document.getElementById('fscroll');
+    if (!section) return;
+    var sticky  = section.querySelector('.fscroll-sticky');
+    var panels  = Array.from(section.querySelectorAll('.fscroll-panel'));
+    var steps   = Array.from(section.querySelectorAll('.fscroll-step'));
+    if (!panels.length || !sticky) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Init: only first panel visible
+    gsap.set(panels, { opacity: 0, y: 28 });
+    gsap.set(panels[0], { opacity: 1, y: 0 });
+
+    function setActive(idx) {
+      steps.forEach(function(s, i) { s.classList.toggle('fs-active', i === idx); });
+    }
+
+    var lastStep = 0;
+
+    // Pin sticky inside the 400vh section; snap locks each quarter-panel.
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top top',
+      end: 'bottom bottom',
+      pin: sticky,
+      pinSpacing: false,
+      snap: {
+        snapTo: [0, 0.25, 0.5, 0.75, 1],
+        duration: { min: 0.25, max: 0.65 },
+        delay: 0.05,
+        ease: 'power2.inOut',
+      },
+      onUpdate: function(self) {
+        var idx = Math.min(Math.floor(self.progress * 4), 3);
+        if (idx === lastStep) return;
+        var fwd  = idx > lastStep;
+        var prev = panels[lastStep];
+        var next = panels[idx];
+        if (fwd) {
+          gsap.to(prev, { opacity: 0, y: -28, duration: 0.35, ease: 'power2.inOut', overwrite: true });
+          gsap.fromTo(next, { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', overwrite: true });
+        } else {
+          gsap.to(prev, { opacity: 0, y: 28, duration: 0.3, ease: 'power2.inOut', overwrite: true });
+          gsap.fromTo(next, { opacity: 0, y: -28 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', overwrite: true });
+        }
+        prev.classList.remove('fp-live');
+        next.classList.add('fp-live');
+        setActive(idx);
+        lastStep = idx;
+      },
+    });
+
+    // Single deferred refresh
+    document.fonts.ready.then(function() {
+      setTimeout(function() { ScrollTrigger.refresh(); }, 150);
+    });
+  })();
+
+  // ── Section entrance animations (GSAP ScrollTrigger) ────────────────
+  (function() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    function revealSection(trigger, targets, opts) {
+      var els = typeof targets === 'string'
+        ? Array.from(document.querySelectorAll(targets))
+        : targets;
+      if (!els.length) return;
+      gsap.fromTo(els,
+        { opacity: 0, y: opts && opts.y != null ? opts.y : 44 },
+        {
+          opacity: 1, y: 0,
+          duration: opts && opts.dur ? opts.dur : 0.75,
+          ease: 'power2.out',
+          stagger: opts && opts.stagger ? opts.stagger : 0.1,
+          scrollTrigger: {
+            trigger: document.querySelector(trigger),
+            start: 'top 82%',
+            once: true,
+          },
+        }
+      );
+    }
+
+    // fscroll left rail enters with the section (steps excluded — they have CSS opacity management)
+    revealSection('#fscroll', '#fscroll .fscroll-eyebrow, #fscroll .fscroll-heading', { stagger: 0.1, y: 32 });
+
+    // Testimonials heading
+    revealSection('#testimonials', '#testimonials h2, #testimonials > div > p', { stagger: 0.1 });
+
+    // Pricing already uses .reveal IntersectionObserver — no extra animation needed
+
+    // fi-section heading + button
+    revealSection('.fi-section', '.fi-section .fi-title, .fi-section .fi-btn', { stagger: 0.12, y: 36 });
+  })();
+
+  // ── Global section autolock (scroll snap) ────────────────────────────
+  (function() {
+    var SNAP_SELECTORS = [
+      '#hero-section', '#features', '#about',
+      '#testimonials', '#pricing', '.fi-section',
+    ];
+    var fscrollEl = document.getElementById('fscroll');
+    var snapTimer;
+    var isSnapping = false;
+
+    function getSnapTargets() {
+      var targets = SNAP_SELECTORS
+        .map(function(s) { return document.querySelector(s); })
+        .filter(Boolean)
+        .map(function(el) { return el.offsetTop; });
+
+      // Insert 4 panel snaps inside the fscroll section
+      if (fscrollEl) {
+        var fTop = fscrollEl.offsetTop;
+        var panelH = fscrollEl.offsetHeight / 4;
+        for (var i = 0; i < 4; i++) {
+          targets.push(fTop + i * panelH);
+        }
+      }
+      return targets.sort(function(a, b) { return a - b; });
+    }
+
+    function snapNow() {
+      if (isSnapping) return;
+      var targets = getSnapTargets();
+      var sy = window.scrollY;
+
+      // Find nearest snap target
+      var nearest = targets.reduce(function(prev, curr) {
+        return Math.abs(curr - sy) < Math.abs(prev - sy) ? curr : prev;
+      });
+
+      // Only snap if within 45% viewport height from a target
+      if (Math.abs(nearest - sy) < window.innerHeight * 0.45 && Math.abs(nearest - sy) > 8) {
+        isSnapping = true;
+        window.scrollTo({ top: nearest, behavior: 'smooth' });
+        setTimeout(function() { isSnapping = false; }, 900);
+      }
+    }
+
+    window.addEventListener('scroll', function() {
+      if (isSnapping) return;
+      clearTimeout(snapTimer);
+      snapTimer = setTimeout(snapNow, 140);
+    }, { passive: true });
   })();
 </script>
 </body>
