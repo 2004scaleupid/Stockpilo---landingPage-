@@ -1994,8 +1994,8 @@
 
 <style>
   /* fscroll: sticky-scroll feature section */
-  .fscroll-section { background:#000; position:relative; height:400vh; }
-  .fscroll-sticky { height:100vh; display:flex; align-items:center; background:#000; z-index:20; }
+  .fscroll-section { background:transparent; position:relative; height:400vh; }
+  .fscroll-sticky { height:100vh; display:flex; align-items:center; background:transparent; z-index:20; }
   .fscroll-inner { max-width:1140px; margin:0 auto; padding:0 48px; display:flex; gap:100px; align-items:center; width:100%; box-sizing:border-box; }
   .fscroll-left { width:300px; flex-shrink:0; }
   .fscroll-eyebrow { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#2d6be4; margin-bottom:12px; }
@@ -4528,19 +4528,13 @@ gl_FragColor=vec4(r,g,b,a);}`;
 
     var lastStep = 0;
 
-    // Pin sticky inside the 400vh section; snap locks each quarter-panel.
+    // Pin sticky inside the 400vh section; CSS proximity snap handles section locking.
     ScrollTrigger.create({
       trigger: section,
       start: 'top top',
       end: 'bottom bottom',
       pin: sticky,
       pinSpacing: false,
-      snap: {
-        snapTo: [0, 0.25, 0.5, 0.75, 1],
-        duration: { min: 0.25, max: 0.65 },
-        delay: 0.05,
-        ease: 'power2.inOut',
-      },
       onUpdate: function(self) {
         var idx = Math.min(Math.floor(self.progress * 4), 3);
         if (idx === lastStep) return;
