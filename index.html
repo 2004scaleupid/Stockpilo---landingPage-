@@ -2030,19 +2030,19 @@
 <style>
   /* ── #why : Composio-style sticky-scroll ─────────────── */
   .why-section { background:#000; position:relative; z-index:10; padding:96px 0 72px; }
-  .why-wrap { max-width:1320px; margin:0 auto; padding:0 48px 0 clamp(24px,5vw,80px); box-sizing:border-box; }
+  .why-wrap { max-width:1320px; margin:0 auto; padding:0 48px 0 clamp(24px,5vw,80px); box-sizing:border-box; position:relative; z-index:1; }
 
   .why-eyebrow { display:inline-flex; align-items:center; gap:9px; font-family:ui-monospace,'SF Mono',Menlo,monospace;
     font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#6b8cba;
-    border:1px solid #1e3a5f; border-radius:999px; padding:7px 14px; }
+    border:1px solid #383a3e; border-radius:999px; padding:7px 14px; }
   .why-eyebrow-sq { width:7px; height:7px; border-radius:2px; background:#2d6be4; box-shadow:0 0 10px rgba(45,107,228,.85); }
   .why-heading { font-family:'Geist',sans-serif; font-size:clamp(30px,4.4vw,56px); font-weight:700;
     letter-spacing:-.03em; line-height:1.06; color:#fff; margin:22px 0 0; max-width:16ch; }
 
   .why-grid { display:grid; grid-template-columns:240px 1fr; gap:40px; margin-top:28px; align-items:start; }
 
-  /* Left rail — position:sticky (NOT a GSAP pin) */
-  .why-rail { position:sticky; top:22vh; align-self:start; display:flex; flex-direction:column; gap:6px; }
+  /* Left rail — position:sticky (NOT a GSAP pin); offset matches the stacking cards */
+  .why-rail { position:sticky; top:80px; align-self:start; display:flex; flex-direction:column; gap:6px; }
   .why-rail-item { display:flex; align-items:center; gap:14px; padding:14px 16px; border-radius:12px;
     border:1px solid transparent; opacity:.5; transition:opacity .4s cubic-bezier(.16,1,.3,1),
     background-color .4s cubic-bezier(.16,1,.3,1), border-color .4s cubic-bezier(.16,1,.3,1); }
@@ -2052,30 +2052,47 @@
   .why-rail-item.is-active { opacity:1; background:rgba(45,107,228,.08); border-color:rgba(45,107,228,.32); }
   .why-rail-item.is-active .why-rail-num { color:#2d6be4; }
 
-  /* Right column — 4 stacked blocks, tightly stacked (~1.4 per screen) */
-  .why-blocks { display:flex; flex-direction:column; gap:52px; }
-  .why-block { display:grid; grid-template-columns:1.2fr 0.8fr; gap:40px; align-items:center; }
+  /* Right column — 4 sticky STACKING cards (Composio pattern). Each sticks at the
+     same top offset with an increasing z-index; the next card slides up and covers
+     the one before it — pure CSS, no scroll-linked JS for the reveal. gap:0 → flush. */
+  .why-blocks { display:flex; flex-direction:column; gap:0; }
+  /* Trailing spacer (a flex item, so it extends the CONTENT box — sticky is bounded by
+     the content box, not padding) gives the LAST card scroll room to dwell like the rest. */
+  .why-blocks::after { content:''; flex:0 0 auto; height:clamp(200px,42vh,420px); }
+  .why-block { display:grid; grid-template-columns:1.2fr 0.8fr; gap:40px; align-items:stretch;
+    position:sticky; top:80px; height:clamp(520px,64vh,640px);
+    background:#17181b; border:1px solid #383a3e; border-radius:24px; padding:26px 30px;
+    overflow:hidden; box-sizing:border-box;
+    box-shadow:0 -10px 30px -12px rgba(0,0,0,.55), 0 26px 60px -22px rgba(0,0,0,.8); }
+  /* Increasing z-index in DOM order → later cards cover earlier ones */
+  .why-blocks .why-block:nth-child(1) { z-index:1; }
+  .why-blocks .why-block:nth-child(2) { z-index:2; }
+  .why-blocks .why-block:nth-child(3) { z-index:3; }
+  .why-blocks .why-block:nth-child(4) { z-index:4; }
 
   /* Visual : tall filled panel — animated blue bg behind the real .csc card */
-  .why-visual { display:flex; align-items:center; justify-content:center; }
-  .why-panel { position:relative; width:100%; min-height:64vh; border-radius:22px; overflow:hidden;
-    background:#060b16; border:1px solid #14243d; display:flex; align-items:center; justify-content:center;
+  .why-visual { display:flex; align-items:stretch; justify-content:center; }
+  .why-panel { position:relative; width:100%; height:100%; min-height:0; border-radius:22px; overflow:hidden;
+    background:#0b0d10; border:1px solid #26282c; display:flex; align-items:center; justify-content:center;
     padding:30px; box-sizing:border-box;
     box-shadow:0 28px 80px -24px rgba(0,0,0,.85), inset 0 1px 0 rgba(255,255,255,.05); }
-  /* Animated brand-blue/navy gradient bg — the faster parallax layer */
-  .why-bg { position:absolute; inset:-14%; z-index:0; pointer-events:none;
-    background:linear-gradient(125deg,#061633 0%,#0a2b63 26%,#1a4491 50%,#0a2650 74%,#05122e 100%);
-    background-size:220% 220%; animation:bgshift 16s ease-in-out infinite;
-    will-change:transform,background-position; }
-  @keyframes bgshift { 0%,100%{background-position:0% 50%;} 50%{background-position:100% 50%;} }
+  /* "Ethereal shadow" bg — neutral cool-charcoal radial blobs (soft grey haze on
+     near-black), blurred then warped by an SVG feTurbulence/feDisplacementMap filter;
+     the warp drifts via a rAF that nudges the filter's baseFrequency (see JS). Still
+     the parallax layer (JS translates .why-bg). Colours only — filter/rAF unchanged. */
+  .why-bg { position:absolute; inset:-25%; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(38% 46% at 30% 32%, rgba(208,216,230,.22), transparent 68%),
+      radial-gradient(44% 52% at 72% 60%, rgba(148,160,180,.16), transparent 70%),
+      radial-gradient(58% 62% at 48% 82%, rgba(58,66,82,.30), transparent 74%),
+      radial-gradient(80% 85% at 50% 28%, rgba(38,44,56,.34), transparent 82%);
+    filter:blur(18px) url(#ethereal-shadow);
+    will-change:transform; }
   .why-panel::before { content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
-    background:radial-gradient(120% 90% at 50% 0%, rgba(45,107,228,.28), transparent 60%); }
+    background:radial-gradient(120% 90% at 50% 0%, rgba(200,210,224,.15), transparent 60%); }
+  /* Soft edge vignette (replaces the old grid) — focuses the glow, adds depth */
   .why-panel::after { content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
-    background-image:linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
-    background-size:34px 34px;
-    -webkit-mask-image:radial-gradient(120% 100% at 50% 40%, #000 55%, transparent);
-    mask-image:radial-gradient(120% 100% at 50% 40%, #000 55%, transparent); }
+    background:radial-gradient(125% 100% at 50% 45%, transparent 52%, rgba(6,8,12,.55) 100%); }
   .why-panel .csc { position:relative; z-index:2; width:100%; max-width:600px; flex-shrink:0;
     will-change:transform; }
 
@@ -2085,7 +2102,8 @@
   .why-block.in .why-visual { opacity:1; transform:none; }
   .why-block.in .why-text { opacity:1; transform:none; transition-delay:.08s; }
 
-  /* Text zone */
+  /* Text zone — vertically centred within the stretched card cell */
+  .why-text { display:flex; flex-direction:column; justify-content:center; }
   .why-num { align-self:flex-start; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:12px;
     letter-spacing:.1em; color:#2d6be4; border:1px solid rgba(45,107,228,.3); border-radius:6px; padding:3px 9px; }
   .why-h3 { font-family:'Geist',sans-serif; font-size:clamp(22px,2.4vw,30px); font-weight:700;
@@ -2104,13 +2122,18 @@
     .why-rail { position:sticky; top:64px; z-index:5; flex-direction:row; overflow-x:auto; gap:8px;
       padding:8px; margin:0 -8px; background:rgba(0,0,0,.8); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
     .why-rail-item { flex:0 0 auto; padding:10px 14px; }
-    .why-block { grid-template-columns:1fr; gap:24px; min-height:auto; padding:44px 0; }
-    .why-panel { max-width:420px; margin:0 auto; }
+    /* Mobile: NO sticky stacking — cards flow normally in a spaced column */
+    .why-blocks { gap:24px; }
+    .why-blocks::after { height:0; }
+    .why-block { grid-template-columns:1fr; gap:24px; position:static; height:auto; min-height:auto;
+      padding:22px; align-items:center; }
+    .why-visual { align-items:center; }
+    .why-panel { height:auto; min-height:0; max-width:420px; margin:0 auto; }
   }
   .csc {
     flex-shrink:0; width:340px;
-    background:#0a1628;
-    border:1px solid #1e3a5f;
+    background:#17181b;
+    border:1px solid #383a3e;
     border-radius:18px;
     padding:26px 26px 22px;
     box-sizing:border-box;
@@ -2127,7 +2150,24 @@
   .csc-row:last-child { border-bottom:none; }
   .csc-ticker-wrap { display:flex; align-items:center; gap:10px; }
   .csc-avatar { width:30px; height:30px; border-radius:7px; background:rgba(255,255,255,.05); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#e8f0fe; font-family:'Geist',sans-serif; }
+
+  /* ── #about → #why : scroll-drawn connecting line (non-invasive SVG layer) ── */
+  /* Sits BEHIND all #why content (.why-wrap is z-index:1); never intercepts clicks. */
+  #aw-line-layer { position:absolute; left:0; width:100%; z-index:0; pointer-events:none; overflow:visible; }
+  #aw-line-layer svg { display:block; width:100%; height:100%; overflow:visible; }
+  #aw-line-path { fill:none; stroke:#2d6be4; stroke-width:6; stroke-linecap:round; stroke-linejoin:round;
+    filter:drop-shadow(0 0 10px rgba(45,107,228,.9)) drop-shadow(0 0 22px rgba(45,107,228,.5)); }
+  /* Mobile: hide — single-column stacked cards + horizontal rail make a vertical weave misaligned. */
+  @media (max-width:900px) { #aw-line-layer { display:none; } }
 </style>
+
+<!-- Ethereal-shadow SVG filter (one def, referenced by every card's .why-bg) -->
+<svg aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden;pointer-events:none;">
+  <filter id="ethereal-shadow" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.010 0.012" numOctaves="2" seed="7" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="50" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
 
 <!-- ── WHY STOCKPILO (sticky-scroll) ───────────────── -->
 <section id="why" class="why-section">
@@ -4807,6 +4847,147 @@ gl_FragColor=vec4(r,g,b,a);}`;
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', sync, { passive: true });
     sync();
+  })();
+
+  // ── #why : "ethereal shadow" drift — nudge the shared SVG filter's baseFrequency ──
+  // Lightweight: ONE feTurbulence, one rAF, no WebGL. Runs only while #why is on
+  // screen (IntersectionObserver) and never under reduced-motion (filter stays static).
+  (function() {
+    var turb = document.querySelector('#ethereal-shadow feTurbulence');
+    var why = document.getElementById('why');
+    if (!turb || !why) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return; // leave the warp static — organic shape, no motion
+
+    var raf = null, t = 0;
+    function tick() {
+      t += 0.006; // ~17s per breath cycle at 60fps
+      var bx = (0.010 + Math.sin(t) * 0.0035).toFixed(4);
+      var by = (0.011 + Math.sin(t * 0.73 + 1.3) * 0.0035).toFixed(4); // out-of-phase → organic drift
+      turb.setAttribute('baseFrequency', bx + ' ' + by);
+      raf = requestAnimationFrame(tick);
+    }
+    function start() { if (!raf) raf = requestAnimationFrame(tick); }
+    function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) { if (e.isIntersecting) start(); else stop(); });
+      }, { rootMargin: '160px 0px 160px 0px' });
+      io.observe(why);
+    } else { start(); }
+  })();
+
+  // ── #about → #why : scroll-drawn connecting line (own passive + rAF listener) ──
+  // A single blue glowing SVG weave revealed via stroke-dashoffset tied to scroll
+  // progress. The span lives ENTIRELY in normal-scroll space: it starts ~160px past
+  // the #about pin-release seam and ends at the last #why card, so it never slides
+  // against the pinned/fixed #about content. Fully independent of the #about pin,
+  // the #why parallax, and the rail IntersectionObserver. No GSAP, no ScrollTrigger.
+  (function() {
+    var why = document.getElementById('why');
+    if (!why) return;
+    var blocks = Array.prototype.slice.call(why.querySelectorAll('.why-block'));
+    if (!blocks.length) return;
+
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var START_GAP = 24; // px below the #about tagline where the line begins (small, no buffer)
+
+    var NS = 'http://www.w3.org/2000/svg';
+    var layer = document.createElement('div');
+    layer.id = 'aw-line-layer';
+    layer.setAttribute('aria-hidden', 'true');
+    var svg = document.createElementNS(NS, 'svg');
+    var path = document.createElementNS(NS, 'path');
+    path.id = 'aw-line-path';
+    svg.appendChild(path);
+    layer.appendChild(svg);
+    why.insertBefore(layer, why.firstChild); // first child + z-index:0 → behind content
+
+    var spanTop = 0, spanH = 0, len = 0, seamDoc = 0;
+
+    // Vertical weave: returns to the centre column each segment, bowing left/right.
+    function buildPath(W, H) {
+      var cx = W * 0.42;                       // centre near the card column (left-of-centre)
+      var amp = Math.min(W * 0.075, 88);       // weave amplitude, capped
+      var waves = Math.max(3, Math.round(H / 430));
+      var seg = H / waves;
+      var d = 'M ' + cx.toFixed(1) + ' 0';
+      var dir = 1;
+      for (var i = 0; i < waves; i++) {
+        var y0 = seg * i, y1 = seg * (i + 1);
+        d += ' C ' + (cx + dir * amp).toFixed(1) + ' ' + (y0 + seg * 0.34).toFixed(1)
+           + ' ' + (cx + dir * amp).toFixed(1) + ' ' + (y0 + seg * 0.66).toFixed(1)
+           + ' ' + cx.toFixed(1) + ' ' + y1.toFixed(1);
+        dir = -dir;
+      }
+      return d;
+    }
+
+    function draw() {
+      if (!len) return;
+      if (reduce) { path.style.strokeDashoffset = '0'; return; } // fully drawn, static
+      var vh = window.innerHeight;
+      // The tip leads ~half a viewport ahead so it ARRIVES at each card as it is framed
+      // (stretches the draw over more scroll), but never so far that drawing would begin
+      // above the pin-release seam (which would slide against the frozen #about content).
+      var lead = Math.min(vh * 0.5, (spanTop - seamDoc) - 40);
+      if (lead < 0) lead = 0;
+      var prog = (window.scrollY + lead - spanTop) / spanH;
+      if (prog < 0) prog = 0; else if (prog > 1) prog = 1;
+      path.style.strokeDashoffset = (len * (1 - prog)).toFixed(1);
+    }
+
+    function layout() {
+      if (getComputedStyle(layer).display === 'none') return; // hidden <900px — skip work
+      var whyTopDoc = why.getBoundingClientRect().top + window.scrollY;
+      var last = blocks[blocks.length - 1];
+      var spanBottomDoc = last.getBoundingClientRect().bottom + window.scrollY; // precise last-card bottom
+
+      // Anchor the start to the #about tagline's RELEASED resting position. The tagline
+      // is pinned, so its live doc-Y varies with scroll; but its offset WITHIN the stage
+      // is fixed, and the stage rests against #why — so released bottom = seam + that offset.
+      var stage = document.getElementById('about-stage');
+      var tagline = document.getElementById('about-tagline');
+      if (stage && tagline) {
+        var stageH = stage.offsetHeight;
+        seamDoc = whyTopDoc - stageH; // pin-release doc-Y (= aboutTop + PIN)
+        var tagBottomInStage = tagline.getBoundingClientRect().bottom - stage.getBoundingClientRect().top;
+        spanTop = seamDoc + tagBottomInStage + START_GAP;
+        if (spanTop < seamDoc + 40) spanTop = seamDoc + 40; // safety: never above the seam
+      } else {
+        spanTop = whyTopDoc - 200; seamDoc = spanTop - 40;
+      }
+
+      spanH = Math.max(1, spanBottomDoc - spanTop);
+      var W = why.clientWidth;
+      layer.style.top = (spanTop - whyTopDoc) + 'px'; // relative to #why → up into the #about tail
+      layer.style.height = spanH + 'px';
+      svg.setAttribute('viewBox', '0 0 ' + W + ' ' + spanH);
+      path.setAttribute('d', buildPath(W, spanH));
+      len = path.getTotalLength();
+      path.style.strokeDasharray = len.toFixed(1);
+      path.style.strokeDashoffset = reduce ? '0' : len.toFixed(1);
+      draw();
+    }
+
+    // Own throttled scroll listener — independent of every existing handler.
+    var ticking = false;
+    function onScroll() {
+      if (!ticking) { ticking = true; requestAnimationFrame(function() { ticking = false; draw(); }); }
+    }
+    if (!reduce) window.addEventListener('scroll', onScroll, { passive: true });
+
+    var rtick = false;
+    window.addEventListener('resize', function() {
+      if (!rtick) { rtick = true; requestAnimationFrame(function() { rtick = false; layout(); }); }
+    }, { passive: true });
+
+    // Build once layout has settled. Re-measure after late shifts (GSAP pin-spacer,
+    // fonts, images) since the span depends on the pinned #about's reserved height.
+    if (document.readyState === 'complete') layout(); else window.addEventListener('load', layout);
+    setTimeout(layout, 400);
+    setTimeout(layout, 1400);
   })();
 
   // ── Section entrance animations (GSAP ScrollTrigger) ────────────────
