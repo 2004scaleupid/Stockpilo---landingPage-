@@ -26,7 +26,7 @@
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; scroll-snap-type: y proximity; }
-    #hero-section, #features, #about, #fscroll, #testimonials, #pricing, .fi-section {
+    #hero-section, #features, #about, #why, #testimonials, #pricing, .fi-section {
       scroll-snap-align: start;
     }
     body {
@@ -580,11 +580,40 @@
       display: inline-flex; align-items: center; justify-content: center;
       padding: 5px 14px; border-radius: 7px;
       font-size: 13px; font-weight: 600; color: #fff;
-      text-decoration: none; background: #2d6be4;
-      transition: background 0.15s; font-family: 'Geist', sans-serif;
+      text-decoration: none; font-family: 'Geist', sans-serif;
       cursor: pointer; border: none;
+      position: relative; overflow: hidden; isolation: isolate;
+      background: #2455c4; /* opaque brand-blue base — guarantees no black through rounded corners */
+      transition: filter 0.15s;
+      animation: metal-breathe 3s ease-in-out infinite; /* always-on breathing glow */
     }
-    .header-btn-solid:hover { background: #2558c4; }
+    /* Flowing blue-metal surface — slow conic swirl, sized to always cover the corners */
+    .header-btn-solid::before {
+      content: ""; position: absolute; inset: -120%; z-index: 1;
+      background: conic-gradient(from 0deg at 50% 50%, #1e3f9e, #2d6be4, #7db0ff, #2d6be4, #1a367f, #2d6be4, #6ea6ff, #2d6be4, #1e3f9e);
+      animation: metal-swirl 16s linear infinite;
+    }
+    /* Soft specular highlight — radial, no hard streak, no blend-mode */
+    .header-btn-solid::after {
+      content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+      background: radial-gradient(120% 80% at 30% 25%, rgba(255,255,255,.42), rgba(255,255,255,0) 55%);
+    }
+    .header-btn-solid .btn-label { position: relative; z-index: 3; text-shadow: 0 1px 2px rgba(0,0,0,.4); }
+    .header-btn-solid:hover { filter: brightness(0.92); }
+    @keyframes metal-swirl { to { transform: rotate(360deg); } }
+    @keyframes metal-breathe {
+      0%,100% { box-shadow: 0 0 14px rgba(45,107,228,.42), 0 0 30px rgba(45,107,228,.2); }
+      50%     { box-shadow: 0 0 20px rgba(45,107,228,.72), 0 0 52px rgba(45,107,228,.4); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .header-btn-solid { animation: none; box-shadow: 0 0 16px rgba(45,107,228,.45); }
+      .header-btn-solid::before { animation: none; }
+      .about-tt-cursor { animation: none; opacity: 0; }
+      .why-rail-item { transition: none !important; }
+      .csc-dot-live { animation: none !important; }
+      .why-bg { animation: none !important; }
+      .why-visual, .why-text { opacity: 1 !important; transform: none !important; transition: none; }
+    }
     .mobile-nav-link {
       display: flex; align-items: center;
       padding: 10px 12px; border-radius: 7px;
@@ -1722,7 +1751,7 @@
         <span class="effect filter" id="gnav-filter"></span>
         <span class="effect text" id="gnav-text"></span>
       </div>
-      <a href="#" class="header-btn-solid" id="hero-cta-nav">Get Started</a>
+      <a href="#" class="header-btn-solid" id="hero-cta-nav"><span class="btn-label">Get Started</span></a>
     </div>
 
     <!-- Mobile hamburger -->
@@ -1743,7 +1772,7 @@
       <a href="/faqs.html" class="mobile-nav-link">FAQs</a>
       <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;padding:0 4px;">
         <a href="#" class="header-btn-outline" style="width:100%;justify-content:center;">Sign In</a>
-        <a href="https://www.stockpiloapp.com/auth" class="header-btn-solid" style="width:100%;justify-content:center;">Get Started</a>
+        <a href="https://www.stockpiloapp.com/auth" class="header-btn-solid" style="width:100%;justify-content:center;"><span class="btn-label">Get Started</span></a>
       </div>
     </div>
   </div>
@@ -1957,13 +1986,18 @@
 
 
 <!-- ── ABOUT / TIMELINE SECTION ──────────────────── -->
-<section id="about" style="background:#000;padding:120px 24px 72px;overflow:hidden;scroll-margin-top:80px;">
-  <div style="max-width:900px;margin:0 auto;" id="about-root">
+<section id="about" style="position:relative;overflow:hidden;scroll-margin-top:80px;">
+  <div id="about-stage" style="height:85vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:0 24px;box-sizing:border-box;">
+    <div style="max-width:900px;margin:0 auto;width:100%;position:relative;" id="about-root">
 
     <h2 id="about-h2"
-      style="font-family:'Geist',sans-serif;font-size:clamp(28px,5vw,58px);font-weight:700;color:#fff;line-height:1.12;letter-spacing:-.03em;margin-bottom:48px;min-height:1.3em;">
-      <span id="about-tt-text"></span><span class="about-tt-cursor" id="about-tt-cursor">|</span>
-    </h2>
+      style="font-family:'Geist',sans-serif;font-size:clamp(28px,5vw,58px);font-weight:700;color:#fff;line-height:1.12;letter-spacing:-.03em;margin-bottom:48px;"></h2>
+
+    <!-- Layer 2: single overlay in the SAME headline slot. Scrub backspaces the
+         assembled headline here, then types the second line in its place. Absolute
+         so it never affects flow; #about-h2 stays in flow reserving the height. -->
+    <h2 id="about-type" aria-hidden="true"
+      style="position:absolute;left:0;top:0;right:0;margin:0;font-family:'Geist',sans-serif;font-size:clamp(28px,5vw,58px);font-weight:700;color:#fff;line-height:1.12;letter-spacing:-.03em;opacity:0;z-index:2;pointer-events:none;"><span id="about-type-txt"></span><span class="about-tt-cursor" id="about-type-cursor" aria-hidden="true">|</span></h2>
 
     <div id="about-tagline" style="opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease;display:flex;flex-direction:column;gap:2px;">
       <div style="display:flex;align-items:center;gap:10px;">
@@ -1976,6 +2010,7 @@
       </div>
     </div>
 
+    </div>
   </div>
 </section>
 
@@ -1993,27 +2028,85 @@
 
 
 <style>
-  /* fscroll: sticky-scroll feature section */
-  .fscroll-section { background:transparent; position:relative; height:400vh; }
-  .fscroll-sticky { height:100vh; display:flex; align-items:center; background:transparent; z-index:20; }
-  .fscroll-inner { max-width:1140px; margin:0 auto; padding:0 48px; display:flex; gap:100px; align-items:center; width:100%; box-sizing:border-box; }
-  .fscroll-left { width:300px; flex-shrink:0; }
-  .fscroll-eyebrow { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#2d6be4; margin-bottom:12px; }
-  .fscroll-heading { font-family:'Geist',sans-serif; font-size:clamp(24px,3vw,38px); font-weight:700; color:#e8f0fe; letter-spacing:-0.03em; margin:0 0 44px; line-height:1.2; }
-  .fscroll-steps { display:flex; flex-direction:column; }
-  .fscroll-step { display:flex; align-items:flex-start; gap:16px; padding:18px 0; border-top:1px solid rgba(255,255,255,.06); opacity:.32; transition:opacity 0.4s ease; cursor:default; }
-  .fscroll-step-body { display:flex; flex-direction:column; gap:5px; }
-  .fscroll-step-desc { font-family:'Geist',sans-serif; font-size:13px; color:#6b8cba; line-height:1.6; margin:0; max-height:0; overflow:hidden; opacity:0; transition:max-height 0.45s ease, opacity 0.35s ease 0.05s; }
-  .fscroll-step.fs-active .fscroll-step-desc { max-height:72px; opacity:1; }
-  .fscroll-num { margin-top:2px; }
-  .fscroll-step:last-child { border-bottom:1px solid rgba(255,255,255,.06); }
-  .fscroll-step.fs-active { opacity:1; }
-  .fscroll-num { font-family:'Geist',sans-serif; font-size:11px; font-weight:700; color:#2d6be4; letter-spacing:.1em; min-width:22px; }
-  .fscroll-step-label { font-family:'Geist',sans-serif; font-size:15px; font-weight:600; color:#e8f0fe; }
-  .fscroll-right { flex:1; position:relative; height:440px; }
-  .fscroll-panel { position:absolute; top:0; left:0; right:0; opacity:0; pointer-events:none; will-change:opacity,transform; }
-  .fscroll-panel.fp-live { pointer-events:auto; }
-  .fscroll-panel .csc { width:100%; box-sizing:border-box; }
+  /* ── #why : Composio-style sticky-scroll ─────────────── */
+  .why-section { background:#000; position:relative; z-index:10; padding:96px 0 72px; }
+  .why-wrap { max-width:1320px; margin:0 auto; padding:0 48px 0 clamp(24px,5vw,80px); box-sizing:border-box; }
+
+  .why-eyebrow { display:inline-flex; align-items:center; gap:9px; font-family:ui-monospace,'SF Mono',Menlo,monospace;
+    font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#6b8cba;
+    border:1px solid #1e3a5f; border-radius:999px; padding:7px 14px; }
+  .why-eyebrow-sq { width:7px; height:7px; border-radius:2px; background:#2d6be4; box-shadow:0 0 10px rgba(45,107,228,.85); }
+  .why-heading { font-family:'Geist',sans-serif; font-size:clamp(30px,4.4vw,56px); font-weight:700;
+    letter-spacing:-.03em; line-height:1.06; color:#fff; margin:22px 0 0; max-width:16ch; }
+
+  .why-grid { display:grid; grid-template-columns:240px 1fr; gap:40px; margin-top:28px; align-items:start; }
+
+  /* Left rail — position:sticky (NOT a GSAP pin) */
+  .why-rail { position:sticky; top:22vh; align-self:start; display:flex; flex-direction:column; gap:6px; }
+  .why-rail-item { display:flex; align-items:center; gap:14px; padding:14px 16px; border-radius:12px;
+    border:1px solid transparent; opacity:.5; transition:opacity .4s cubic-bezier(.16,1,.3,1),
+    background-color .4s cubic-bezier(.16,1,.3,1), border-color .4s cubic-bezier(.16,1,.3,1); }
+  .why-rail-num { font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:12px; font-weight:700;
+    letter-spacing:.08em; color:#6b8cba; transition:color .4s cubic-bezier(.16,1,.3,1); }
+  .why-rail-label { font-family:'Geist',sans-serif; font-size:14px; font-weight:600; color:#e8f0fe; }
+  .why-rail-item.is-active { opacity:1; background:rgba(45,107,228,.08); border-color:rgba(45,107,228,.32); }
+  .why-rail-item.is-active .why-rail-num { color:#2d6be4; }
+
+  /* Right column — 4 stacked blocks, tightly stacked (~1.4 per screen) */
+  .why-blocks { display:flex; flex-direction:column; gap:52px; }
+  .why-block { display:grid; grid-template-columns:1.2fr 0.8fr; gap:40px; align-items:center; }
+
+  /* Visual : tall filled panel — animated blue bg behind the real .csc card */
+  .why-visual { display:flex; align-items:center; justify-content:center; }
+  .why-panel { position:relative; width:100%; min-height:64vh; border-radius:22px; overflow:hidden;
+    background:#060b16; border:1px solid #14243d; display:flex; align-items:center; justify-content:center;
+    padding:30px; box-sizing:border-box;
+    box-shadow:0 28px 80px -24px rgba(0,0,0,.85), inset 0 1px 0 rgba(255,255,255,.05); }
+  /* Animated brand-blue/navy gradient bg — the faster parallax layer */
+  .why-bg { position:absolute; inset:-14%; z-index:0; pointer-events:none;
+    background:linear-gradient(125deg,#061633 0%,#0a2b63 26%,#1a4491 50%,#0a2650 74%,#05122e 100%);
+    background-size:220% 220%; animation:bgshift 16s ease-in-out infinite;
+    will-change:transform,background-position; }
+  @keyframes bgshift { 0%,100%{background-position:0% 50%;} 50%{background-position:100% 50%;} }
+  .why-panel::before { content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+    background:radial-gradient(120% 90% at 50% 0%, rgba(45,107,228,.28), transparent 60%); }
+  .why-panel::after { content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+    background-image:linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+    background-size:34px 34px;
+    -webkit-mask-image:radial-gradient(120% 100% at 50% 40%, #000 55%, transparent);
+    mask-image:radial-gradient(120% 100% at 50% 40%, #000 55%, transparent); }
+  .why-panel .csc { position:relative; z-index:2; width:100%; max-width:600px; flex-shrink:0;
+    will-change:transform; }
+
+  /* Entrance: fade / rise / scale on enter (IO toggles .in on the block) */
+  .why-visual, .why-text { opacity:0; transform:translateY(42px) scale(.97);
+    transition:opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+  .why-block.in .why-visual { opacity:1; transform:none; }
+  .why-block.in .why-text { opacity:1; transform:none; transition-delay:.08s; }
+
+  /* Text zone */
+  .why-num { align-self:flex-start; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:12px;
+    letter-spacing:.1em; color:#2d6be4; border:1px solid rgba(45,107,228,.3); border-radius:6px; padding:3px 9px; }
+  .why-h3 { font-family:'Geist',sans-serif; font-size:clamp(22px,2.4vw,30px); font-weight:700;
+    letter-spacing:-.02em; color:#fff; margin:16px 0 12px; line-height:1.15; }
+  .why-desc { font-family:'Geist',sans-serif; font-size:15px; line-height:1.7; color:#6b8cba; margin:0 0 22px; max-width:44ch; }
+  .why-list { list-style:none; display:flex; flex-direction:column; gap:11px; margin:0; padding:0; }
+  .why-list li { position:relative; padding:2px 0 2px 16px; border-left:2px solid rgba(45,107,228,.4);
+    font-family:'Geist',sans-serif; font-size:14px; line-height:1.5; color:#cdd9ee; }
+  .why-list li.why-legal { color:#5a6b85; font-size:12px; border-left-color:rgba(255,255,255,.12); }
+
+  /* Responsive <900px: rail → horizontal strip, blocks → single column */
+  @media (max-width:900px) {
+    .why-section { padding:64px 0 48px; }
+    .why-wrap { padding:0 24px; }
+    .why-grid { grid-template-columns:1fr; gap:28px; margin-top:40px; }
+    .why-rail { position:sticky; top:64px; z-index:5; flex-direction:row; overflow-x:auto; gap:8px;
+      padding:8px; margin:0 -8px; background:rgba(0,0,0,.8); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+    .why-rail-item { flex:0 0 auto; padding:10px 14px; }
+    .why-block { grid-template-columns:1fr; gap:24px; min-height:auto; padding:44px 0; }
+    .why-panel { max-width:420px; margin:0 auto; }
+  }
   .csc {
     flex-shrink:0; width:340px;
     background:#0a1628;
@@ -2036,52 +2129,28 @@
   .csc-avatar { width:30px; height:30px; border-radius:7px; background:rgba(255,255,255,.05); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#e8f0fe; font-family:'Geist',sans-serif; }
 </style>
 
-<!-- ── CARDS SCROLLING ──────────────────────────────── -->
-<section class="fscroll-section" id="fscroll">
-  <div class="fscroll-sticky">
-    <div class="fscroll-inner">
+<!-- ── WHY STOCKPILO (sticky-scroll) ───────────────── -->
+<section id="why" class="why-section">
+  <div class="why-wrap">
+    <div class="why-head">
+      <div class="why-eyebrow"><span class="why-eyebrow-sq"></span>Why Stockpilo</div>
+      <h2 class="why-heading">Your portfolio is complex. Your dashboard shouldn't be.</h2>
+    </div>
 
-      <!-- Left rail -->
-      <div class="fscroll-left">
-        <div class="fscroll-eyebrow">See it in action</div>
-        <h2 class="fscroll-heading">Everything you need,<br>in one place.</h2>
-        <nav class="fscroll-steps">
-          <div class="fscroll-step fs-active" data-step="0">
-            <span class="fscroll-num">01</span>
-            <div class="fscroll-step-body">
-              <span class="fscroll-step-label">Top Movers</span>
-              <p class="fscroll-step-desc">Real-time gainers and losers, refreshed every 15 seconds. Know what's moving before the crowd catches on.</p>
-            </div>
-          </div>
-          <div class="fscroll-step" data-step="1">
-            <span class="fscroll-num">02</span>
-            <div class="fscroll-step-body">
-              <span class="fscroll-step-label">AI Insight</span>
-              <p class="fscroll-step-desc">Deep-dive AI analysis behind every significant price move. Understand the why, not just the what.</p>
-            </div>
-          </div>
-          <div class="fscroll-step" data-step="2">
-            <span class="fscroll-num">03</span>
-            <div class="fscroll-step-body">
-              <span class="fscroll-step-label">Portfolio</span>
-              <p class="fscroll-step-desc">Track your holdings and performance in real time. Clear P&L, weighted exposure, and daily change at a glance.</p>
-            </div>
-          </div>
-          <div class="fscroll-step" data-step="3">
-            <span class="fscroll-num">04</span>
-            <div class="fscroll-step-body">
-              <span class="fscroll-step-label">Morning Brief</span>
-              <p class="fscroll-step-desc">Start every trading day with a personalised AI briefing — key signals, watchlist moves, and macro context.</p>
-            </div>
-          </div>
-        </nav>
-      </div>
+    <div class="why-grid">
+      <!-- Sticky rail -->
+      <aside class="why-rail" aria-hidden="true">
+        <div class="why-rail-item is-active" data-rail="0"><span class="why-rail-num">01</span><span class="why-rail-label">Top Movers</span></div>
+        <div class="why-rail-item" data-rail="1"><span class="why-rail-num">02</span><span class="why-rail-label">AI Insight</span></div>
+        <div class="why-rail-item" data-rail="2"><span class="why-rail-num">03</span><span class="why-rail-label">Portfolio</span></div>
+        <div class="why-rail-item" data-rail="3"><span class="why-rail-num">04</span><span class="why-rail-label">Morning Brief</span></div>
+      </aside>
 
-      <!-- Right: 4 overlapping panels, one visible at a time -->
-      <div class="fscroll-right">
+      <!-- Blocks -->
+      <div class="why-blocks">
 
-        <!-- Panel 0: Top Movers -->
-        <div class="fscroll-panel fp-live" data-panel="0">
+        <article class="why-block" data-block="0">
+          <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
           <div class="csc">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
               <div><div class="csc-label">Today's Movers</div><div class="csc-title">Top Gainers</div></div>
@@ -2098,10 +2167,21 @@
             </div>
             <div class="csc-footer"><div class="csc-dot csc-dot-live"></div>Live · Updated every 15s</div>
           </div>
-        </div>
+          </div></div>
+          <div class="why-text">
+            <span class="why-num">01</span>
+            <h3 class="why-h3">Real-time top movers</h3>
+            <p class="why-desc">Every gainer and loser, ranked and refreshed in real time. See what's moving before the crowd catches on.</p>
+            <ul class="why-list">
+              <li>Refreshed every 15 seconds</li>
+              <li>Gainers and losers, ranked live</li>
+              <li class="why-legal">Market data · Not investment advice</li>
+            </ul>
+          </div>
+        </article>
 
-        <!-- Panel 1: AI Insight -->
-        <div class="fscroll-panel" data-panel="1">
+        <article class="why-block" data-block="1">
+          <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
           <div class="csc">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
               <div><div class="csc-label">AI Insight</div><div class="csc-title">Why NVDA is up 8.2%</div></div>
@@ -2120,10 +2200,21 @@
             </div>
             <div><div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:11px;color:#6b8cba;">AI Confidence</span><span style="font-size:11px;color:#a855f7;font-weight:600;">94%</span></div><div style="height:4px;background:rgba(255,255,255,.07);border-radius:3px;"><div style="width:94%;height:100%;background:linear-gradient(to right,#7c3aed,#a855f7);border-radius:3px;"></div></div></div>
           </div>
-        </div>
+          </div></div>
+          <div class="why-text">
+            <span class="why-num">02</span>
+            <h3 class="why-h3">AI insight, in plain English</h3>
+            <p class="why-desc">The reason behind every significant move, written in plain English. Understand the why, not just the what.</p>
+            <ul class="why-list">
+              <li>Plain-language reasons, not jargon</li>
+              <li>Neutral news-digest framing</li>
+              <li class="why-legal">Market data · Not investment advice</li>
+            </ul>
+          </div>
+        </article>
 
-        <!-- Panel 2: Portfolio -->
-        <div class="fscroll-panel" data-panel="2">
+        <article class="why-block" data-block="2">
+          <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
           <div class="csc">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
               <div><div class="csc-label">Portfolio</div><div class="csc-title">Overview</div></div>
@@ -2146,10 +2237,21 @@
               <div class="csc-row" style="border-bottom:none;"><div class="csc-ticker-wrap"><div class="csc-avatar">T</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">TSLA</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#ef4444;">&#x2212;$20.40</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">&#x2212;1.8%</div></div></div>
             </div>
           </div>
-        </div>
+          </div></div>
+          <div class="why-text">
+            <span class="why-num">03</span>
+            <h3 class="why-h3">Your portfolio at a glance</h3>
+            <p class="why-desc">Your holdings, performance and exposure in one live view. Clear profit and loss, updated as the market moves.</p>
+            <ul class="why-list">
+              <li>Real-time profit and loss</li>
+              <li>Weighted exposure by holding</li>
+              <li class="why-legal">Market data · Not investment advice</li>
+            </ul>
+          </div>
+        </article>
 
-        <!-- Panel 3: Morning Brief -->
-        <div class="fscroll-panel" data-panel="3">
+        <article class="why-block" data-block="3">
+          <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
           <div class="csc">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
               <div><div class="csc-label">Stockpilo AI</div><div class="csc-title">Morning Brief</div></div>
@@ -2172,7 +2274,18 @@
             </div>
             <div class="csc-footer"><div class="csc-dot"></div>Generated by Stockpilo AI &#xb7; 6:02 AM</div>
           </div>
-        </div>
+          </div></div>
+          <div class="why-text">
+            <span class="why-num">04</span>
+            <h3 class="why-h3">Start the day informed</h3>
+            <p class="why-desc">A personalised AI briefing before the bell. Key signals, watchlist moves and macro context to start the day informed.</p>
+            <ul class="why-list">
+              <li>Personalised to your watchlist</li>
+              <li>Macro context and market mood</li>
+              <li class="why-legal">Market data · Not investment advice</li>
+            </ul>
+          </div>
+        </article>
 
       </div>
     </div>
@@ -2733,75 +2846,180 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.footer-anim').forEach(el => footerIo.observe(el));
 
-  // ── Mission typewriter ─────────────────────────────
+  // ── Mission: scatter → assemble → hold → exit (single pinned ScrollTrigger) ──
+  // Replaces the old time-based typewriter. ONE timeline drives all three
+  // phases via scrub; the pin (pinSpacing on) makes #about own the full
+  // viewport so the next section cannot bleed in until phase C has finished.
+  // No ScrollTrigger.refresh() calls anywhere — natural recalculation only.
   (function() {
-    const textEl = document.getElementById('about-tt-text');
-    const cursor = document.getElementById('about-tt-cursor');
-    const h2     = document.getElementById('about-h2');
-    if (!textEl || !h2) return;
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
 
-    const part1 = 'We are eliminating the chaos of everyday investing.';
-    const part2 = 'Market data, AI insights, portfolio tracking — all in one place, so you can invest with confidence.';
+    const section = document.getElementById('about');
+    const stage   = document.getElementById('about-stage');
+    const h2      = document.getElementById('about-h2');
+    const tagline = document.getElementById('about-tagline');
+    if (!section || !stage || !h2) return;
 
-    let played = false;
+    const type2    = document.getElementById('about-type');       // Layer-2 overlay <h2>
+    const type2Txt = document.getElementById('about-type-txt');   // text sink (cursor is a sibling)
+    const SECOND   = 'We are eliminating the chaos of everyday investing.';
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function type(text, speed, cb) {
-      let i = 0;
-      (function tick() {
-        if (i <= text.length) { textEl.textContent = text.slice(0, i++); setTimeout(tick, speed); }
-        else if (cb) cb();
-      })();
+    // Word tokens. Each word scatters/assembles independently; the highlight
+    // phrase stays a single shiny token (comma glued on) so the assembled
+    // end-state matches the previous typewriter output — "all in one place,".
+    const tokens = [
+      { t: 'Market' }, { t: 'data,' }, { t: 'AI' }, { t: 'insights,' },
+      { t: 'portfolio' }, { t: 'tracking' }, { t: '—' },
+      { t: 'all in one place,', hi: true },
+      { t: 'so' }, { t: 'you' }, { t: 'can' }, { t: 'invest' },
+      { t: 'with' }, { t: 'confidence.' },
+    ];
+
+    h2.innerHTML = tokens.map(tok =>
+      '<span class="as-word' + (tok.hi ? ' shiny-text' : '') +
+      '" style="display:inline-block;white-space:nowrap;will-change:transform,opacity;">' + tok.t + '</span>'
+    ).join(' ');
+    const words = gsap.utils.toArray('#about-h2 .as-word');
+
+    // Reconstruct the full headline string + the highlight char-range straight
+    // from the tokens, so Layer-2's render is byte-identical to Layer-1.
+    let FULL = '', hiStart = 0, hiEnd = 0;
+    tokens.forEach(function(tok, i) {
+      if (i) FULL += ' ';
+      if (tok.hi) hiStart = FULL.length;
+      FULL += tok.t;
+      if (tok.hi) hiEnd = FULL.length;
+    });
+    // Render the first n chars of FULL as the SAME inline-block word spans Layer-1
+    // uses (highlight token keeps its shiny class + nowrap) → seamless swap, and
+    // backspacing never reflows the earlier words (verified: 0px shift).
+    function wspan(hi, txt) {
+      return '<span class="as2-word' + (hi ? ' shiny-text' : '') +
+        '" style="display:inline-block;white-space:nowrap;">' + txt + '</span>';
     }
-
-    function erase(speed, cb) {
-      (function tick() {
-        const cur = textEl.textContent;
-        if (cur.length > 0) { textEl.textContent = cur.slice(0, -1); setTimeout(tick, speed); }
-        else if (cb) cb();
-      })();
-    }
-
-    const io = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !played) {
-        played = true;
-        io.disconnect();
-        type(part1, 40, () => {
-          setTimeout(() => {
-            erase(18, () => {
-              type(part2, 35, () => {
-                // Inject highlight span around "all in one place"
-                const phrase = 'all in one place';
-                const raw = textEl.textContent;
-                const idx = raw.indexOf(phrase);
-                if (idx !== -1) {
-                  textEl.innerHTML =
-                    raw.slice(0, idx) +
-                    '<span class="shiny-text">' + phrase + '</span>' +
-                    raw.slice(idx + phrase.length);
-                }
-
-                setTimeout(() => {
-                  if (cursor) cursor.classList.add('done');
-                }, 800);
-                setTimeout(() => {
-                  const tag = document.getElementById('about-tagline');
-                  if (tag) {
-                    tag.style.opacity = '1';
-                    tag.style.transform = 'translateY(0)';
-                    window.dispatchEvent(new CustomEvent('aboutTaglineReveal'));
-                  }
-                }, 1000);
-                // FallingText fires after highlight animation (2s) + small buffer
-                setTimeout(() => {
-                  window.dispatchEvent(new CustomEvent('aboutTypewriterDone'));
-                }, 2800);
-              });
-            });
-          }, 600);
-        });
+    function renderHeadline(n) {
+      n = Math.max(0, Math.min(FULL.length, Math.floor(n)));
+      const parts = []; let acc = 0;
+      for (let i = 0; i < tokens.length; i++) {
+        const tk = tokens[i];
+        if (acc < n) parts.push(wspan(tk.hi, tk.t.slice(0, n - acc)));
+        acc += tk.t.length + 1; // +1 = the joining space
       }
-    }, { threshold: 0.3 });
-    io.observe(h2);
+      return parts.join(' ');
+    }
+
+    // Per-word outward scatter vectors, stored so the exit can reverse along
+    // each word's original entry vector (fly back out the way it came in).
+    const vecs = words.map(function() {
+      const ang  = Math.random() * Math.PI * 2;
+      const dist = 200 + Math.random() * 320;
+      return {
+        x: Math.cos(ang) * dist,
+        y: Math.sin(ang) * dist,
+        r: (Math.random() - 0.5) * 120,
+        s: 0.4 + Math.random() * 0.4,
+      };
+    });
+
+    // Phase-A start: scattered + invisible.
+    gsap.set(words, {
+      opacity: 0,
+      x: function(i) { return vecs[i].x; },
+      y: function(i) { return vecs[i].y; },
+      rotation: function(i) { return vecs[i].r; },
+      scale: function(i) { return vecs[i].s; },
+    });
+
+    // Tagline is GSAP-driven; kill its CSS transition so scrubbing stays smooth.
+    if (tagline) { tagline.style.transition = 'none'; gsap.set(tagline, { opacity: 0, y: 24 }); }
+
+    // Reduced motion: final state = the SECOND line shown in the headline slot,
+    // main hidden, no timeline, no cursor (cursor blink already killed via CSS).
+    if (reduce) {
+      gsap.set(words, { opacity: 0 });
+      if (type2Txt) type2Txt.textContent = SECOND;
+      if (type2) gsap.set(type2, { opacity: 1 });
+      if (tagline) gsap.set(tagline, { opacity: 1, y: 0 });
+      window.dispatchEvent(new CustomEvent('aboutTaglineReveal'));
+      return;
+    }
+    // Pre-fill Layer-2 with the FULL headline (identical to the assembled words)
+    // so the crossfade at end of Phase A has nothing to pop in.
+    if (type2Txt) type2Txt.innerHTML = renderHeadline(FULL.length);
+    if (type2) gsap.set(type2, { opacity: 0 });
+
+    // Phase proportions of the total virtual duration (A+B+C = 2.1):
+    // over a 1150px pin → assemble 0-548px, hold 548-740px (~16.7%), exit 740-1150px.
+    // Trimmed from 1500 to shorten the run-up to the next section; proportions unchanged
+    // so scatter/hold/exit still feel unrushed (exit ~410px).
+    // B widened from 0.35 (empty hold) to 0.70 for the scrubbed typewriter window.
+    // PIN scaled 1150→1340 to keep px-per-unit (~547px/unit) so A/C feel unchanged.
+    // Phases (virtual units). UNIT kept at the original 547.6px/unit so assemble
+    // (A) and exit (C) feel exactly as before; PIN is derived from it.
+    //   A assemble → SWAP crossfade words→Layer2 → B1 backspace → B2 type → C exit
+    // C spans the full exit so the timeline's duration == TOTAL (its last tween
+    // ends the timeline); ScrollTrigger maps PIN linearly onto that duration, so
+    // PIN = TOTAL*UNIT keeps 547.6px/unit and lands the exit exactly at release.
+    const A = 1.0, SWAP = 0.08, B1 = 0.60, B2 = 0.70, C = 0.55;
+    const UNIT = 547.6, TOTAL = A + SWAP + B1 + B2 + C, PIN = Math.round(TOTAL * UNIT);
+    const swapEnd = A + SWAP, b1End = swapEnd + B1, b2End = b1End + B2;
+    let ctnFired = false;
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: '+=' + PIN,
+        scrub: 1,
+        pin: stage,
+        anticipatePin: 1,
+      },
+    });
+
+    // Phase A — assemble (words fly in to their natural positions).
+    tl.to(words, {
+      opacity: 1, x: 0, y: 0, rotation: 0, scale: 1,
+      ease: 'power3.out', duration: A,
+      stagger: { each: 0.03, from: 'random' },
+    }, 0);
+    if (tagline) {
+      tl.to(tagline, { opacity: 1, y: 0, ease: 'power2.out', duration: A * 0.5 }, A * 0.5);
+      // Reveal the "Clear The Noise" sub-line once, when assembled (idempotent;
+      // its own listener self-removes, so re-crossing on reverse scrub is a no-op).
+      tl.call(function() {
+        if (!ctnFired) { ctnFired = true; window.dispatchEvent(new CustomEvent('aboutTaglineReveal')); }
+      }, null, A * 0.8);
+    }
+
+    // SWAP — crossfade the assembled words (Layer-1) to Layer-2, which already
+    // holds the identical full headline. Opacity-only; content is pixel-identical
+    // so the swap is invisible, and it reverses cleanly back to the word layer.
+    tl.to(h2,    { opacity: 0, duration: SWAP, ease: 'power1.inOut' }, A);
+    tl.to(type2, { opacity: 1, duration: SWAP, ease: 'power1.inOut' }, A);
+
+    // Phase B1 — backspace-erase the headline, scrubbed (chars removed on scroll).
+    const eraseP = { n: FULL.length };
+    tl.to(eraseP, {
+      n: 0, duration: B1, ease: 'none',
+      onUpdate: function() { type2Txt.innerHTML = renderHeadline(eraseP.n); },
+    }, swapEnd);
+
+    // Phase B2 — type the second line IN THE SAME SLOT, scrubbed → full.
+    const typeP = { n: 0 };
+    tl.to(typeP, {
+      n: SECOND.length, duration: B2, ease: 'none',
+      onUpdate: function() { type2Txt.textContent = SECOND.slice(0, Math.floor(typeP.n)); },
+    }, b1End);
+
+    // Phase C — exit: the visible content is now the single Layer-2 line, so it
+    // fades out (with the tagline) rather than word-scattering. (Layer-1 words are
+    // already invisible from the swap; there is nothing left to scatter.)
+    tl.to(type2, { opacity: 0, y: -24, ease: 'power2.in', duration: C }, b2End);
+    if (tagline) {
+      tl.to(tagline, { opacity: 0, y: -24, ease: 'power2.in', duration: C }, b2End);
+    }
   })();
 
   // ── Footer logo typewriter ─────────────────────────
@@ -4506,59 +4724,89 @@ gl_FragColor=vec4(r,g,b,a);}`;
     obs.observe(heroSection);
   })();
 
-  // fscroll: sticky-scroll section
+  // ── #why : rail active-state via IntersectionObserver (no ScrollTrigger) ──
+  // A thin band at viewport center (rootMargin -45%/-45%) → the block crossing
+  // it marks its rail item active. Deliberately avoids the fragile pin/rAF
+  // pattern; no ScrollTrigger, no refresh().
   (function() {
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
-    var section = document.getElementById('fscroll');
+    var section = document.getElementById('why');
     if (!section) return;
-    var sticky  = section.querySelector('.fscroll-sticky');
-    var panels  = Array.from(section.querySelectorAll('.fscroll-panel'));
-    var steps   = Array.from(section.querySelectorAll('.fscroll-step'));
-    if (!panels.length || !sticky) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Init: only first panel visible
-    gsap.set(panels, { opacity: 0, y: 28 });
-    gsap.set(panels[0], { opacity: 1, y: 0 });
+    var blocks = Array.prototype.slice.call(section.querySelectorAll('.why-block'));
+    var items  = Array.prototype.slice.call(section.querySelectorAll('.why-rail-item'));
+    if (!blocks.length || !items.length) return;
 
     function setActive(idx) {
-      steps.forEach(function(s, i) { s.classList.toggle('fs-active', i === idx); });
+      items.forEach(function(it, i) { it.classList.toggle('is-active', i === idx); });
     }
 
-    var lastStep = 0;
+    if (!('IntersectionObserver' in window)) { setActive(0); return; }
 
-    // Pin sticky inside the 400vh section; CSS proximity snap handles section locking.
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top top',
-      end: 'bottom bottom',
-      pin: sticky,
-      pinSpacing: false,
-      onUpdate: function(self) {
-        var idx = Math.min(Math.floor(self.progress * 4), 3);
-        if (idx === lastStep) return;
-        var fwd  = idx > lastStep;
-        var prev = panels[lastStep];
-        var next = panels[idx];
-        if (fwd) {
-          gsap.to(prev, { opacity: 0, y: -28, duration: 0.35, ease: 'power2.inOut', overwrite: true });
-          gsap.fromTo(next, { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', overwrite: true });
-        } else {
-          gsap.to(prev, { opacity: 0, y: 28, duration: 0.3, ease: 'power2.inOut', overwrite: true });
-          gsap.fromTo(next, { opacity: 0, y: -28 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', overwrite: true });
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          var idx = parseInt(e.target.getAttribute('data-block'), 10);
+          if (!isNaN(idx)) setActive(idx);
         }
-        prev.classList.remove('fp-live');
-        next.classList.add('fp-live');
-        setActive(idx);
-        lastStep = idx;
-      },
-    });
+      });
+    }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
 
-    // Single deferred refresh
-    document.fonts.ready.then(function() {
-      setTimeout(function() { ScrollTrigger.refresh(); }, 150);
+    blocks.forEach(function(b) { io.observe(b); });
+  })();
+
+  // ── #why : entrance (fade/rise/scale) + scroll parallax (no ScrollTrigger) ──
+  // Entrance via IntersectionObserver(threshold .2). Parallax via rAF + passive
+  // scroll (ticking-throttled): the card drifts slower (±26px) than its animated
+  // .why-bg (±70px) → depth. Both disabled under reduced-motion and <900px.
+  (function() {
+    var section = document.getElementById('why');
+    if (!section) return;
+    var blocks = Array.prototype.slice.call(section.querySelectorAll('.why-block'));
+    if (!blocks.length) return;
+
+    // Entrance — reveal each block once when ~20% enters.
+    if ('IntersectionObserver' in window) {
+      var eio = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); eio.unobserve(e.target); }
+        });
+      }, { threshold: 0.2 });
+      blocks.forEach(function(b) { eio.observe(b); });
+    } else {
+      blocks.forEach(function(b) { b.classList.add('in'); });
+    }
+
+    // Parallax — skip under reduced-motion or narrow (mobile) viewports.
+    var mqReduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var mqNarrow = window.matchMedia && window.matchMedia('(max-width: 900px)');
+    function parallaxEnabled() { return !mqReduce && !(mqNarrow && mqNarrow.matches); }
+
+    var layers = blocks.map(function(b) {
+      return { block: b, card: b.querySelector('.csc'), bg: b.querySelector('.why-bg') };
     });
+    var ticking = false;
+    function apply() {
+      ticking = false;
+      if (!parallaxEnabled()) return;
+      var vh = window.innerHeight;
+      for (var i = 0; i < layers.length; i++) {
+        var L = layers[i];
+        var r = L.block.getBoundingClientRect();
+        if (r.bottom < -80 || r.top > vh + 80) continue; // only process near viewport
+        var p = (r.top + r.height / 2 - vh / 2) / vh; // ~[-1,1]
+        if (p > 1) p = 1; else if (p < -1) p = -1;
+        if (L.card) L.card.style.transform = 'translate3d(0,' + (-p * 26).toFixed(1) + 'px,0)';
+        if (L.bg)   L.bg.style.transform   = 'translate3d(0,' + (-p * 70).toFixed(1) + 'px,0)';
+      }
+    }
+    function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(apply); } }
+    function clearTransforms() {
+      layers.forEach(function(L) { if (L.card) L.card.style.transform = ''; if (L.bg) L.bg.style.transform = ''; });
+    }
+    function sync() { if (parallaxEnabled()) apply(); else clearTransforms(); }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', sync, { passive: true });
+    sync();
   })();
 
   // ── Section entrance animations (GSAP ScrollTrigger) ────────────────
@@ -4587,8 +4835,9 @@ gl_FragColor=vec4(r,g,b,a);}`;
       );
     }
 
-    // fscroll left rail enters with the section (steps excluded — they have CSS opacity management)
-    revealSection('#fscroll', '#fscroll .fscroll-eyebrow, #fscroll .fscroll-heading', { stagger: 0.1, y: 32 });
+    // #why has no entrance reveal by design — its rail active-state is driven by
+    // a self-contained IntersectionObserver (no ScrollTrigger), content appears
+    // on natural scroll.
 
     // Testimonials heading
     revealSection('#testimonials', '#testimonials h2, #testimonials > div > p', { stagger: 0.1 });

@@ -3,3 +3,10 @@
 *.jpeg
 *.gif
 *.pdf
+
+# Local tooling — not part of the deployed static site
+node_modules/
+.agents/
+.claude/
+docs/superpowers/
+skills-lock.json
