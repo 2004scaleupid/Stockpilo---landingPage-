@@ -2159,6 +2159,17 @@
     filter:drop-shadow(0 0 10px rgba(45,107,228,.9)) drop-shadow(0 0 22px rgba(45,107,228,.5)); }
   /* Mobile: hide — single-column stacked cards + horizontal rail make a vertical weave misaligned. */
   @media (max-width:900px) { #aw-line-layer { display:none; } }
+
+  /* ── Reusable line segments (Features / Testimonials / Pricing) ──────── */
+  /* Same glowing weave as the #about→#why line, extended so it feels like one
+     continuous line across most of the page. z-index:-1 so it never needs any
+     change to the host section's own content — negative z-index always paints
+     above the section's own background but below its normal (non-positioned) content. */
+  .aw-line-seg { position:absolute; left:0; width:100%; z-index:-1; pointer-events:none; overflow:visible; }
+  .aw-line-seg svg { display:block; width:100%; height:100%; overflow:visible; }
+  .aw-line-seg-path { fill:none; stroke:#2d6be4; stroke-width:6; stroke-linecap:round; stroke-linejoin:round;
+    filter:drop-shadow(0 0 10px rgba(45,107,228,.9)) drop-shadow(0 0 22px rgba(45,107,228,.5)); }
+  @media (max-width:900px) { .aw-line-seg { display:none; } }
 </style>
 
 <!-- Ethereal-shadow SVG filter (one def, referenced by every card's .why-bg) -->
@@ -2886,10 +2897,10 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.footer-anim').forEach(el => footerIo.observe(el));
 
-  // ── Mission: scatter → assemble → hold → exit (single pinned ScrollTrigger) ──
-  // Replaces the old time-based typewriter. ONE timeline drives all three
-  // phases via scrub; the pin (pinSpacing on) makes #about own the full
-  // viewport so the next section cannot bleed in until phase C has finished.
+  // ── Mission: fade in → hold → exit (single pinned ScrollTrigger) ──
+  // ONE timeline drives all phases via scrub; the pin (pinSpacing on) makes
+  // #about own the full viewport so the next section cannot bleed in until
+  // phase C has finished.
   // No ScrollTrigger.refresh() calls anywhere — natural recalculation only.
   (function() {
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
@@ -2906,9 +2917,9 @@
     const SECOND   = 'We are eliminating the chaos of everyday investing.';
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Word tokens. Each word scatters/assembles independently; the highlight
-    // phrase stays a single shiny token (comma glued on) so the assembled
-    // end-state matches the previous typewriter output — "all in one place,".
+    // Word tokens. Each word fades in independently; the highlight phrase
+    // stays a single shiny token (comma glued on) so the assembled end-state
+    // matches the typewriter output — "all in one place,".
     const tokens = [
       { t: 'Market' }, { t: 'data,' }, { t: 'AI' }, { t: 'insights,' },
       { t: 'portfolio' }, { t: 'tracking' }, { t: '—' },
@@ -2950,27 +2961,10 @@
       return parts.join(' ');
     }
 
-    // Per-word outward scatter vectors, stored so the exit can reverse along
-    // each word's original entry vector (fly back out the way it came in).
-    const vecs = words.map(function() {
-      const ang  = Math.random() * Math.PI * 2;
-      const dist = 200 + Math.random() * 320;
-      return {
-        x: Math.cos(ang) * dist,
-        y: Math.sin(ang) * dist,
-        r: (Math.random() - 0.5) * 120,
-        s: 0.4 + Math.random() * 0.4,
-      };
-    });
-
-    // Phase-A start: scattered + invisible.
-    gsap.set(words, {
-      opacity: 0,
-      x: function(i) { return vecs[i].x; },
-      y: function(i) { return vecs[i].y; },
-      rotation: function(i) { return vecs[i].r; },
-      scale: function(i) { return vecs[i].s; },
-    });
+    // Layer-1 (#about-h2) only exists to reserve the headline's height in normal
+    // flow; it never becomes visible. All visible typing happens on Layer-2.
+    gsap.set(words, { opacity: 0 });
+    gsap.set(h2, { opacity: 0 });
 
     // Tagline is GSAP-driven; kill its CSS transition so scrubbing stays smooth.
     if (tagline) { tagline.style.transition = 'none'; gsap.set(tagline, { opacity: 0, y: 24 }); }
@@ -2985,26 +2979,21 @@
       window.dispatchEvent(new CustomEvent('aboutTaglineReveal'));
       return;
     }
-    // Pre-fill Layer-2 with the FULL headline (identical to the assembled words)
-    // so the crossfade at end of Phase A has nothing to pop in.
-    if (type2Txt) type2Txt.innerHTML = renderHeadline(FULL.length);
-    if (type2) gsap.set(type2, { opacity: 0 });
+    // Layer-2 is visible from the start and starts empty — it types the FULL
+    // headline itself in Phase A, so there is nothing to pre-fill.
+    if (type2Txt) type2Txt.innerHTML = renderHeadline(0);
+    if (type2) gsap.set(type2, { opacity: 1 });
 
-    // Phase proportions of the total virtual duration (A+B+C = 2.1):
-    // over a 1150px pin → assemble 0-548px, hold 548-740px (~16.7%), exit 740-1150px.
-    // Trimmed from 1500 to shorten the run-up to the next section; proportions unchanged
-    // so scatter/hold/exit still feel unrushed (exit ~410px).
-    // B widened from 0.35 (empty hold) to 0.70 for the scrubbed typewriter window.
-    // PIN scaled 1150→1340 to keep px-per-unit (~547px/unit) so A/C feel unchanged.
-    // Phases (virtual units). UNIT kept at the original 547.6px/unit so assemble
-    // (A) and exit (C) feel exactly as before; PIN is derived from it.
-    //   A assemble → SWAP crossfade words→Layer2 → B1 backspace → B2 type → C exit
+    // Phases (virtual units), mapped onto the scroll pin at UNIT px/unit:
+    //   A type the FULL headline from empty (slow) → HOLD → B1 backspace →
+    //   B2 type the second line (half pre-filled, so B2 only has to type the
+    //   back half) → C exit
     // C spans the full exit so the timeline's duration == TOTAL (its last tween
     // ends the timeline); ScrollTrigger maps PIN linearly onto that duration, so
     // PIN = TOTAL*UNIT keeps 547.6px/unit and lands the exit exactly at release.
-    const A = 1.0, SWAP = 0.08, B1 = 0.60, B2 = 0.70, C = 0.55;
-    const UNIT = 547.6, TOTAL = A + SWAP + B1 + B2 + C, PIN = Math.round(TOTAL * UNIT);
-    const swapEnd = A + SWAP, b1End = swapEnd + B1, b2End = b1End + B2;
+    const A = 1.6, HOLD = 0.3, B1 = 0.60, B2 = 0.35, C = 0.55;
+    const UNIT = 547.6, TOTAL = A + HOLD + B1 + B2 + C, PIN = Math.round(TOTAL * UNIT);
+    const holdEnd = A + HOLD, b1End = holdEnd + B1, b2End = b1End + B2;
     let ctnFired = false;
 
     const tl = gsap.timeline({
@@ -3018,36 +3007,34 @@
       },
     });
 
-    // Phase A — assemble (words fly in to their natural positions).
-    tl.to(words, {
-      opacity: 1, x: 0, y: 0, rotation: 0, scale: 1,
-      ease: 'power3.out', duration: A,
-      stagger: { each: 0.03, from: 'random' },
+    // Phase A — type the FULL headline into Layer-2 from empty, scrubbed (chars
+    // added on scroll), same mechanism as the B1 backspace below just inverted.
+    const typeInP = { n: 0 };
+    tl.to(typeInP, {
+      n: FULL.length, duration: A, ease: 'none',
+      onUpdate: function() { type2Txt.innerHTML = renderHeadline(typeInP.n); },
     }, 0);
     if (tagline) {
-      tl.to(tagline, { opacity: 1, y: 0, ease: 'power2.out', duration: A * 0.5 }, A * 0.5);
-      // Reveal the "Clear The Noise" sub-line once, when assembled (idempotent;
+      tl.to(tagline, { opacity: 1, y: 0, ease: 'power2.out', duration: A * 0.3 }, A * 0.7);
+      // Reveal the "Clear The Noise" sub-line once, when fully typed (idempotent;
       // its own listener self-removes, so re-crossing on reverse scrub is a no-op).
       tl.call(function() {
         if (!ctnFired) { ctnFired = true; window.dispatchEvent(new CustomEvent('aboutTaglineReveal')); }
-      }, null, A * 0.8);
+      }, null, A * 0.92);
     }
-
-    // SWAP — crossfade the assembled words (Layer-1) to Layer-2, which already
-    // holds the identical full headline. Opacity-only; content is pixel-identical
-    // so the swap is invisible, and it reverses cleanly back to the word layer.
-    tl.to(h2,    { opacity: 0, duration: SWAP, ease: 'power1.inOut' }, A);
-    tl.to(type2, { opacity: 1, duration: SWAP, ease: 'power1.inOut' }, A);
 
     // Phase B1 — backspace-erase the headline, scrubbed (chars removed on scroll).
     const eraseP = { n: FULL.length };
     tl.to(eraseP, {
       n: 0, duration: B1, ease: 'none',
       onUpdate: function() { type2Txt.innerHTML = renderHeadline(eraseP.n); },
-    }, swapEnd);
+    }, holdEnd);
 
     // Phase B2 — type the second line IN THE SAME SLOT, scrubbed → full.
-    const typeP = { n: 0 };
+    // Starts already half-filled (only the back half is typed out) so the
+    // swap doesn't take as long to read.
+    const HALF = Math.floor(SECOND.length / 2);
+    const typeP = { n: HALF };
     tl.to(typeP, {
       n: SECOND.length, duration: B2, ease: 'none',
       onUpdate: function() { type2Txt.textContent = SECOND.slice(0, Math.floor(typeP.n)); },
@@ -4988,6 +4975,95 @@ gl_FragColor=vec4(r,g,b,a);}`;
     if (document.readyState === 'complete') layout(); else window.addEventListener('load', layout);
     setTimeout(layout, 400);
     setTimeout(layout, 1400);
+  })();
+
+  // ── Extra line segments: Features, Testimonials, Pricing ─────────────
+  // Extends the same glowing weave earlier (right after the Hero, at Features)
+  // and further (through Testimonials and Pricing, ending right where the FI
+  // section starts). Each section gets its own independent segment — same
+  // visual style, own scroll-driven reveal — so it reads as one continuous
+  // line resuming section by section (with a gap while the pinned Mission
+  // animation covers the screen, same as before).
+  (function() {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var NS = 'http://www.w3.org/2000/svg';
+
+    function buildPath(W, H) {
+      var cx = W * 0.42;
+      var amp = Math.min(W * 0.075, 88);
+      var waves = Math.max(2, Math.round(H / 430));
+      var seg = H / waves;
+      var d = 'M ' + cx.toFixed(1) + ' 0';
+      var dir = 1;
+      for (var i = 0; i < waves; i++) {
+        var y0 = seg * i, y1 = seg * (i + 1);
+        d += ' C ' + (cx + dir * amp).toFixed(1) + ' ' + (y0 + seg * 0.34).toFixed(1)
+           + ' ' + (cx + dir * amp).toFixed(1) + ' ' + (y0 + seg * 0.66).toFixed(1)
+           + ' ' + cx.toFixed(1) + ' ' + y1.toFixed(1);
+        dir = -dir;
+      }
+      return d;
+    }
+
+    function createLineSegment(container, topPad, bottomPad) {
+      if (!container) return;
+
+      var layer = document.createElement('div');
+      layer.className = 'aw-line-seg';
+      layer.setAttribute('aria-hidden', 'true');
+      var svg = document.createElementNS(NS, 'svg');
+      var path = document.createElementNS(NS, 'path');
+      path.setAttribute('class', 'aw-line-seg-path');
+      svg.appendChild(path);
+      layer.appendChild(svg);
+      container.insertBefore(layer, container.firstChild);
+
+      var spanTop = 0, spanH = 0, len = 0;
+
+      function draw() {
+        if (!len) return;
+        if (reduce) { path.style.strokeDashoffset = '0'; return; }
+        var lead = window.innerHeight * 0.4;
+        var prog = (window.scrollY + lead - spanTop) / spanH;
+        if (prog < 0) prog = 0; else if (prog > 1) prog = 1;
+        path.style.strokeDashoffset = (len * (1 - prog)).toFixed(1);
+      }
+
+      function layout() {
+        if (getComputedStyle(layer).display === 'none') return;
+        var rect = container.getBoundingClientRect();
+        var containerTopDoc = rect.top + window.scrollY;
+        spanTop = containerTopDoc + topPad;
+        var spanBottomDoc = containerTopDoc + container.offsetHeight - bottomPad;
+        spanH = Math.max(1, spanBottomDoc - spanTop);
+        var W = container.clientWidth;
+        layer.style.top = topPad + 'px';
+        layer.style.height = spanH + 'px';
+        svg.setAttribute('viewBox', '0 0 ' + W + ' ' + spanH);
+        path.setAttribute('d', buildPath(W, spanH));
+        len = path.getTotalLength();
+        path.style.strokeDasharray = len.toFixed(1);
+        path.style.strokeDashoffset = reduce ? '0' : len.toFixed(1);
+        draw();
+      }
+
+      var ticking = false;
+      function onScroll() {
+        if (!ticking) { ticking = true; requestAnimationFrame(function() { ticking = false; draw(); }); }
+      }
+      if (!reduce) window.addEventListener('scroll', onScroll, { passive: true });
+
+      var rtick = false;
+      window.addEventListener('resize', function() {
+        if (!rtick) { rtick = true; requestAnimationFrame(function() { rtick = false; layout(); }); }
+      }, { passive: true });
+
+      if (document.readyState === 'complete') layout(); else window.addEventListener('load', layout);
+      setTimeout(layout, 400);
+      setTimeout(layout, 1400);
+    }
+
+    createLineSegment(document.getElementById('features'), 110, 110);
   })();
 
   // ── Section entrance animations (GSAP ScrollTrigger) ────────────────
