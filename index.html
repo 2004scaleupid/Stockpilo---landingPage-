@@ -25,10 +25,7 @@
       --red:    #ef4444;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; scroll-snap-type: y proximity; }
-    #hero-section, #features, #about, #why, #testimonials, #pricing, .fi-section {
-      scroll-snap-align: start;
-    }
+    html { scroll-behavior: smooth; }
     body {
       background: transparent;
       color: var(--text);
@@ -2991,7 +2988,7 @@
     // C spans the full exit so the timeline's duration == TOTAL (its last tween
     // ends the timeline); ScrollTrigger maps PIN linearly onto that duration, so
     // PIN = TOTAL*UNIT keeps 547.6px/unit and lands the exit exactly at release.
-    const A = 1.6, HOLD = 0.3, B1 = 0.60, B2 = 0.35, C = 0.55;
+    const A = 1.6, HOLD = 0.3, B1 = 0.60, B2 = 0.18, C = 0.55;
     const UNIT = 547.6, TOTAL = A + HOLD + B1 + B2 + C, PIN = Math.round(TOTAL * UNIT);
     const holdEnd = A + HOLD, b1End = holdEnd + B1, b2End = b1End + B2;
     let ctnFired = false;
@@ -5066,6 +5063,38 @@ gl_FragColor=vec4(r,g,b,a);}`;
     createLineSegment(document.getElementById('features'), 110, 110);
   })();
 
+  // ── Hero parallax: mockup cards drift apart at different speeds, headline
+  // lifts away, as the Hero scrolls past — into Features underneath. Plain
+  // scrubbed scroll-tracking (no pin), so it never locks/auto-scrolls the page.
+  (function() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const hero = document.getElementById('hero-section');
+    const content = document.getElementById('hero-content');
+    const center = hero && hero.querySelector('.hero-mock-center');
+    const left   = hero && hero.querySelector('.hero-mock-side-l');
+    const right  = hero && hero.querySelector('.hero-mock-side-r');
+    if (!hero || !center || !left || !right) return;
+
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+
+    // Re-declare the side cards' resting perspective/rotation/scale through GSAP
+    // (instead of leaving them as a static CSS transform) so animating y afterward
+    // doesn't clobber the 3D tilt they already have.
+    gsap.set(left,  { transformPerspective: 900, rotationY: 22,  scale: 0.97, transformOrigin: 'right center' });
+    gsap.set(right, { transformPerspective: 900, rotationY: -22, scale: 0.97, transformOrigin: 'left center' });
+
+    gsap.timeline({
+      scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.3 },
+    })
+      .to(content, { opacity: 0, y: -60, ease: 'none' }, 0)
+      .to(center,  { y: 70,  ease: 'none' }, 0)
+      .to(left,    { y: 150, ease: 'none' }, 0)
+      .to(right,   { y: 210, ease: 'none' }, 0);
+  })();
+
   // ── Section entrance animations (GSAP ScrollTrigger) ────────────────
   (function() {
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
@@ -5104,8 +5133,6 @@ gl_FragColor=vec4(r,g,b,a);}`;
     // fi-section heading + button
     revealSection('.fi-section', '.fi-section .fi-title, .fi-section .fi-btn', { stagger: 0.12, y: 36 });
   })();
-
-  // Section autolock handled by CSS scroll-snap-type: y proximity (see <html> styles)
 </script>
 </body>
 </html>
