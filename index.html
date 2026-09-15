@@ -3131,8 +3131,10 @@
 
     const SUPABASE_URL  = 'https://knurwbloofzchsblzwnr.supabase.co';
     const ANON_KEY      = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtudXJ3Ymxvb2Z6Y2hzYmx6d25yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzODAyMjQsImV4cCI6MjA5Mzk1NjIyNH0.gla_wM2y8BAoDFE1C3KsX008RwBan8WIFcl_7DO5Too';
-    const APP_URL       = 'https://stockpiloapp.com';
-    const LOGIN_URL     = APP_URL + '/login';
+    // www, not the apex: stockpiloapp.com has no DNS record (only www resolves),
+    // and the app's sign-in route is /auth — it has no /login (that is the 404 page).
+    const APP_URL       = 'https://www.stockpiloapp.com';
+    const LOGIN_URL     = APP_URL + '/auth';
     const DASHBOARD_URL = APP_URL + '/dashboard';
 
     const client = window.supabase.createClient(SUPABASE_URL, ANON_KEY);
