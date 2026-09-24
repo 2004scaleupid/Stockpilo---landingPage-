@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Clean URLs: the host 308-redirects /page.html to /page, so list the final URLs.
+     blog.html is left out while every post is "Coming Soon"; add /blog when it has content.
+     The app (www.stockpiloapp.com) has its own sitemap. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://stockpilo.com/</loc></url>
+  <url><loc>https://stockpilo.com/faqs</loc></url>
+  <url><loc>https://stockpilo.com/help</loc></url>
+  <url><loc>https://stockpilo.com/privacy</loc></url>
+  <url><loc>https://stockpilo.com/terms</loc></url>
+</urlset>
