@@ -1553,12 +1553,12 @@
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      gap: 14px;
+      gap: 0;
       animation: fadeUp 1s cubic-bezier(.16,1,.3,1) 0.3s both;
     }
     .hero-mock-card {
       flex-shrink: 0;
-      width: 65vw;
+      width: 44vw;
       border-radius: 10px;
       background: rgba(8,8,18,.95);
       padding: 6px;
@@ -1573,23 +1573,31 @@
       display: block;
     }
     .hero-mock-center {
+      position: relative;
+      z-index: 2;
       border: 1px solid rgba(255,255,255,.15);
       box-shadow: 0 32px 80px rgba(0,0,0,.8), inset 0 0 0 1px rgba(255,255,255,.07);
     }
     .hero-mock-side-l {
       border: 1px solid rgba(255,255,255,.06);
-      opacity: 0.45;
+      opacity: 0.75;
       pointer-events: none;
-      transform: perspective(900px) rotateY(22deg) translateY(20px) scale(0.97);
+      transform: perspective(1200px) rotateY(14deg) translateY(20px) scale(0.9);
       transform-origin: right center;
       margin-top: 0;
+      margin-right: -5vw;
+      position: relative;
+      z-index: 1;
     }
     .hero-mock-side-r {
       border: 1px solid rgba(255,255,255,.06);
-      opacity: 0.45;
+      opacity: 0.75;
       pointer-events: none;
-      transform: perspective(900px) rotateY(-22deg) translateY(20px) scale(0.97);
+      transform: perspective(1200px) rotateY(-14deg) translateY(20px) scale(0.9);
       transform-origin: left center;
+      margin-left: -5vw;
+      position: relative;
+      z-index: 1;
     }
 
     /* ── Floating logos ────────────────────────────────── */
@@ -1835,13 +1843,13 @@
   <div class="hero-triple-wrap" id="hero-mockup">
     <div class="hero-triple-row">
       <div class="hero-mock-card hero-mock-side-l">
-        <img src="https://storage.efferd.com/screen/dashboard-dark.webp" alt="" width="1920" height="1080" loading="eager">
+        <img src="brand_assets/screens/geopolitical-globe.webp" alt="" width="2000" height="1039" loading="eager">
       </div>
       <div class="hero-mock-card hero-mock-center">
-        <img src="https://storage.efferd.com/screen/dashboard-dark.webp" alt="Stockpilo dashboard" width="1920" height="1080" loading="eager">
+        <img src="brand_assets/screens/stock-detail.webp" alt="Stockpilo stock detail view for NVDA" width="2000" height="1084" loading="eager">
       </div>
       <div class="hero-mock-card hero-mock-side-r">
-        <img src="https://storage.efferd.com/screen/dashboard-dark.webp" alt="" width="1920" height="1080" loading="eager">
+        <img src="brand_assets/screens/earnings-calendar.webp" alt="" width="2000" height="1104" loading="eager">
       </div>
     </div>
   </div>
@@ -1849,10 +1857,103 @@
 </section>
 
 <!-- ── FEATURES ────────────────────────────────────── -->
+<style>
+  .feat-grid { position:relative; z-index:1; max-width:1320px; margin:0 auto; padding:140px 24px;
+    display:grid; grid-template-columns:minmax(280px,360px) 1fr; gap:64px; align-items:center; }
+  /* ── Stockpilo app mock: Geopolitical Events (real app UI, built in HTML) ── */
+  .sp-stage { perspective:1800px; }
+  .sp-app { --sp-line:#1f2024; --sp-mute:#8a8f98; --sp-dim:#5b606a; display:grid; grid-template-columns:62px 1fr;
+    background:#060607; border:1px solid #232428; border-radius:22px; overflow:hidden; font-family:'Geist',sans-serif; color:#e8f0fe;
+    box-shadow:0 40px 100px -30px rgba(0,0,0,.95), 0 0 0 1px rgba(255,255,255,.03), 0 0 90px -40px rgba(45,107,228,.45);
+    transition:transform .6s cubic-bezier(.16,1,.3,1); will-change:transform; }
+  .sp-side { border-right:1px solid var(--sp-line); display:flex; flex-direction:column; align-items:center; gap:6px; padding:16px 0; background:#08080a; }
+  .sp-logo { font-size:22px; font-weight:800; font-style:italic; letter-spacing:-.06em; line-height:1; margin-bottom:14px; }
+  .sp-logo span { color:#2d6be4; }
+  .sp-ic { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:#9aa0aa;
+    background:none; border:0; cursor:pointer; transition:background-color .2s ease, color .2s ease; }
+  .sp-ic svg { width:15px; height:15px; }
+  .sp-ic:hover { color:#fff; background:rgba(255,255,255,.05); }
+  .sp-ic:focus-visible { outline:2px solid #2d6be4; outline-offset:1px; }
+  .sp-ic.is-on { background:#1a1b1e; color:#fff; }
+  .sp-main { min-width:0; display:flex; flex-direction:column; }
+  .sp-top { display:flex; align-items:center; gap:10px; padding:12px 14px; border-bottom:1px solid var(--sp-line); }
+  .sp-search { display:flex; align-items:center; justify-content:space-between; gap:12px; width:190px; padding:5px 5px 5px 14px;
+    border:1px solid #26272b; border-radius:999px; font-size:11px; color:#9aa0aa; }
+  .sp-plus { width:22px; height:22px; border-radius:50%; border:1px solid #3a3b40; display:flex; align-items:center; justify-content:center; color:#e8f0fe; font-size:13px; line-height:1; }
+  .sp-cust { margin-left:auto; display:flex; align-items:center; gap:7px; font-size:11px; color:#9aa0aa; padding-left:14px; border-left:1px solid var(--sp-line); }
+  .sp-tape { position:relative; overflow:hidden; border-bottom:1px solid var(--sp-line); padding:9px 0;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent); mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent); }
+  .sp-tape-row { display:flex; gap:30px; width:max-content; animation:spTape 28s linear infinite; }
+  .sp-tape:hover .sp-tape-row { animation-play-state:paused; }
+  .sp-tk { display:flex; align-items:center; gap:7px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:11px; font-weight:600; white-space:nowrap; }
+  .sp-tk img { width:18px; height:18px; border-radius:50%; object-fit:cover; }
+  .sp-up { color:#34d399; } .sp-dn { color:#f87171; }
+  @keyframes spTape { to { transform:translateX(-50%); } }
+  .sp-body { padding:14px; }
+  .sp-card { position:relative; border:1px solid #232428; border-radius:20px; overflow:hidden; background:#0d0c0f; }
+  .sp-card-h { position:relative; z-index:3; display:flex; align-items:center; justify-content:space-between; padding:16px 18px 0; }
+  .sp-card-h h3 { margin:0; font-size:17px; font-weight:700; letter-spacing:-.02em; color:#fff; }
+  .sp-refresh { color:#8a8f98; display:flex; }
+  .sp-geo { display:block; }
+  .sp-list { width:212px; }
+  .sp-list { position:relative; z-index:3; padding:14px 0 16px 14px; display:flex; flex-direction:column; gap:7px; }
+  .sp-meta { display:flex; justify-content:space-between; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.16em; color:#8a8f98; text-transform:uppercase; padding:0 2px 3px; }
+  .sp-ev { display:flex; gap:9px; align-items:center; text-align:left; width:100%; padding:7px; border-radius:12px; cursor:pointer; font-family:inherit;
+    background:rgba(22,22,26,.92); border:1px solid #2a2b30; color:inherit;
+    transition:border-color .25s ease, background-color .25s ease, transform .35s cubic-bezier(.16,1,.3,1); }
+  .sp-ev:hover, .sp-ev.is-on { border-color:rgba(245,158,11,.55); background:rgba(30,28,24,.95); transform:translateX(3px); }
+  .sp-ev:focus-visible { outline:2px solid #2d6be4; outline-offset:2px; }
+  .sp-ev img { width:48px; height:48px; border-radius:9px; object-fit:cover; flex-shrink:0; }
+  .sp-ev-t { min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .sp-ev-m { font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9px; letter-spacing:.06em; color:#8a8f98; }
+  .sp-ev-m b { color:#f87171; font-weight:600; }
+  .sp-ev-m b.sp-med { color:#f59e0b; }
+  .sp-ev-h { font-size:11.5px; font-weight:600; line-height:1.3; color:#f1f3f6; }
+  .sp-ev-s { font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9px; color:#6b7280; letter-spacing:.04em; }
+  .sp-also { margin-top:6px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.16em; color:#8a8f98; }
+  .sp-also-i { display:flex; align-items:center; gap:7px; font-size:11px; color:#cdd3de; }
+  .sp-also-i::before { content:''; width:6px; height:6px; border-radius:50%; background:#f59e0b; flex-shrink:0; }
+  /* Globe fills the card behind the list, like in the app; right-aligned so the pins stay mapped to the image */
+  .sp-card { min-height:430px; }
+  .sp-globe { position:absolute; top:0; right:0; bottom:0; height:100%; aspect-ratio:1140 / 880; z-index:1; }
+  .sp-globe::after { content:''; position:absolute; inset:0; z-index:2; pointer-events:none;
+    background:linear-gradient(90deg,#0d0c0f 0%,rgba(13,12,15,0) 10%); }
+  .sp-globe-img { position:absolute; inset:0; transition:transform .8s cubic-bezier(.16,1,.3,1); will-change:transform; }
+  .sp-globe-img img { width:100%; height:100%; display:block; animation:spFloat 9s ease-in-out infinite; }
+  @keyframes spFloat { 0%,100% { transform:translateY(0) scale(1); } 50% { transform:translateY(-6px) scale(1.01); } }
+  .sp-pin { position:absolute; width:12px; height:12px; margin:-6px 0 0 -6px; border-radius:50%; pointer-events:none; }
+  .sp-pin::before, .sp-pin::after { content:''; position:absolute; inset:0; border-radius:50%; border:2px solid #f59e0b; }
+  .sp-pin::after { animation:spPing 2.2s cubic-bezier(.16,1,.3,1) infinite; }
+  .sp-pin.is-on::before { background:#f59e0b; box-shadow:0 0 14px #f59e0b; }
+  .sp-pin.is-on::after { border-color:#fbbf24; }
+  @keyframes spPing { 0% { transform:scale(1); opacity:.9; } 100% { transform:scale(3.2); opacity:0; } }
+  .sp-lbl { z-index:3; position:absolute; transform:translate(16px,-50%); background:rgba(12,12,14,.92); border:1px solid #33343a;
+    border-radius:8px; padding:5px 8px; font-size:10px; font-weight:600; color:#fff; white-space:nowrap; pointer-events:none;
+    transition:left .45s cubic-bezier(.16,1,.3,1), top .45s cubic-bezier(.16,1,.3,1), opacity .25s ease; }
+  .sp-lbl small { display:block; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:8.5px; color:#f87171; font-weight:600; letter-spacing:.06em; }
+  .sp-legal { font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9px; color:#4a5060; text-align:right; padding:8px 4px 0; }
+  @media (max-width:1100px) { .feat-grid { grid-template-columns:1fr; gap:48px; } }
+  @media (max-width:760px) {
+    .feat-grid { padding:96px 16px; }
+    .sp-app { grid-template-columns:1fr; }
+    .sp-side { display:none; }
+    .sp-search { width:auto; flex:1; }
+    .sp-geo { grid-template-columns:1fr; }
+    .sp-list { padding:12px 14px 4px; }
+    .sp-card { min-height:0; }
+    .sp-list { width:auto; }
+    .sp-globe { position:relative; height:auto; width:100%; }
+    .sp-globe::after { display:none; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    .sp-app, .sp-globe-img { transition:none; }
+    .sp-tape-row, .sp-globe-img img, .sp-pin::after { animation:none; }
+  }
+</style>
 <section id="features" data-inner style="position:relative;z-index:10;background:#000;overflow:visible;">
   <!-- Top fade from hero -->
   <div style="position:absolute;top:-60px;left:0;right:0;height:120px;background:linear-gradient(to bottom,#000 0%,transparent 100%);pointer-events:none;z-index:5;"></div>
-  <div style="position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:140px 24px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
+  <div class="feat-grid">
 
     <!-- Left: text -->
     <div class="reveal" style="display:flex;flex-direction:column;gap:20px;">
@@ -1861,120 +1962,75 @@
         <span class="shiny-text">See what's moving the market — live</span>
       </h2>
       <p style="font-size:16px;color:rgba(255,255,255,.5);line-height:1.75;margin:0;max-width:380px;">
-        Real-time top gainers and losers, updated every 15 seconds. Know which stocks are on the move before the crowd catches on.
+        Market-relevant world events pinned to a live 3D globe — the top three ranked by impact, with the time and source for every story.
       </p>
       <ul style="list-style:none;display:flex;flex-direction:column;gap:12px;margin:8px 0 0;padding:0;">
         <li style="display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,.6);">
           <span style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></span>
-          Live top gainers &amp; losers, updated every 15s
+          Top 3 events, ranked by impact
         </li>
         <li style="display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,.6);">
           <span style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></span>
-          AI explanation behind every significant price move
+          Impact level, time and source on every event
         </li>
         <li style="display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,.6);">
           <span style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></span>
-          Filter by sector, market cap, and volatility
+          "Also notable" for everything else
         </li>
       </ul>
     </div>
 
-    <!-- Right: card -->
-    <div class="reveal" style="width:100%;max-width:440px;justify-self:end;background:rgba(8,8,12,0.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:36px 40px;">
+    <!-- Right: Stockpilo app mock — Geopolitical Events (HTML, interactive) -->
+    <div class="sp-stage reveal">
+      <div class="sp-app" id="sp-app" aria-label="Stockpilo dashboard preview: Geopolitical Events on a live globe">
+        <aside class="sp-side">
+          <div class="sp-logo" aria-hidden="true">s<span>p</span></div>
+          <button class="sp-ic" type="button" aria-label="Dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1.2"/><rect x="14" y="4" width="6" height="6" rx="1.2"/><rect x="4" y="14" width="6" height="6" rx="1.2"/><rect x="14" y="14" width="6" height="6" rx="1.2"/></svg></button>
+          <button class="sp-ic" type="button" aria-label="Market Snapshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></button>
+          <button class="sp-ic" type="button" aria-label="News"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></button>
+          <button class="sp-ic" type="button" aria-label="Congress trades"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V10M19 21V10M9 21V10M15 21V10M12 3l9 5H3z"/></svg></button>
+          <button class="sp-ic" type="button" aria-label="Risk Lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M12 8v5M12 16h.01"/></svg></button>
+          <button class="sp-ic is-on" type="button" aria-label="Geopolitical Events"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></button>
+        </aside>
 
-      <!-- Header row -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
-        <div>
-          <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:6px;">Today's Movers</div>
-          <h3 style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.02em;font-family:'Geist',sans-serif;margin:0;">Top Gainers &amp; Losers</h3>
-        </div>
-        <div style="width:40px;height:40px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;">
-          <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><path d="M11 3L14.5 8H7.5L11 3Z" fill="#10b981"/><path d="M11 19L7.5 14H14.5L11 19Z" fill="#ef4444"/><line x1="3" y1="11" x2="19" y2="11" stroke="rgba(107,140,186,.35)" stroke-width="1.2"/></svg>
-        </div>
-      </div>
+        <div class="sp-main">
+          <div class="sp-top">
+            <div class="sp-search">Search ticker<span class="sp-plus">+</span></div>
+            <div class="sp-cust"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Customize</div>
+          </div>
+          <div class="sp-tape" aria-hidden="true"><div class="sp-tape-row"><span class="sp-tk"><img src="brand_assets/screens/geo/googl.webp" alt="" width="44" height="44"><span class="sp-up">↗ +1.55%</span></span><span class="sp-tk"><img src="brand_assets/screens/geo/dis.webp" alt="" width="44" height="44"><span class="sp-up">↗ +1.50%</span></span><span class="sp-tk"><img src="brand_assets/screens/geo/avgo.webp" alt="" width="44" height="44"><span class="sp-up">↗ +1.41%</span></span><span class="sp-tk"><img src="brand_assets/screens/geo/orcl.webp" alt="" width="44" height="44"><span class="sp-up">↗ +0.65%</span></span><span class="sp-tk"><img src="brand_assets/screens/geo/v.webp" alt="" width="44" height="44"><span class="sp-up">↗ +0.45%</span></span><span class="sp-tk"><img src="brand_assets/screens/geo/tgt.webp" alt="" width="44" height="44"><span class="sp-dn">↘ −0.30%</span></span><span class="sp-tk"><img src="brand_assets/screens/geo/abbv.webp" alt="" width="44" height="44"><span class="sp-up">↗ +0.22%</span></span><span class="sp-tk"><img src="brand_assets/screens/geo/googl.webp" alt="" width="44" height="44"><span class="sp-up">↗ +1.55%</span></span><span class="sp-tk"><img src="brand_assets/screens/geo/dis.webp" alt="" width="44" height="44"><span class="sp-up">↗ +1.50%</span></span><span class="sp-tk"><img src="brand_assets/screens/geo/avgo.webp" alt="" width="44" height="44"><span class="sp-up">↗ +1.41%</span></span><span class="sp-tk"><img src="brand_assets/screens/geo/orcl.webp" alt="" width="44" height="44"><span class="sp-up">↗ +0.65%</span></span><span class="sp-tk"><img src="brand_assets/screens/geo/v.webp" alt="" width="44" height="44"><span class="sp-up">↗ +0.45%</span></span><span class="sp-tk"><img src="brand_assets/screens/geo/tgt.webp" alt="" width="44" height="44"><span class="sp-dn">↘ −0.30%</span></span><span class="sp-tk"><img src="brand_assets/screens/geo/abbv.webp" alt="" width="44" height="44"><span class="sp-up">↗ +0.22%</span></span></div></div>
 
-      <!-- Gainers -->
-      <div style="font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--green);opacity:.7;margin-bottom:10px;">Gainers</div>
-      <div style="display:flex;flex-direction:column;gap:0;margin-bottom:16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">N</div>
-            <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;letter-spacing:.02em;">NVDA</div>
-              <div style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">Nvidia Corp</div>
+          <div class="sp-body">
+            <div class="sp-card">
+              <div class="sp-card-h">
+                <h3>Geopolitical Events</h3>
+                <span class="sp-refresh" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.9-3M4 5v4h4M4 13a8 8 0 0 0 14.9 3M20 19v-4h-4"/></svg></span>
+              </div>
+              <div class="sp-geo">
+                <div class="sp-list">
+                  <div class="sp-meta"><span>Top 3</span><span>15 events</span></div>
+                  <button class="sp-ev is-on" type="button" data-ev="0"><img src="brand_assets/screens/geo/g1.webp" alt="" width="112" height="112"><span class="sp-ev-t"><span class="sp-ev-m"><b>HIGH</b> · 16H AGO</span><span class="sp-ev-h">Oil rises amid worries of…</span><span class="sp-ev-s">CNBC.COM</span></span></button>
+                  <button class="sp-ev" type="button" data-ev="1"><img src="brand_assets/screens/geo/g2.webp" alt="" width="112" height="112"><span class="sp-ev-t"><span class="sp-ev-m"><b>HIGH</b> · 1D AGO</span><span class="sp-ev-h">Dow closes 360 points higher as…</span><span class="sp-ev-s">INVEZZ.COM</span></span></button>
+                  <button class="sp-ev" type="button" data-ev="2"><img src="brand_assets/screens/geo/g3.webp" alt="" width="112" height="112"><span class="sp-ev-t"><span class="sp-ev-m"><b class="sp-med">MED</b> · 13H AGO</span><span class="sp-ev-h">China expands export control li…</span><span class="sp-ev-s">REUTERS.COM · …</span></span></button>
+                  <div class="sp-also">ALSO NOTABLE</div>
+                  <div class="sp-also-i">Natural Gas and Oil Forecast…</div>
+                  <div class="sp-also-i">Oil Price Forecast: WTI and …</div>
+                  <div class="sp-also" style="margin-top:2px;">+10 MORE ON THE MAP</div>
+                </div>
+                <div class="sp-globe" id="sp-globe">
+                  <div class="sp-globe-img" id="sp-globe-img">
+                    <img src="brand_assets/screens/geo/globe2.webp" alt="3D globe with pinned world events" width="1140" height="880" loading="lazy" decoding="async">
+                    <span class="sp-pin is-on" style="left:33.2%;top:36.9%"></span>
+                    <span class="sp-pin" style="left:26.3%;top:37.5%"></span>
+                    <span class="sp-pin" style="left:60.1%;top:44.7%"></span>
+                    <div class="sp-lbl" id="sp-lbl" style="left:33.2%;top:36.9%"><small>HIGH · 16H AGO</small>Oil rises amid worries of…</div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div style="text-align:right;">
-            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--green);font-family:'Geist',sans-serif;">+8.2%</div>
-            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">$887.40</div>
+            <div class="sp-legal">Market data · Not investment advice</div>
           </div>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">A</div>
-            <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;letter-spacing:.02em;">AAPL</div>
-              <div style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">Apple Inc</div>
-            </div>
-          </div>
-          <div style="text-align:right;">
-            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--green);font-family:'Geist',sans-serif;">+5.7%</div>
-            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">$214.80</div>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">M</div>
-            <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;letter-spacing:.02em;">MSFT</div>
-              <div style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">Microsoft Corp</div>
-            </div>
-          </div>
-          <div style="text-align:right;">
-            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--green);font-family:'Geist',sans-serif;">+3.1%</div>
-            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">$420.15</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Divider -->
-      <div style="height:1px;background:rgba(255,255,255,.07);margin-bottom:16px;"></div>
-
-      <!-- Losers -->
-      <div style="font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--red);opacity:.7;margin-bottom:10px;">Losers</div>
-      <div style="display:flex;flex-direction:column;gap:0;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">T</div>
-            <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;letter-spacing:.02em;">TSLA</div>
-              <div style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">Tesla Inc</div>
-            </div>
-          </div>
-          <div style="text-align:right;">
-            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--red);font-family:'Geist',sans-serif;">−1.8%</div>
-            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">$174.20</div>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;">M</div>
-            <div>
-              <div style="font-size:14px;font-weight:700;color:var(--text);font-family:'Geist',sans-serif;letter-spacing:.02em;">META</div>
-              <div style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">Meta Platforms</div>
-            </div>
-          </div>
-          <div style="text-align:right;">
-            <div class="tabnum" style="font-size:15px;font-weight:700;color:var(--red);font-family:'Geist',sans-serif;">−0.6%</div>
-            <div class="tabnum" style="font-size:11px;color:var(--sub);font-family:'Geist',sans-serif;">$492.65</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Footer note -->
-      <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,.06);font-size:12px;color:var(--sub);font-family:'Geist',sans-serif;display:flex;align-items:center;gap:7px;">
-        <div style="width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);flex-shrink:0;"></div>
-        Live data · AI reason on every move
       </div>
     </div>
 
@@ -2027,7 +2083,7 @@
 <style>
   /* ── #why : Composio-style sticky-scroll ─────────────── */
   .why-section { background:#000; position:relative; z-index:10; padding:96px 0 72px; }
-  .why-wrap { max-width:1320px; margin:0 auto; padding:0 48px 0 clamp(24px,5vw,80px); box-sizing:border-box; position:relative; z-index:1; }
+  .why-wrap { max-width:1480px; margin:0 auto; padding:0 48px 0 clamp(24px,5vw,80px); box-sizing:border-box; position:relative; z-index:1; }
 
   .why-eyebrow { display:inline-flex; align-items:center; gap:9px; font-family:ui-monospace,'SF Mono',Menlo,monospace;
     font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#6b8cba;
@@ -2036,7 +2092,7 @@
   .why-heading { font-family:'Geist',sans-serif; font-size:clamp(30px,4.4vw,56px); font-weight:700;
     letter-spacing:-.03em; line-height:1.06; color:#fff; margin:22px 0 0; max-width:16ch; }
 
-  .why-grid { display:grid; grid-template-columns:240px 1fr; gap:40px; margin-top:28px; align-items:start; }
+  .why-grid { display:grid; grid-template-columns:210px 1fr; gap:40px; margin-top:28px; align-items:start; }
 
   /* Left rail — position:sticky (NOT a GSAP pin); offset matches the stacking cards */
   .why-rail { position:sticky; top:80px; align-self:start; display:flex; flex-direction:column; gap:6px; }
@@ -2056,7 +2112,7 @@
   /* Trailing spacer (a flex item, so it extends the CONTENT box — sticky is bounded by
      the content box, not padding) gives the LAST card scroll room to dwell like the rest. */
   .why-blocks::after { content:''; flex:0 0 auto; height:clamp(200px,42vh,420px); }
-  .why-block { display:grid; grid-template-columns:1.2fr 0.8fr; gap:40px; align-items:stretch;
+  .why-block { display:grid; grid-template-columns:1.9fr 0.8fr; gap:32px; align-items:stretch;
     position:sticky; top:80px; height:clamp(520px,64vh,640px);
     background:#17181b; border:1px solid #383a3e; border-radius:24px; padding:26px 30px;
     overflow:hidden; box-sizing:border-box;
@@ -2066,6 +2122,9 @@
   .why-blocks .why-block:nth-child(2) { z-index:2; }
   .why-blocks .why-block:nth-child(3) { z-index:3; }
   .why-blocks .why-block:nth-child(4) { z-index:4; }
+  .why-blocks .why-block:nth-child(5) { z-index:5; }
+  .why-blocks .why-block:nth-child(6) { z-index:6; }
+  .why-blocks .why-block:nth-child(7) { z-index:7; }
 
   /* Visual : tall filled panel — animated blue bg behind the real .csc card */
   .why-visual { display:flex; align-items:stretch; justify-content:center; }
@@ -2092,6 +2151,15 @@
     background:radial-gradient(125% 100% at 50% 45%, transparent 52%, rgba(6,8,12,.55) 100%); }
   .why-panel .csc { position:relative; z-index:2; width:100%; max-width:600px; flex-shrink:0;
     will-change:transform; }
+  /* Real app screenshot inside the panel (keeps .csc so the parallax JS still drives it) */
+  .why-panel:has(.why-shot) { padding:18px; }
+  .why-panel .csc.why-shot { max-width:none; padding:0; overflow:hidden; border-radius:14px; background:#0b0d10;
+    box-shadow:0 24px 60px -18px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.04); }
+  /* Screenshot cards: height follows the image so the whole screen is always visible */
+  .why-block:has(.why-shot) { height:auto; min-height:0; align-items:center; padding:20px 30px 20px 20px; }
+  .why-panel:has(.why-shot) { height:auto; padding:14px; }
+  .why-panel .csc.why-shot { height:auto; }
+  .why-shot img { display:block; width:100%; height:auto; }
 
   /* Entrance: fade / rise / scale on enter (IO toggles .in on the block) */
   .why-visual, .why-text { opacity:0; transform:translateY(42px) scale(.97);
@@ -2188,10 +2256,13 @@
     <div class="why-grid">
       <!-- Sticky rail -->
       <aside class="why-rail" aria-hidden="true">
-        <div class="why-rail-item is-active" data-rail="0"><span class="why-rail-num">01</span><span class="why-rail-label">Top Movers</span></div>
-        <div class="why-rail-item" data-rail="1"><span class="why-rail-num">02</span><span class="why-rail-label">AI Insight</span></div>
-        <div class="why-rail-item" data-rail="2"><span class="why-rail-num">03</span><span class="why-rail-label">Portfolio</span></div>
-        <div class="why-rail-item" data-rail="3"><span class="why-rail-num">04</span><span class="why-rail-label">Morning Brief</span></div>
+        <div class="why-rail-item is-active" data-rail="0"><span class="why-rail-num">01</span><span class="why-rail-label">Daily Brief</span></div>
+        <div class="why-rail-item" data-rail="1"><span class="why-rail-num">02</span><span class="why-rail-label">AI News</span></div>
+        <div class="why-rail-item" data-rail="2"><span class="why-rail-num">03</span><span class="why-rail-label">Congress Trades</span></div>
+        <div class="why-rail-item" data-rail="3"><span class="why-rail-num">04</span><span class="why-rail-label">Geopolitics</span></div>
+        <div class="why-rail-item" data-rail="4"><span class="why-rail-num">05</span><span class="why-rail-label">Earnings</span></div>
+        <div class="why-rail-item" data-rail="5"><span class="why-rail-num">06</span><span class="why-rail-label">Risk Lab</span></div>
+        <div class="why-rail-item" data-rail="6"><span class="why-rail-num">07</span><span class="why-rail-label">Market Snapshot</span></div>
       </aside>
 
       <!-- Blocks -->
@@ -2199,30 +2270,16 @@
 
         <article class="why-block" data-block="0">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-              <div><div class="csc-label">Today's Movers</div><div class="csc-title">Top Gainers</div></div>
-              <div style="width:32px;height:32px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-                <svg width="14" height="14" viewBox="0 0 22 22" fill="none"><path d="M11 3L14.5 8H7.5L11 3Z" fill="#10b981"/></svg>
-              </div>
-            </div>
-            <div class="csc-divider"></div>
-            <div style="display:flex;flex-direction:column;">
-              <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">N</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">NVDA</div><div style="font-size:11px;color:#6b8cba;">Nvidia Corp</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+8.2%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$887.40</div></div></div>
-              <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">A</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">AAPL</div><div style="font-size:11px;color:#6b8cba;">Apple Inc</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+5.7%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$214.80</div></div></div>
-              <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">M</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">MSFT</div><div style="font-size:11px;color:#6b8cba;">Microsoft</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+3.1%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$420.15</div></div></div>
-              <div class="csc-row" style="border-bottom:none;"><div class="csc-ticker-wrap"><div class="csc-avatar">G</div><div><div style="font-size:13px;font-weight:700;color:#e8f0fe;font-family:'Geist',sans-serif;">GOOGL</div><div style="font-size:11px;color:#6b8cba;">Alphabet Inc</div></div></div><div style="text-align:right;"><div class="tabnum" style="font-size:14px;font-weight:700;color:#10b981;">+2.4%</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">$175.30</div></div></div>
-            </div>
-            <div class="csc-footer"><div class="csc-dot csc-dot-live"></div>Live · Updated every 15s</div>
-          </div>
+          <div class="csc why-shot"><img src="brand_assets/screens/daily-brief.webp" alt="Pilo Daily Brief: portfolio move per $1,000 vs the market, biggest drop explained, market mood from the VIX" width="1600" height="1121" loading="lazy" decoding="async"></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">01</span>
-            <h3 class="why-h3">Real-time top movers</h3>
-            <p class="why-desc">Every gainer and loser, ranked and refreshed in real time. See what's moving before the crowd catches on.</p>
+            <h3 class="why-h3">Your daily brief, while you slept</h3>
+            <p class="why-desc">A pre-market brief written for your holdings. See how your portfolio did against the market, and why.</p>
             <ul class="why-list">
-              <li>Refreshed every 15 seconds</li>
-              <li>Gainers and losers, ranked live</li>
+              <li>Your move per $1,000 vs. the market</li>
+              <li>Your biggest drop, explained with the news behind it</li>
+              <li>Market mood, read from the VIX</li>
               <li class="why-legal">Market data · Not investment advice</li>
             </ul>
           </div>
@@ -2230,32 +2287,15 @@
 
         <article class="why-block" data-block="1">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-              <div><div class="csc-label">AI Insight</div><div class="csc-title">Why NVDA is up 8.2%</div></div>
-              <div style="width:32px;height:32px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-                <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M9 2C9 2 5 5 5 9.5C5 12 6.8 14 9 14C11.2 14 13 12 13 9.5C13 5 9 2 9 2Z" stroke="#a855f7" stroke-width="1.5" stroke-linejoin="round"/><circle cx="9" cy="16" r="1" fill="#a855f7"/></svg>
-              </div>
-            </div>
-            <div class="csc-divider"></div>
-            <div style="background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.15);border-radius:10px;padding:12px 13px;margin-bottom:14px;">
-              <p style="font-size:11px;color:rgba(232,240,254,.85);line-height:1.65;margin:0;font-style:italic;">"Strong Q2 earnings beat by 18%. Data center revenue surged 141% YoY driven by AI chip demand. Multiple analyst upgrades followed."</p>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
-              <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">Q2 revenue +122% YoY — beat by $2.1B</span></div>
-              <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">Data center: $18.4B (&#x2191; 141%)</span></div>
-              <div style="display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div><span style="font-size:11px;color:#6b8cba;">12 analyst upgrades post-earnings</span></div>
-            </div>
-            <div><div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:11px;color:#6b8cba;">AI Confidence</span><span style="font-size:11px;color:#a855f7;font-weight:600;">94%</span></div><div style="height:4px;background:rgba(255,255,255,.07);border-radius:3px;"><div style="width:94%;height:100%;background:linear-gradient(to right,#7c3aed,#a855f7);border-radius:3px;"></div></div></div>
-          </div>
+          <div class="csc why-shot"><img src="brand_assets/screens/news-feed.webp" alt="News feed with a top story and watchlist headlines tagged by ticker and estimated impact" width="1600" height="788" loading="lazy" decoding="async"></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">02</span>
-            <h3 class="why-h3">AI insight, in plain English</h3>
-            <p class="why-desc">The reason behind every significant move, written in plain English. Understand the why, not just the what.</p>
+            <h3 class="why-h3">News for your stocks, summarised</h3>
+            <p class="why-desc">Stories for your watchlist, sectors and top gainers. Hover over any article for an instant Stockpilo AI summary.</p>
             <ul class="why-list">
-              <li>Plain-language reasons, not jargon</li>
-              <li>Neutral news-digest framing</li>
+              <li>Tagged with the tickers each story mentions</li>
+              <li>Estimated impact on every headline</li>
               <li class="why-legal">Market data · Not investment advice</li>
             </ul>
           </div>
@@ -2263,36 +2303,16 @@
 
         <article class="why-block" data-block="2">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-              <div><div class="csc-label">Portfolio</div><div class="csc-title">Overview</div></div>
-              <div style="font-family:'Geist',sans-serif;text-align:right;"><div class="tabnum" style="font-size:20px;font-weight:800;color:#e8f0fe;letter-spacing:-0.03em;">$24,812</div><div class="tabnum" style="font-size:12px;color:#10b981;font-weight:600;">+$342.80 today</div></div>
-            </div>
-            <div class="csc-divider"></div>
-            <div style="display:flex;gap:3px;align-items:flex-end;height:64px;margin-bottom:18px;">
-              <div style="flex:1;height:45%;background:rgba(45,107,228,.3);border-radius:3px 3px 0 0;"></div>
-              <div style="flex:1;height:60%;background:rgba(45,107,228,.4);border-radius:3px 3px 0 0;"></div>
-              <div style="flex:1;height:50%;background:rgba(45,107,228,.35);border-radius:3px 3px 0 0;"></div>
-              <div style="flex:1;height:75%;background:rgba(45,107,228,.5);border-radius:3px 3px 0 0;"></div>
-              <div style="flex:1;height:65%;background:rgba(45,107,228,.45);border-radius:3px 3px 0 0;"></div>
-              <div style="flex:1;height:55%;background:rgba(45,107,228,.4);border-radius:3px 3px 0 0;"></div>
-              <div style="flex:1;height:80%;background:rgba(45,107,228,.55);border-radius:3px 3px 0 0;"></div>
-              <div style="flex:1;height:100%;background:#10b981;border-radius:3px 3px 0 0;box-shadow:0 0 8px rgba(16,185,129,.4);"></div>
-            </div>
-            <div style="display:flex;flex-direction:column;">
-              <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">N</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">NVDA</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#10b981;">+$218.40</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">+8.2%</div></div></div>
-              <div class="csc-row"><div class="csc-ticker-wrap"><div class="csc-avatar">A</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">AAPL</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#10b981;">+$104.60</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">+5.7%</div></div></div>
-              <div class="csc-row" style="border-bottom:none;"><div class="csc-ticker-wrap"><div class="csc-avatar">T</div><div style="font-size:13px;font-weight:600;color:#e8f0fe;font-family:'Geist',sans-serif;">TSLA</div></div><div style="text-align:right;"><div class="tabnum" style="font-size:13px;font-weight:700;color:#ef4444;">&#x2212;$20.40</div><div class="tabnum" style="font-size:11px;color:#6b8cba;">&#x2212;1.8%</div></div></div>
-            </div>
-          </div>
+          <div class="csc why-shot"><img src="brand_assets/screens/congress-trades.webp" alt="Latest Congress disclosures with member, asset, type, amount range and filing dates" width="1600" height="1031" loading="lazy" decoding="async"></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">03</span>
-            <h3 class="why-h3">Your portfolio at a glance</h3>
-            <p class="why-desc">Your holdings, performance and exposure in one live view. Clear profit and loss, updated as the market moves.</p>
+            <h3 class="why-h3">See what Congress is trading</h3>
+            <p class="why-desc">The latest stock disclosures from Senate and House members, with a link to every filing.</p>
             <ul class="why-list">
-              <li>Real-time profit and loss</li>
-              <li>Weighted exposure by holding</li>
+              <li>Filter by chamber, purchases or sales</li>
+              <li>Traded → disclosed dates and amount ranges</li>
+              <li>Filings in stocks on your watchlist</li>
               <li class="why-legal">Market data · Not investment advice</li>
             </ul>
           </div>
@@ -2300,36 +2320,63 @@
 
         <article class="why-block" data-block="3">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-              <div><div class="csc-label">Stockpilo AI</div><div class="csc-title">Morning Brief</div></div>
-              <div style="font-size:12px;color:#6b8cba;font-family:'Geist',sans-serif;">Mon, May 16</div>
-            </div>
-            <div class="csc-divider"></div>
-            <div style="display:flex;flex-direction:column;gap:9px;">
-              <div style="background:rgba(45,107,228,.08);border:1px solid rgba(45,107,228,.15);border-radius:10px;padding:11px 13px;">
-                <div style="font-size:9px;font-weight:600;color:#2d6be4;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Market Mood</div>
-                <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">Futures pointing higher after Fed signals pause. Tech outperforming &#x2014; NVDA leads pre-market.</div>
-              </div>
-              <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.14);border-radius:10px;padding:11px 13px;">
-                <div style="font-size:9px;font-weight:600;color:#10b981;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Your Watchlist</div>
-                <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">AAPL earnings Thursday &#x2014; consensus EPS $1.53. MSFT cloud beat could lift the sector.</div>
-              </div>
-              <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.13);border-radius:10px;padding:11px 13px;">
-                <div style="font-size:9px;font-weight:600;color:#ef4444;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Watch Out</div>
-                <div style="font-size:11px;color:#e8f0fe;line-height:1.6;font-family:'Geist',sans-serif;">CPI data at 8:30 AM ET. Higher print = volatility. TSLA short interest elevated.</div>
-              </div>
-            </div>
-            <div class="csc-footer"><div class="csc-dot"></div>Generated by Stockpilo AI &#xb7; 6:02 AM</div>
-          </div>
+          <div class="csc why-shot"><img src="brand_assets/screens/geopolitical-events.webp" alt="Geopolitical Events globe with the top three high-impact events listed" width="1600" height="751" loading="lazy" decoding="async"></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">04</span>
-            <h3 class="why-h3">Start the day informed</h3>
-            <p class="why-desc">A personalised AI briefing before the bell. Key signals, watchlist moves and macro context to start the day informed.</p>
+            <h3 class="why-h3">World events on a live globe</h3>
+            <p class="why-desc">Market-relevant world events pinned to a 3D globe, with the top three ranked by impact.</p>
             <ul class="why-list">
-              <li>Personalised to your watchlist</li>
-              <li>Macro context and market mood</li>
+              <li>Impact level, time and source for every event</li>
+              <li>"Also notable" for everything else</li>
+              <li class="why-legal">Market data · Not investment advice</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="why-block" data-block="4">
+          <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
+          <div class="csc why-shot"><img src="brand_assets/screens/earnings-calendar-full.webp" alt="Earnings calendar with company earnings and economic reports such as CPI, PMI and the jobs report" width="1600" height="883" loading="lazy" decoding="async"></div>
+          </div></div>
+          <div class="why-text">
+            <span class="why-num">05</span>
+            <h3 class="why-h3">One calendar for everything that moves the market</h3>
+            <p class="why-desc">Earnings from the 20 largest US companies and your watchlist, plus key economic reports from the US, euro area, UK, Japan and China.</p>
+            <ul class="why-list">
+              <li>Themes: Space, Energy, Military, Technology, Semiconductors, Health care</li>
+              <li>EPS estimate and last quarter's result</li>
+              <li class="why-legal">Market data · Not investment advice</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="why-block" data-block="5">
+          <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
+          <div class="csc why-shot"><img src="brand_assets/screens/risk-lab.webp" alt="Risk cards for geopolitical, macro and rotation risk above VIX and CPI vs Core vs Breakeven charts" width="1600" height="863" loading="lazy" decoding="async"></div>
+          </div></div>
+          <div class="why-text">
+            <span class="why-num">06</span>
+            <h3 class="why-h3">Risks, scored and charted</h3>
+            <p class="why-desc">Geopolitical, macro and rotation risks with a level and probability, next to the charts behind them.</p>
+            <ul class="why-list">
+              <li>VIX over 90 days with calm and fear thresholds</li>
+              <li>CPI vs. Core vs. Breakeven inflation, from FRED</li>
+              <li class="why-legal">Market data · Not investment advice</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="why-block" data-block="6">
+          <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
+          <div class="csc why-shot"><img src="brand_assets/screens/market-snapshot.webp" alt="Market Snapshot cards for S&amp;P 500, Nasdaq Composite, Dow Jones, VIX, gold and Brent futures" width="1600" height="985" loading="lazy" decoding="async"></div>
+          </div></div>
+          <div class="why-text">
+            <span class="why-num">07</span>
+            <h3 class="why-h3">16 instruments, three months each</h3>
+            <p class="why-desc">Indices, volatility, gold, oil and Treasuries — every instrument the dashboard rotates through, each with its own three-month history.</p>
+            <ul class="why-list">
+              <li>Today's change and change over 30 days</li>
+              <li>Search — SPX, gold, Treasury…</li>
               <li class="why-legal">Market data · Not investment advice</li>
             </ul>
           </div>
@@ -2448,7 +2495,7 @@
         </div>
         <div class="plan-desc">Everything you need to invest smarter — no limits, no noise.</div>
         <div class="plan-price">
-          <span class="tabnum" id="plan-price-val">$9.99</span><span class="plan-price-sub" id="plan-price-period">/mo</span>
+          <span class="tabnum" id="plan-price-val">$14.90</span><span class="plan-price-sub" id="plan-price-period">/mo</span>
         </div>
         <div class="plan-divider"></div>
         <div class="plan-what">What's included:</div>
@@ -2687,7 +2734,7 @@
         toggle.querySelectorAll('.plan-toggle-opt').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const yearly = btn.dataset.period === 'yearly';
-        if (priceVal)  priceVal.textContent  = yearly ? '$6.99' : '$9.99';
+        if (priceVal)  priceVal.textContent  = yearly ? '$10.43' : '$14.90';
         if (pricePer)  pricePer.textContent  = '/mo';
       });
     });
@@ -5085,16 +5132,16 @@ gl_FragColor=vec4(r,g,b,a);}`;
     // Re-declare the side cards' resting perspective/rotation/scale through GSAP
     // (instead of leaving them as a static CSS transform) so animating y afterward
     // doesn't clobber the 3D tilt they already have.
-    gsap.set(left,  { transformPerspective: 900, rotationY: 22,  scale: 0.97, transformOrigin: 'right center' });
-    gsap.set(right, { transformPerspective: 900, rotationY: -22, scale: 0.97, transformOrigin: 'left center' });
+    gsap.set(left,  { transformPerspective: 1200, rotationY: 14,  scale: 0.9, transformOrigin: 'right center' });
+    gsap.set(right, { transformPerspective: 1200, rotationY: -14, scale: 0.9, transformOrigin: 'left center' });
 
     gsap.timeline({
       scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.3 },
     })
       .to(content, { opacity: 0, y: -60, ease: 'none' }, 0)
       .to(center,  { y: 70,  ease: 'none' }, 0)
-      .to(left,    { y: 150, ease: 'none' }, 0)
-      .to(right,   { y: 210, ease: 'none' }, 0);
+      .to(left,    { y: 110, ease: 'none' }, 0)
+      .to(right,   { y: 110, ease: 'none' }, 0);
   })();
 
   // ── Section entrance animations (GSAP ScrollTrigger) ────────────────
@@ -5134,6 +5181,55 @@ gl_FragColor=vec4(r,g,b,a);}`;
 
     // fi-section heading + button
     revealSection('.fi-section', '.fi-section .fi-title, .fi-section .fi-btn', { stagger: 0.12, y: 36 });
+  })();
+</script>
+<script>
+  // ── Features: Stockpilo app mock — Geopolitical Events ───────────
+  (function() {
+    var app = document.getElementById('sp-app');
+    if (!app) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var evs = Array.prototype.slice.call(app.querySelectorAll('.sp-ev'));
+    var pins = Array.prototype.slice.call(app.querySelectorAll('.sp-pin'));
+    var lbl = document.getElementById('sp-lbl');
+    var cur = 0, timer = 0;
+
+    function select(i) {
+      cur = i;
+      evs.forEach(function(e, k) { e.classList.toggle('is-on', k === i); });
+      pins.forEach(function(p, k) { p.classList.toggle('is-on', k === i); });
+      var p = pins[i], e = evs[i];
+      lbl.style.left = p.style.left; lbl.style.top = p.style.top;
+      lbl.innerHTML = '<small>' + e.querySelector('.sp-ev-m').textContent + '</small>' + e.querySelector('.sp-ev-h').textContent;
+    }
+    function auto() { clearInterval(timer); if (!reduce) timer = setInterval(function() { select((cur + 1) % evs.length); }, 3200); }
+    evs.forEach(function(e, i) {
+      e.addEventListener('mouseenter', function() { clearInterval(timer); select(i); });
+      e.addEventListener('focus', function() { clearInterval(timer); select(i); });
+      e.addEventListener('click', function() { select(i); });
+      e.addEventListener('mouseleave', auto);
+    });
+    app.querySelectorAll('.sp-ic').forEach(function(b) {
+      b.addEventListener('click', function() { app.querySelectorAll('.sp-ic').forEach(function(o) { o.classList.toggle('is-on', o === b); }); });
+    });
+    auto();
+
+    // Pointer: slight 3D tilt of the whole app + globe drifts the other way (depth)
+    if (!reduce && window.matchMedia('(hover: hover) and (min-width: 1100px)').matches) {
+      var stage = app.parentElement, globe = document.getElementById('sp-globe-img'), raf = 0, tx = 0, ty = 0;
+      var rest = 'rotateX(5deg) rotateY(-7deg)';
+      app.style.transform = rest;
+      stage.addEventListener('mousemove', function(ev) {
+        var b = stage.getBoundingClientRect();
+        tx = (ev.clientX - b.left) / b.width - 0.5; ty = (ev.clientY - b.top) / b.height - 0.5;
+        if (!raf) raf = requestAnimationFrame(function() {
+          raf = 0;
+          app.style.transform = 'rotateX(' + (-ty * 6).toFixed(2) + 'deg) rotateY(' + (tx * 8).toFixed(2) + 'deg)';
+          globe.style.transform = 'translate3d(' + (-tx * 18).toFixed(1) + 'px,' + (-ty * 12).toFixed(1) + 'px,0)';
+        });
+      });
+      stage.addEventListener('mouseleave', function() { app.style.transform = rest; globe.style.transform = ''; });
+    }
   })();
 </script>
 </body>
