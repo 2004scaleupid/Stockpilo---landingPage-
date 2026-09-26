@@ -441,9 +441,14 @@
       btn.href = AUTH_URL;
       btn.addEventListener('click', function(e) {
         e.preventDefault();
+        rememberAppUser();
         window.location.href = AUTH_URL;
       });
     });
+
+    // Anyone who goes to the app from here is sent straight to it on their next visit (see the <head> script)
+    function rememberAppUser() { try { localStorage.setItem('sp_app_user', '1'); } catch (e) {} }
+    document.querySelectorAll('[data-app-link]').forEach(function(a) { a.addEventListener('click', rememberAppUser); });
   })();
 
   // ── Supabase + Stripe integration (disabled) ────────

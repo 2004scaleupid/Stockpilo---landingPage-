@@ -2,6 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script>
+    // Returning app users: if this browser has opened the app from here before, go straight to it.
+    // Skipped with ?home, when arriving from the app or from another page of this site, and for first-time visitors / crawlers (no flag).
+    try {
+      if (localStorage.getItem('sp_app_user') === '1' && location.pathname === '/' && !/[?&]home\b/.test(location.search)
+          && !/stockpiloapp\.com/.test(document.referrer) && document.referrer.indexOf(location.origin) !== 0) location.replace('https://www.stockpiloapp.com/dashboard');
+    } catch (e) {}
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stockpilo — Invest smarter. Know why before you buy.</title>
   <meta name="description" content="Stockpilo is an AI stock market dashboard for retail investors: a daily market recap, news explained, earnings, Congress trades and world events in one view.">
@@ -1773,6 +1781,7 @@
         <span class="effect filter" id="gnav-filter"></span>
         <span class="effect text" id="gnav-text"></span>
       </div>
+      <a href="https://www.stockpiloapp.com/dashboard" class="header-btn-outline" data-app-link>Log in</a>
       <a href="#" class="header-btn-solid" id="hero-cta-nav"><span class="btn-label">Get Started</span></a>
     </div>
 
@@ -1793,8 +1802,8 @@
       <a href="/blog.html" class="mobile-nav-link">Blog</a>
       <a href="/faqs.html" class="mobile-nav-link">FAQs</a>
       <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;padding:0 4px;">
-        <a href="#" class="header-btn-outline" style="width:100%;justify-content:center;">Sign In</a>
-        <a href="https://www.stockpiloapp.com/auth" class="header-btn-solid" style="width:100%;justify-content:center;"><span class="btn-label">Get Started</span></a>
+        <a href="https://www.stockpiloapp.com/dashboard" class="header-btn-outline" data-app-link style="width:100%;justify-content:center;">Log in</a>
+        <a href="https://www.stockpiloapp.com/auth" class="header-btn-solid" data-app-link style="width:100%;justify-content:center;"><span class="btn-label">Get Started</span></a>
       </div>
     </div>
   </div>
@@ -2939,7 +2948,7 @@
   </footer>
 </div>
 
-<script defer src="js/site.js?v=1"></script>
+<script defer src="js/site.js?v=2"></script>
 
 <!-- ── Cookie Consent Banner ─────────────────────── -->
 <div id="cookie-banner" style="
