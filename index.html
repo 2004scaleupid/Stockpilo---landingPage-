@@ -1843,10 +1843,10 @@
   <div class="hero-triple-wrap" id="hero-mockup">
     <div class="hero-triple-row">
       <div class="hero-mock-card hero-mock-side-l">
-        <img src="brand_assets/screens/geopolitical-globe.webp" alt="" width="2000" height="1039" loading="eager">
+        <img src="brand_assets/screens/macro-charts.webp" alt="" width="2000" height="1235" loading="eager">
       </div>
       <div class="hero-mock-card hero-mock-center">
-        <img src="brand_assets/screens/stock-detail.webp" alt="Stockpilo stock detail view for NVDA" width="2000" height="1084" loading="eager">
+        <img src="brand_assets/screens/stock-detail-aapl.webp" alt="Stockpilo stock detail view for AAPL with intraday chart, key stats and news" width="2000" height="1938" loading="eager">
       </div>
       <div class="hero-mock-card hero-mock-side-r">
         <img src="brand_assets/screens/earnings-calendar.webp" alt="" width="2000" height="1104" loading="eager">
@@ -1932,6 +1932,127 @@
     transition:left .45s cubic-bezier(.16,1,.3,1), top .45s cubic-bezier(.16,1,.3,1), opacity .25s ease; }
   .sp-lbl small { display:block; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:8.5px; color:#f87171; font-weight:600; letter-spacing:.06em; }
   .sp-legal { font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9px; color:#4a5060; text-align:right; padding:8px 4px 0; }
+  .sp-globe { cursor:pointer; }
+
+  /* ── Event detail: opens over the card when an event is clicked (or on the auto cycle) ── */
+  .sp-card { container-type:inline-size; }
+  .sp-dt { --mono:ui-monospace,'SF Mono',Menlo,monospace; position:absolute; inset:0; z-index:6; display:flex; flex-direction:column;
+    padding:12px 14px 10px; overflow:hidden; opacity:0; visibility:hidden;
+    background:
+      radial-gradient(1px 1px at 18px 24px,rgba(255,255,255,.55) 50%,transparent 51%),
+      radial-gradient(1px 1px at 96px 70px,rgba(255,255,255,.35) 50%,transparent 51%),
+      radial-gradient(1.5px 1.5px at 150px 18px,rgba(255,255,255,.5) 50%,transparent 51%),
+      radial-gradient(1px 1px at 60px 118px,rgba(255,255,255,.3) 50%,transparent 51%),
+      radial-gradient(ellipse 70% 45% at 50% -12%,rgba(245,158,11,.16),transparent 70%),
+      #07070a;
+    background-size:180px 140px,180px 140px,180px 140px,180px 140px,100% 100%,100% 100%;
+    transition:opacity .45s ease, visibility 0s linear .45s; }
+  .sp-dt.is-open { opacity:1; visibility:visible; transition:opacity .45s ease, visibility 0s; }
+  .sp-dt-bar { position:absolute; top:0; left:0; right:0; height:2px; background:rgba(255,255,255,.05); }
+  .sp-dt-bar i { display:block; height:100%; width:100%; transform-origin:left; transform:scaleX(0); background:linear-gradient(90deg,#f59e0b,#fbbf24); }
+  .sp-dt-bar i.run { animation:spBar 15s linear forwards; }
+  @keyframes spBar { from { transform:scaleX(0); } to { transform:scaleX(1); } }
+  .sp-dt:hover .sp-dt-bar i, .sp-dt:has(:focus-visible) .sp-dt-bar i, .sp-app.is-off .sp-dt-bar i { animation-play-state:paused; }
+  .sp-dt-top { display:flex; align-items:center; justify-content:space-between; gap:10px; font-family:var(--mono); font-size:9px; letter-spacing:.14em; color:#8a8f98; text-transform:uppercase; }
+  .sp-dt-meta { display:flex; align-items:center; gap:8px; min-width:0; white-space:nowrap; overflow:hidden; }
+  .sp-dt-meta::before { content:''; width:6px; height:6px; border-radius:50%; background:#6b7280; flex-shrink:0; }
+  .sp-dt-meta b { color:#cdd3de; font-weight:600; }
+  .sp-dt-meta span { letter-spacing:.04em; text-transform:none; color:#6b7280; }
+  .sp-dt-act { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+  .sp-risk { padding:4px 9px; border-radius:999px; border:1px solid rgba(245,158,11,.3); background:rgba(245,158,11,.08); color:#f59e0b; font-weight:600; }
+  .sp-risk.is-high { border-color:rgba(248,113,113,.3); background:rgba(248,113,113,.08); color:#f87171; }
+  .sp-dt-x { width:24px; height:24px; border-radius:50%; border:1px solid #2a2b30; background:rgba(255,255,255,.03); color:#9aa0aa; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:color .2s ease, border-color .2s ease; }
+  .sp-dt-x:hover { color:#fff; border-color:#4a4b52; }
+  .sp-dt button:focus-visible { outline:2px solid #2d6be4; outline-offset:2px; }
+  .sp-dt-grid { flex:1; min-height:0; display:grid; grid-template-columns:minmax(0,205px) minmax(0,1fr) minmax(0,178px); gap:16px; padding-top:10px; }
+  .sp-dt-grid > div { min-height:0; display:flex; flex-direction:column; opacity:0; transform:translateY(8px); transition:opacity .5s ease, transform .6s cubic-bezier(.16,1,.3,1); }
+  .sp-dt.is-open .sp-dt-grid > div { opacity:1; transform:none; }
+  .sp-dt.is-open .sp-dt-c { transition-delay:.05s; } .sp-dt.is-open .sp-dt-l { transition-delay:.15s; } .sp-dt.is-open .sp-dt-r { transition-delay:.22s; }
+  /* Left: AI explainer steps */
+  .sp-dt-l { gap:9px; border-left:1px solid #1f2024; padding-left:11px; margin-left:3px; }
+  .sp-step { position:relative; }
+  .sp-step::before { content:''; position:absolute; left:-14.5px; top:4px; width:6px; height:6px; border-radius:50%; background:#3a3b40; }
+  .sp-step.s2::before { background:#60a5fa; } .sp-step.s3::before { background:#34d399; }
+  .sp-step-h { font-family:var(--mono); font-size:8.5px; letter-spacing:.16em; color:#6b7280; margin-bottom:4px; }
+  .sp-step-h em { font-style:normal; margin-left:4px; padding:1px 4px; border-radius:3px; background:#1a1b1e; color:#9aa0aa; letter-spacing:.06em; }
+  .sp-step p { margin:0; font-size:10.5px; line-height:1.5; color:#cdd3de; }
+  .sp-step.s1 p { font-size:9.5px; color:#8a8f98; }
+  .sp-step p + p { margin-top:4px; }
+  .sp-step .sp-nb { color:#60a5fa; } .sp-step .sp-ng { color:#34d399; }
+  .sp-next { font-family:var(--mono); font-size:8.5px; letter-spacing:.08em; color:#8a8f98; }
+  .sp-aff { margin-top:auto; padding-top:8px; border-top:1px solid #1f2024; }
+  .sp-lab { font-family:var(--mono); font-size:8.5px; letter-spacing:.16em; color:#6b7280; margin-bottom:5px; }
+  .sp-aff-r { display:flex; align-items:center; gap:7px; font-size:10.5px; color:#8a8f98; white-space:nowrap; }
+  .sp-aff-r i { font-style:normal; width:20px; height:20px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:7px; font-weight:700; color:#fff; background:#1f7a6a; flex-shrink:0; }
+  .sp-aff-r b { color:#fff; font-weight:600; }
+  .sp-aff-r span { overflow:hidden; text-overflow:ellipsis; min-width:0; }
+  .sp-aff-r em { font-style:normal; margin-left:auto; font-family:var(--mono); font-weight:600; }
+  /* Center: headline, globe, timeline */
+  .sp-dt-c { align-items:center; text-align:center; }
+  .sp-dt-c h4 { margin:0; font-size:15px; font-weight:600; line-height:1.25; letter-spacing:-.015em; color:#fff; text-wrap:balance; }
+  .sp-chip { margin-top:7px; padding:3px 9px; border-radius:999px; border:1px solid #2a2b30; background:rgba(255,255,255,.03); font-family:var(--mono); font-size:8.5px; letter-spacing:.16em; color:#cdd3de; }
+  .sp-dt-globe { flex:1; min-height:120px; width:100%; display:flex; align-items:center; justify-content:center; margin:4px 0 2px; }
+  .sp-dt-gw { position:relative; height:100%; aspect-ratio:1140 / 880; max-width:100%; transform:scale(.86); transition:transform .9s cubic-bezier(.16,1,.3,1); }
+  .sp-dt.is-open .sp-dt-gw { transform:scale(1); }
+  .sp-dt-gw img { width:100%; height:100%; display:block; object-fit:contain; animation:spFloat 9s ease-in-out infinite;
+    -webkit-mask-image:radial-gradient(ellipse 62% 60% at 40% 52%,#000 62%,transparent 100%); mask-image:radial-gradient(ellipse 62% 60% at 40% 52%,#000 62%,transparent 100%); }
+  .sp-dpin { position:absolute; width:24px; height:24px; margin:-12px 0 0 -12px; padding:0; border:0; border-radius:50%; background:none; cursor:pointer; }
+  .sp-dpin::before, .sp-dpin::after { content:''; position:absolute; inset:7px; border-radius:50%; border:2px solid #f59e0b; }
+  .sp-dpin::after { animation:spPing 2.2s cubic-bezier(.16,1,.3,1) infinite; }
+  .sp-dpin.is-on::before { background:#f59e0b; box-shadow:0 0 14px #f59e0b; }
+  .sp-dlbl { position:absolute; transform:translate(-50%,calc(-100% - 12px)); font-family:var(--mono); font-size:8.5px; color:#fff; white-space:nowrap; text-shadow:0 1px 6px #000; pointer-events:none;
+    transition:left .45s cubic-bezier(.16,1,.3,1), top .45s cubic-bezier(.16,1,.3,1); }
+  .sp-vis { font-family:var(--mono); font-size:8px; letter-spacing:.16em; color:#6b7280; }
+  .sp-tl { position:relative; width:100%; max-width:330px; height:44px; margin-top:6px; }
+  .sp-tl-line { position:absolute; left:0; right:0; top:22px; height:1px; background:#26272b; }
+  .sp-tl-h { position:absolute; top:0; font-family:var(--mono); font-size:7.5px; letter-spacing:.14em; color:#6b7280; white-space:nowrap; }
+  .sp-tl-d { position:absolute; top:22px; width:7px; height:7px; margin:-3.5px 0 0 -3.5px; border-radius:50%; background:#f59e0b; opacity:.55; }
+  button.sp-tl-d { width:15px; height:15px; margin:-7.5px 0 0 -7.5px; padding:0; border:0; background:none; opacity:1; cursor:pointer; }
+  button.sp-tl-d::before { content:''; position:absolute; inset:4px; border-radius:50%; background:#f59e0b; transition:transform .25s ease, box-shadow .25s ease; }
+  button.sp-tl-d:hover::before { transform:scale(1.3); }
+  button.sp-tl-d.is-on::before { background:#fbbf24; box-shadow:0 0 0 3px rgba(251,191,36,.22), 0 0 10px #fbbf24; }
+  .sp-tl-now { position:absolute; top:12px; width:1px; height:19px; background:#e8f0fe; }
+  .sp-tl-now::before { content:''; position:absolute; top:-3px; left:-3px; width:7px; height:7px; border-radius:50%; background:#fff; }
+  .sp-tl-a { position:absolute; top:19px; width:7px; height:7px; margin-left:-3.5px; border-radius:50%; border:1px solid #8a8f98; }
+  .sp-tl-a span { position:absolute; top:10px; left:50%; transform:translateX(-50%); font-family:var(--mono); font-size:7px; letter-spacing:.1em; color:#8a8f98; white-space:nowrap; }
+  .sp-pager { display:flex; align-items:center; gap:10px; margin-top:2px; font-family:var(--mono); font-size:9.5px; color:#8a8f98; letter-spacing:.08em; }
+  .sp-pager button { width:22px; height:22px; border-radius:50%; border:1px solid #2a2b30; background:none; color:#9aa0aa; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:color .2s ease, border-color .2s ease; }
+  .sp-pager button:hover { color:#fff; border-color:#4a4b52; }
+  /* Right: market readout, since headline, sectors */
+  .sp-dt-r { gap:0; }
+  .sp-dt-r .sp-lab { margin-top:9px; } .sp-dt-r .sp-lab:first-child { margin-top:0; }
+  .sp-ro { display:grid; grid-template-columns:1fr 1fr; border:1px solid #1f2024; border-radius:9px; overflow:hidden; background:rgba(10,10,12,.85); }
+  .sp-ro > div { padding:6px 8px; border-right:1px solid #1f2024; border-bottom:1px solid #1f2024; }
+  .sp-ro > div:nth-child(2n) { border-right:0; } .sp-ro > div:nth-child(n+3) { border-bottom:0; }
+  .sp-ro small { display:block; font-family:var(--mono); font-size:7.5px; letter-spacing:.06em; color:#6b7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sp-ro b { display:block; font-size:13px; font-weight:400; color:#f1f3f6; margin:2px 0 1px; }
+  .sp-ro span { font-family:var(--mono); font-size:8.5px; }
+  .sp-since { display:flex; align-items:center; gap:8px; padding:7px 9px; border:1px solid #1f2024; border-radius:9px; background:rgba(10,10,12,.85); }
+  .sp-since b { font-size:14px; font-weight:400; }
+  .sp-since small { display:block; font-family:var(--mono); font-size:7px; color:#6b7280; white-space:nowrap; }
+  .sp-since svg { flex:1; min-width:0; height:22px; }
+  .sp-sec { padding:6px 8px; border:1px solid #1f2024; border-radius:9px; background:rgba(10,10,12,.85); display:flex; flex-direction:column; gap:3px; }
+  .sp-sec-r { display:grid; grid-template-columns:52px 1fr 36px; align-items:center; gap:6px; font-size:8.5px; color:#cdd3de; }
+  .sp-sec-r em { font-style:normal; text-align:right; font-family:var(--mono); font-size:8px; }
+  .sp-sec-t { position:relative; height:3px; border-radius:2px; background:#1a1b1e; }
+  .sp-sec-t i { position:absolute; top:0; bottom:0; border-radius:2px; width:0; transition:width .7s cubic-bezier(.16,1,.3,1) .25s; }
+  .sp-sec-t i.up { left:50%; background:#34d399; } .sp-sec-t i.dn { right:50%; background:#f87171; }
+  @container (max-width:640px) {
+    .sp-dt-grid { grid-template-columns:minmax(0,190px) minmax(0,1fr); }
+    .sp-dt-r { display:none !important; }
+  }
+  @container (max-width:470px) {
+    .sp-dt { overflow-y:auto; }
+    .sp-dt-grid { grid-template-columns:1fr; flex:none; }
+    .sp-dt-c { order:-1; }
+    .sp-dt-globe { flex:none; height:190px; }
+    .sp-dt-r { display:flex !important; }
+    .sp-aff { margin-top:4px; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    .sp-dt, .sp-dt-grid > div, .sp-dt-gw, .sp-sec-t i { transition:none; }
+    .sp-dt-gw img, .sp-dpin::after { animation:none; }
+  }
   @media (max-width:1100px) { .feat-grid { grid-template-columns:1fr; gap:48px; } }
   @media (max-width:760px) {
     .feat-grid { padding:96px 16px; }
@@ -2027,6 +2148,69 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Event detail (filled from EVENTS in the script below) -->
+              <div class="sp-dt" id="sp-dt" role="region" aria-label="Event detail" aria-hidden="true" inert>
+                <div class="sp-dt-bar" aria-hidden="true"><i id="sp-dt-bar"></i></div>
+                <div class="sp-dt-top">
+                  <div class="sp-dt-meta">EVENT <b data-f="tag"></b><span data-f="src"></span></div>
+                  <div class="sp-dt-act">
+                    <span class="sp-risk" data-f="risk"></span>
+                    <button class="sp-dt-x" type="button" id="sp-dt-x" aria-label="Close event"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                  </div>
+                </div>
+                <div class="sp-dt-grid">
+                  <div class="sp-dt-l">
+                    <div class="sp-step s1"><div class="sp-step-h">01 · BACKGROUND<em>AI</em></div><p data-f="bg"></p></div>
+                    <div class="sp-step s2"><div class="sp-step-h">02 · WHY THIS HAPPENED<em>AI</em></div><p data-f="why"></p><p class="sp-nb" data-f="noteB"></p></div>
+                    <div class="sp-step s3"><div class="sp-step-h">03 · WHAT TO WATCH<em>AI</em></div><p data-f="watch"></p><p class="sp-ng" data-f="noteG"></p></div>
+                    <div class="sp-next" data-f="next"></div>
+                    <div class="sp-aff"><div class="sp-lab">MOST AFFECTED</div><div class="sp-aff-r" data-f="aff"></div></div>
+                  </div>
+                  <div class="sp-dt-c">
+                    <h4 data-f="title"></h4>
+                    <span class="sp-chip" data-f="region"></span>
+                    <div class="sp-dt-globe">
+                      <div class="sp-dt-gw">
+                        <img src="brand_assets/screens/geo/globe2.webp" alt="" width="1140" height="880" loading="lazy" decoding="async">
+                        <button class="sp-dpin" type="button" data-ev="0" style="left:33.2%;top:36.9%" aria-label="Event 1"></button>
+                        <button class="sp-dpin" type="button" data-ev="1" style="left:26.3%;top:37.5%" aria-label="Event 2"></button>
+                        <button class="sp-dpin" type="button" data-ev="2" style="left:60.1%;top:44.7%" aria-label="Event 3"></button>
+                        <div class="sp-dlbl" data-f="pinLbl"></div>
+                      </div>
+                    </div>
+                    <div class="sp-vis">15 EVENTS VISIBLE · NOW</div>
+                    <div class="sp-tl" aria-label="Event timeline">
+                      <span class="sp-tl-h" style="left:0">LAST 24H</span>
+                      <span class="sp-tl-h" style="left:72%;transform:translateX(-50%)">NOW</span>
+                      <span class="sp-tl-h" style="right:0">AHEAD</span>
+                      <div class="sp-tl-line"></div>
+                      <span class="sp-tl-d" style="left:14%"></span>
+                      <span class="sp-tl-d" style="left:44%"></span>
+                      <span class="sp-tl-d" style="left:55%"></span>
+                      <button class="sp-tl-d" type="button" data-ev="1" style="left:4%" aria-label="Event 2, 1 day ago"></button>
+                      <button class="sp-tl-d" type="button" data-ev="0" style="left:23%" aria-label="Event 1, 16 hours ago"></button>
+                      <button class="sp-tl-d" type="button" data-ev="2" style="left:32%" aria-label="Event 3, 13 hours ago"></button>
+                      <span class="sp-tl-now" style="left:72%"></span>
+                      <span class="sp-tl-a" style="left:84%"><span data-f="a1"></span></span>
+                      <span class="sp-tl-a" style="left:96%"><span data-f="a2"></span></span>
+                    </div>
+                    <div class="sp-pager">
+                      <button type="button" id="sp-dt-prev" aria-label="Previous event"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+                      <span data-f="pos"></span>
+                      <button type="button" id="sp-dt-next" aria-label="Next event"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+                    </div>
+                  </div>
+                  <div class="sp-dt-r">
+                    <div class="sp-lab">MARKET READOUT</div>
+                    <div class="sp-ro" data-f="ro"></div>
+                    <div class="sp-lab" data-f="sinceLab"></div>
+                    <div class="sp-since" data-f="since"></div>
+                    <div class="sp-lab">SECTORS TODAY</div>
+                    <div class="sp-sec" data-f="sec"></div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="sp-legal">Market data · Not investment advice</div>
           </div>
@@ -2114,9 +2298,10 @@
   .why-blocks::after { content:''; flex:0 0 auto; height:clamp(200px,42vh,420px); }
   .why-block { display:grid; grid-template-columns:1.9fr 0.8fr; gap:32px; align-items:stretch;
     position:sticky; top:80px; height:clamp(520px,64vh,640px);
-    background:#17181b; border:1px solid #383a3e; border-radius:24px; padding:26px 30px;
+    background:rgba(15,15,20,.98); border:1px solid rgba(26,10,165,.6); border-radius:24px; padding:26px 30px;
     overflow:hidden; box-sizing:border-box;
-    box-shadow:0 -10px 30px -12px rgba(0,0,0,.55), 0 26px 60px -22px rgba(0,0,0,.8); }
+    /* same look as the Pro plan card: dark fill + #1a0aa5 glow edge */
+    box-shadow:0 0 5px rgba(26,10,165,.7), 0 0 34px -4px rgba(26,10,165,.4), 0 -10px 30px -12px rgba(0,0,0,.55), 0 26px 60px -22px rgba(0,0,0,.8); }
   /* Increasing z-index in DOM order → later cards cover earlier ones */
   .why-blocks .why-block:nth-child(1) { z-index:1; }
   .why-blocks .why-block:nth-child(2) { z-index:2; }
@@ -2177,7 +2362,6 @@
   .why-list { list-style:none; display:flex; flex-direction:column; gap:11px; margin:0; padding:0; }
   .why-list li { position:relative; padding:2px 0 2px 16px; border-left:2px solid rgba(45,107,228,.4);
     font-family:'Geist',sans-serif; font-size:14px; line-height:1.5; color:#cdd9ee; }
-  .why-list li.why-legal { color:#5a6b85; font-size:12px; border-left-color:rgba(255,255,255,.12); }
 
   /* Responsive <900px: rail → horizontal strip, blocks → single column */
   @media (max-width:900px) {
@@ -2270,17 +2454,16 @@
 
         <article class="why-block" data-block="0">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc why-shot"><img src="brand_assets/screens/daily-brief.webp" alt="Pilo Daily Brief: portfolio move per $1,000 vs the market, biggest drop explained, market mood from the VIX" width="1600" height="1121" loading="lazy" decoding="async"></div>
+          <div class="csc why-shot"><img src="brand_assets/screens/daily-brief.webp" alt="Pilo Daily Recap: your watchlist and the S&amp;P 500 last session, sector moves and the story behind the day" width="1600" height="1205" loading="lazy" decoding="async"></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">01</span>
-            <h3 class="why-h3">Your daily brief, while you slept</h3>
-            <p class="why-desc">A pre-market brief written for your holdings. See how your portfolio did against the market, and why.</p>
+            <h3 class="why-h3">Yesterday's market, in two minutes</h3>
+            <p class="why-desc">Every morning, a plain-English recap of the last trading day: what the market did, what drove it, and how your stocks moved.</p>
             <ul class="why-list">
-              <li>Your move per $1,000 vs. the market</li>
-              <li>Your biggest drop, explained with the news behind it</li>
-              <li>Market mood, read from the VIX</li>
-              <li class="why-legal">Market data · Not investment advice</li>
+              <li>The S&amp;P 500's day, and how it compares to a typical one</li>
+              <li>The story behind the move, linked to the news</li>
+              <li>Which sectors led, which lagged, and your stocks that stood out</li>
             </ul>
           </div>
         </article>
@@ -2296,7 +2479,6 @@
             <ul class="why-list">
               <li>Tagged with the tickers each story mentions</li>
               <li>Estimated impact on every headline</li>
-              <li class="why-legal">Market data · Not investment advice</li>
             </ul>
           </div>
         </article>
@@ -2313,7 +2495,6 @@
               <li>Filter by chamber, purchases or sales</li>
               <li>Traded → disclosed dates and amount ranges</li>
               <li>Filings in stocks on your watchlist</li>
-              <li class="why-legal">Market data · Not investment advice</li>
             </ul>
           </div>
         </article>
@@ -2329,7 +2510,6 @@
             <ul class="why-list">
               <li>Impact level, time and source for every event</li>
               <li>"Also notable" for everything else</li>
-              <li class="why-legal">Market data · Not investment advice</li>
             </ul>
           </div>
         </article>
@@ -2345,7 +2525,6 @@
             <ul class="why-list">
               <li>Themes: Space, Energy, Military, Technology, Semiconductors, Health care</li>
               <li>EPS estimate and last quarter's result</li>
-              <li class="why-legal">Market data · Not investment advice</li>
             </ul>
           </div>
         </article>
@@ -2361,7 +2540,6 @@
             <ul class="why-list">
               <li>VIX over 90 days with calm and fear thresholds</li>
               <li>CPI vs. Core vs. Breakeven inflation, from FRED</li>
-              <li class="why-legal">Market data · Not investment advice</li>
             </ul>
           </div>
         </article>
@@ -2372,12 +2550,11 @@
           </div></div>
           <div class="why-text">
             <span class="why-num">07</span>
-            <h3 class="why-h3">16 instruments, three months each</h3>
-            <p class="why-desc">Indices, volatility, gold, oil and Treasuries — every instrument the dashboard rotates through, each with its own three-month history.</p>
+            <h3 class="why-h3">The whole market at a glance</h3>
+            <p class="why-desc">Indices, volatility, gold, oil and Treasuries side by side, each with its recent history, so you can see where the market stands in seconds.</p>
             <ul class="why-list">
               <li>Today's change and change over 30 days</li>
               <li>Search — SPX, gold, Treasury…</li>
-              <li class="why-legal">Market data · Not investment advice</li>
             </ul>
           </div>
         </article>
@@ -2395,56 +2572,92 @@
       <svg width="16" height="16" viewBox="0 0 16 16" fill="#2d6be4"><rect x="0" y="2" width="7" height="2" rx="1"/><rect x="0" y="6" width="5" height="2" rx="1"/><rect x="0" y="10" width="7" height="2" rx="1"/></svg>
     </div>
     <h2 style="font-family:'Geist',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-.03em;color:#fff;margin:0 0 12px;">Why investors are switching</h2>
-    <p style="font-family:'Geist',sans-serif;font-size:16px;color:rgba(255,255,255,.45);margin:0;">2,000+ investors already made the move. No noise — just clarity.</p>
+    <p style="font-family:'Geist',sans-serif;font-size:16px;color:rgba(255,255,255,.45);margin:0;">Everything you check every morning, in one place. No noise — just clarity.</p>
   </div>
 
-  <!-- Row 1 — scrolls left -->
-  <div class="tst-row-wrap">
-    <div class="tst-row" id="tst-row-1"></div>
-  </div>
+  <div class="sb-grid reveal">
+    <!-- Primary -->
+    <div class="sb-card sb-primary">
+      <div class="sb-lines" aria-hidden="true"></div>
+      <div>
+        <span class="sb-pill">One dashboard</span>
+        <p class="sb-big">10+</p>
+        <p class="sb-big-sub">tools in one place</p>
+      </div>
+      <div>
+        <p class="sb-copy">Daily Brief, news, earnings, Congress trades, geopolitical events, Risk Lab and your portfolio — one clean view instead of ten tabs.</p>
+        <div class="sb-tags" aria-hidden="true"><span>Daily Brief</span><span>News</span><span>Earnings</span><span>Congress</span><span>Globe</span><span>Risk Lab</span><span>Stockpilo AI</span></div>
+      </div>
+    </div>
 
-  <!-- Row 2 — scrolls right -->
-  <div class="tst-row-wrap" style="margin-top:16px;">
-    <div class="tst-row tst-row-rev" id="tst-row-2"></div>
+    <!-- Secondary -->
+    <div class="sb-card sb-wide">
+      <div>
+        <p class="sb-lab">Stockpilo AI</p>
+        <p class="sb-mid">Why, not just what</p>
+        <p class="sb-note">Every big move on your list, explained with the news behind it</p>
+      </div>
+      <div class="sb-why" aria-hidden="true">
+        <span class="sb-why-tag">Earnings beat<small>+6.2% today</small></span>
+        <svg viewBox="0 0 150 64" fill="none">
+          <path d="M2 50 L18 46 L32 49 L46 42 L60 44 L74 38 L86 40 L98 16 L112 20 L126 14 L148 10" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M98 16 V62" stroke="rgba(255,255,255,.18)" stroke-dasharray="2 3"/>
+          <circle cx="98" cy="16" r="9" fill="#34d399" fill-opacity=".18"/><circle cx="98" cy="16" r="4" fill="#34d399"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Tertiary -->
+    <div class="sb-card sb-small">
+      <p class="sb-mid">7</p>
+      <p class="sb-lab" style="margin:0;">Days free</p>
+    </div>
+    <div class="sb-card sb-chip">
+      <span class="sb-ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div>
+        <p class="sb-chip-t">No credit card</p>
+        <p class="sb-note" style="margin-top:3px;">Cancel any time</p>
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
-  .tst-row-wrap {
-    overflow: hidden;
-    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-  }
-  .tst-row {
-    display: flex;
-    gap: 16px;
-    width: max-content;
-    animation: tstScroll 40s linear infinite;
-  }
-  .tst-row-rev { animation: tstScrollRev 40s linear infinite; }
-  .tst-row:hover, .tst-row-rev:hover { animation-play-state: paused; }
-  @keyframes tstScroll    { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  @keyframes tstScrollRev { from { transform: translateX(-50%); } to { transform: translateX(0); } }
-  .tst-mcard {
-    flex-shrink: 0;
-    width: 320px;
-    background: rgba(10,12,20,.85);
-    border: 1px solid rgba(255,255,255,.08);
-    border-radius: 16px;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    cursor: default;
-    transition: border-color .2s;
-  }
-  .tst-mcard:hover { border-color: rgba(255,255,255,.18); }
-  .tst-mquote { font-family: 'Geist',sans-serif; font-size: 14px; color: rgba(255,255,255,.8); line-height: 1.65; flex: 1; }
-  .tst-mfooter { display: flex; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.06); }
-  .tst-mavatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,.1); flex-shrink: 0; }
-  .tst-mavatar-placeholder { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Geist',sans-serif; font-weight: 700; font-size: 14px; color: #fff; flex-shrink: 0; }
-  .tst-mname { font-family: 'Geist',sans-serif; font-size: 13px; font-weight: 700; color: #fff; }
-  .tst-mrole { font-family: 'Geist',sans-serif; font-size: 11px; color: rgba(255,255,255,.4); margin-top: 1px; }
+  .sb-grid { max-width:1100px; margin:0 auto; padding:0 48px; display:grid; grid-template-columns:1fr; gap:16px; font-family:'Geist',sans-serif; }
+  @media (min-width:768px) { .sb-grid { grid-template-columns:repeat(6,1fr); grid-template-rows:repeat(2,minmax(150px,auto)); } }
+  @media (max-width:767px) { .sb-grid { padding:0 16px; grid-template-columns:1fr 1fr; } .sb-primary, .sb-wide { grid-column:1 / -1; } .sb-chip { flex-direction:column; justify-content:center; text-align:center; gap:10px; padding:20px 16px; } .sb-primary { padding:28px; } }
+  /* same look as the Pro plan card: dark fill + #1a0aa5 glow edge */
+  .sb-card { position:relative; overflow:hidden; border-radius:24px; border:1px solid rgba(26,10,165,.6); background:rgba(15,15,20,.98);
+    box-shadow:0 0 5px rgba(26,10,165,.7), 0 0 34px -4px rgba(26,10,165,.4); transition:border-color .25s ease, box-shadow .25s ease; }
+  .sb-card:hover { border-color:rgba(72,52,235,.9); box-shadow:0 0 6px rgba(26,10,165,.9), 0 0 44px -2px rgba(26,10,165,.55); }
+  .sb-card p { margin:0; }
+  .sb-primary { padding:40px; display:flex; flex-direction:column; justify-content:space-between; gap:40px; min-height:320px;
+    background:radial-gradient(ellipse 90% 60% at 100% 0%,rgba(26,10,165,.35),transparent 70%),rgba(15,15,20,.98); }
+  @media (min-width:768px) { .sb-primary { grid-column:span 3; grid-row:span 2; } .sb-wide { grid-column:span 3; } .sb-small { grid-column:span 1; } .sb-chip { grid-column:span 2; } }
+  .sb-lines { position:absolute; inset:0; pointer-events:none; opacity:.3;
+    background:repeating-linear-gradient(45deg,rgba(128,128,128,.8) 0 1px,transparent 1px 10px);
+    -webkit-mask-image:radial-gradient(ellipse 80% 50% at 100% 0%,#000 70%,transparent 110%); mask-image:radial-gradient(ellipse 80% 50% at 100% 0%,#000 70%,transparent 110%); }
+  .sb-primary > div { position:relative; }
+  .sb-pill { display:inline-block; padding:4px 12px; margin-bottom:24px; border-radius:999px; background:rgba(45,107,228,.15); border:1px solid rgba(45,107,228,.35); font-size:10px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.75); }
+  .sb-big { font-size:clamp(56px,7vw,76px); font-weight:600; letter-spacing:-.05em; line-height:1; color:#fff; }
+  .sb-big-sub { margin-top:6px !important; font-size:18px; color:rgba(255,255,255,.85); letter-spacing:-.01em; }
+  .sb-copy { font-size:14px; line-height:1.6; color:rgba(255,255,255,.55); max-width:340px; }
+  .sb-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:16px; }
+  .sb-tags span { padding:4px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.12); font-size:11px; color:rgba(255,255,255,.7); }
+  .sb-wide { padding:32px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+  .sb-lab { font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:6px !important; }
+  .sb-mid { font-size:32px; font-weight:500; letter-spacing:-.03em; line-height:1.1; color:#fff; }
+  .sb-note { font-size:13px; color:rgba(255,255,255,.45); margin-top:6px !important; line-height:1.45; }
+  .sb-why { position:relative; width:180px; flex-shrink:0; padding-top:30px; }
+  .sb-why svg { width:100%; height:auto; display:block; }
+  .sb-why-tag { position:absolute; left:65%; top:0; transform:translateX(-50%); padding:4px 9px; border-radius:8px; white-space:nowrap;
+    background:rgba(15,15,20,.95); border:1px solid rgba(45,107,228,.45); font-size:11px; font-weight:600; color:#fff; line-height:1.25; }
+  .sb-why-tag small { display:block; font-size:10px; font-weight:500; color:#34d399; }
+  @media (max-width:520px) { .sb-wide { flex-direction:column; align-items:flex-start; } .sb-why { width:100%; max-width:260px; } }
+  .sb-small { padding:24px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:4px; }
+  .sb-chip { padding:24px; display:flex; align-items:center; gap:16px; }
+  .sb-ico { width:40px; height:40px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:rgba(52,211,153,.12); color:#34d399; }
+  .sb-chip-t { font-size:15px; font-weight:500; color:#fff; line-height:1.1; }
 </style>
 
 
@@ -2652,6 +2865,7 @@
           <span class="footer-logo-letter white">s</span><span class="footer-logo-letter white">t</span><span class="footer-logo-letter white">o</span><span class="footer-logo-letter white">c</span><span class="footer-logo-letter white">k</span><span class="logo-p-wrap"><span class="logo-p-accent"></span><span class="footer-logo-letter logo-p">p</span></span><span class="footer-logo-letter white">i</span><span class="footer-logo-letter white">l</span><span class="footer-logo-letter white">o</span><span class="footer-logo-cursor" id="footer-cursor"></span>
         </a>
         <p class="footer-tagline">© 2026 Stockpilo. All rights reserved.</p>
+        <p class="footer-tagline" style="margin-top:6px;opacity:.7;">Market data for information only. Not investment advice.</p>
       </div>
 
       <!-- Links columns -->
@@ -2662,7 +2876,7 @@
           <ul class="footer-link-list">
             <li><a href="#features" class="footer-link" data-magnetic>Features</a></li>
             <li><a href="#pricing" class="footer-link" data-magnetic>Pricing</a></li>
-            <li><a href="#testimonials" class="footer-link" data-magnetic>Testimonials</a></li>
+            <li><a href="#testimonials" class="footer-link" data-magnetic>Why Stockpilo</a></li>
             <li><a href="/" class="footer-link" data-magnetic>Integration</a></li>
           </ul>
         </div>
@@ -2682,8 +2896,7 @@
           <ul class="footer-link-list">
             <li><a href="/blog.html" class="footer-link" data-magnetic>Blog</a></li>
             <li><a href="/changelog" class="footer-link" data-magnetic>Changelog</a></li>
-            <li><a href="/brand" class="footer-link" data-magnetic>Brand</a></li>
-            <li><a href="/help.html" class="footer-link" data-magnetic>Help</a></li>
+                        <li><a href="/help.html" class="footer-link" data-magnetic>Help</a></li>
           </ul>
         </div>
         <!-- Social Links -->
@@ -2692,26 +2905,14 @@
           <ul class="footer-link-list">
             <li class="footer-social-li">
               <a href="#" class="footer-link" data-magnetic>
-                <svg class="footer-social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                Facebook
+                <svg class="footer-social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768"/><path d="M13.232 10.768l6.768 -6.768"/></svg>
+                X
               </a>
             </li>
             <li class="footer-social-li">
               <a href="#" class="footer-link" data-magnetic>
                 <svg class="footer-social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
                 Instagram
-              </a>
-            </li>
-            <li class="footer-social-li">
-              <a href="#" class="footer-link" data-magnetic>
-                <svg class="footer-social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>
-                YouTube
-              </a>
-            </li>
-            <li class="footer-social-li">
-              <a href="#" class="footer-link" data-magnetic>
-                <svg class="footer-social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
-                LinkedIn
               </a>
             </li>
           </ul>
@@ -3383,47 +3584,6 @@
     init();
   })();
 
-  // ── Testimonials marquee ───────────────────────────
-  (function() {
-    const TESTIMONIALS = [
-      { name:'James K.', role:'Retail investor · 5 yrs', avatar:'https://i.pravatar.cc/80?img=11', content:'I used to spend an hour every morning reading market news. Now I get the same picture in 5 minutes. The AI context is exactly what I was missing.' },
-      { name:'Sara M.', role:'Day trader · London', avatar:'https://i.pravatar.cc/80?img=32', content:'Stockpilo actually tells me why things are moving — not just that they moved. That context is the bit that makes it click.' },
-      { name:'Alex R.', role:'Self-directed investor · Berlin', avatar:'https://i.pravatar.cc/80?img=47', content:'Premium feel without the Wall Street stuffiness. It respects that I\'m a beginner but doesn\'t talk down to me.' },
-      { name:'Nina P.', role:'Software engineer · Side investor', avatar:'https://i.pravatar.cc/80?img=56', content:'I don\'t have time to watch the markets all day. Stockpilo\'s morning brief keeps me informed without the noise.' },
-      { name:'Tom W.', role:'Swing trader · New York', avatar:'https://i.pravatar.cc/80?img=15', content:'Finally a tool that combines portfolio tracking with real-time AI reasoning. I\'ve tried six others — this is the one I kept.' },
-      { name:'Lena K.', role:'Long-term investor · Helsinki', avatar:'https://i.pravatar.cc/80?img=25', content:'The earnings calendar with AI context is a game changer. I know what to watch for before market open every single day.' },
-      { name:'Marco D.', role:'Portfolio manager · Milan', avatar:'https://i.pravatar.cc/80?img=53', content:'Clean UI, fast data, smart alerts. Stockpilo cut my daily research time in half. The watchlist is exactly what a busy investor needs.' },
-      { name:'Aisha B.', role:'First-time investor · Dubai', avatar:'https://i.pravatar.cc/80?img=44', content:'As someone new to investing, Stockpilo makes complex market moves understandable. I actually know why my stocks go up or down now.' },
-    ];
-
-    function makeCard(t) {
-      return `<div class="tst-mcard">
-        <p class="tst-mquote">"${t.content}"</p>
-        <div class="tst-mfooter">
-          <img class="tst-mavatar" src="${t.avatar}" alt="${t.name}" loading="lazy">
-          <div>
-            <div class="tst-mname">${t.name}</div>
-            <div class="tst-mrole">${t.role}</div>
-          </div>
-        </div>
-      </div>`;
-    }
-
-    const row1 = document.getElementById('tst-row-1');
-    const row2 = document.getElementById('tst-row-2');
-    if (!row1 || !row2) return;
-
-    const half = Math.ceil(TESTIMONIALS.length / 2);
-    const group1 = TESTIMONIALS.slice(0, half);
-    const group2 = TESTIMONIALS.slice(half);
-
-    // Duplicate for seamless loop
-    const html1 = [...group1, ...group1].map(makeCard).join('');
-    const html2 = [...group2, ...group2].map(makeCard).join('');
-    row1.innerHTML = html1;
-    row2.innerHTML = html2;
-  })();
-
   // ── About section timeline reveal ─────────────────
   (function() {
     const root = document.getElementById('about-root');
@@ -3474,6 +3634,12 @@
   })();
 
 
+
+  // Perf: run a callback with true/false as an element enters/leaves the viewport
+  window.spWhenVisible = function(el, cb, margin) {
+    if (!el || !('IntersectionObserver' in window)) { cb(true); return; }
+    new IntersectionObserver(function(es) { cb(es[es.length - 1].isIntersecting); }, { rootMargin: margin || '100px' }).observe(el);
+  };
 
   // ── DotField overlay ───────────────────────────────
   (function() {
@@ -3531,7 +3697,13 @@
       mouse.y = e.pageY - size.offsetY;
     }, { passive: true });
 
+    let running = false, onScreen = true, idle = 0;
+    function kick() { idle = 0; if (!running && onScreen) { running = true; requestAnimationFrame(tick); } }
+    window.addEventListener('mousemove', kick, { passive: true });
+    spWhenVisible(container || canvas, v => { onScreen = v; if (v) kick(); });
+
     const speedInterval = setInterval(() => {
+      if (!onScreen) return;
       const dx = mouse.prevX - mouse.x, dy = mouse.prevY - mouse.y;
       const dist = Math.sqrt(dx*dx + dy*dy);
       mouse.speed += (dist - mouse.speed) * 0.5;
@@ -3600,11 +3772,14 @@
         ctx.arc(drawX, drawY, rad, 0, TWO_PI);
       }
       ctx.fill();
+      // Dots only move near an active cursor: once everything has eased back, stop redrawing
+      idle = (engagement === 0 && glowOpacity < 0.001) ? idle + 1 : 0;
+      if (!onScreen || idle > 90) { running = false; return; }
       requestAnimationFrame(tick);
     }
 
     doResize();
-    requestAnimationFrame(tick);
+    kick();
   })();
 
   // ── ColorBends hero background ─────────────────────
@@ -3694,7 +3869,7 @@ void main(){
     scene.add(new THREE.Mesh(geometry,material));
 
     const renderer=new THREE.WebGLRenderer({antialias:false,alpha:true,powerPreference:'high-performance'});
-    renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+    renderer.setPixelRatio(1); // soft gradient: 1x is visually identical and 4x cheaper on retina
     renderer.setClearColor(0x000000,0);
     Object.assign(renderer.domElement.style,{position:'absolute',inset:'0',width:'100%',height:'100%',display:'block'});
     container.appendChild(renderer.domElement);
@@ -3710,14 +3885,18 @@ void main(){
     },{passive:true});
 
     const clock=new THREE.Clock();
-    (function loop(){
+    let running=false,onScreen=true,odd=false;
+    function loop(){
+      if(!onScreen){running=false;clock.stop();return;}
+      requestAnimationFrame(loop);
+      if((odd=!odd))return; // slow-moving shader: 30fps is plenty
       const dt=clock.getDelta();
       material.uniforms.uTime.value=clock.elapsedTime;
       ptr.c.lerp(ptr.t,Math.min(1,dt*8));
       material.uniforms.uPointer.value.copy(ptr.c);
       renderer.render(scene,camera);
-      requestAnimationFrame(loop);
-    })();
+    }
+    spWhenVisible(container,v=>{onScreen=v;if(v&&!running){running=true;clock.start();requestAnimationFrame(loop);}});
   })();
 
   // ── ASCIIText (removed) ────────────────────────────
@@ -3941,7 +4120,9 @@ gl_FragColor=vec4(r,g,b,a);}`;
     new ResizeObserver(resize).observe(card);
     resize();
 
+    let ebOdd = false;
     function draw(now) {
+      if ((ebOdd = !ebOdd) && ebOn) { requestAnimationFrame(draw); return; } // 30fps is enough for the wobble
       const dt = (now - lastT) / 1000;
       time += dt * SPEED;
       lastT = now;
@@ -3958,7 +4139,7 @@ gl_FragColor=vec4(r,g,b,a);}`;
       const bw=W-2*OFFSET, bh=H-2*OFFSET;
       const r = Math.min(BORDER_RADIUS, Math.min(bw,bh)/2);
       const perim = 2*(bw+bh)+2*Math.PI*r;
-      const samples = Math.floor(perim/2);
+      const samples = Math.floor(perim/5); // noise is low-frequency: 5px segments look identical, 2.5x less work
 
       ctx.beginPath();
       for (let i=0; i<=samples; i++) {
@@ -3970,9 +4151,11 @@ gl_FragColor=vec4(r,g,b,a);}`;
       }
       ctx.closePath();
       ctx.stroke();
+      if (!ebOn) { ebRun = false; return; }
       requestAnimationFrame(draw);
     }
-    requestAnimationFrame(draw);
+    let ebOn = true, ebRun = false;
+    spWhenVisible(card, v => { ebOn = v; if (v && !ebRun) { ebRun = true; requestAnimationFrame(t => { lastT = t; draw(t); }); } });
   })();
 
   // ── BorderGlow on cs-cards ─────────────────────────
@@ -4036,7 +4219,10 @@ gl_FragColor=vec4(r,g,b,a);}`;
     track.addEventListener('mouseenter', () => paused = true);
     track.addEventListener('mouseleave', () => paused = false);
 
+    let llOn = true, llRun = true;
+    spWhenVisible(track, v => { llOn = v; if (v && !llRun) { llRun = true; last = null; requestAnimationFrame(loop); } });
     (function loop(ts) {
+      if (!llOn) { llRun = false; return; }
       if (last !== null && !paused) {
         const dt = (ts - last) / 1000;
         offset += SPEED * dt;
@@ -4890,7 +5076,9 @@ gl_FragColor=vec4(r,g,b,a);}`;
     var why = document.getElementById('why');
     if (!turb || !why) return;
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) return; // leave the warp static — organic shape, no motion
+    // Perf: animating baseFrequency re-renders the blur+displacement filter on every panel each
+    // frame (the main source of scroll jank here). The warp stays static; the parallax still moves it.
+    return;
 
     var raf = null, t = 0;
     function tick() {
@@ -5202,16 +5390,154 @@ gl_FragColor=vec4(r,g,b,a);}`;
       lbl.style.left = p.style.left; lbl.style.top = p.style.top;
       lbl.innerHTML = '<small>' + e.querySelector('.sp-ev-m').textContent + '</small>' + e.querySelector('.sp-ev-h').textContent;
     }
-    function auto() { clearInterval(timer); if (!reduce) timer = setInterval(function() { select((cur + 1) % evs.length); }, 3200); }
+    function auto() { clearInterval(timer); if (!reduce && !isOpen) timer = setInterval(function() { select((cur + 1) % evs.length); }, 3200); }
     evs.forEach(function(e, i) {
       e.addEventListener('mouseenter', function() { clearInterval(timer); select(i); });
       e.addEventListener('focus', function() { clearInterval(timer); select(i); });
-      e.addEventListener('click', function() { select(i); });
+      e.addEventListener('click', function(ev) { open(i, ev.detail === 0); });
       e.addEventListener('mouseleave', auto);
     });
     app.querySelectorAll('.sp-ic').forEach(function(b) {
       b.addEventListener('click', function() { app.querySelectorAll('.sp-ic').forEach(function(o) { o.classList.toggle('is-on', o === b); }); });
     });
+
+    // ── Event detail ────────────────────────────────
+    // Illustrative data for the three pinned events (mock of the in-app event view)
+    var EVENTS = [
+      { tag:'ENERGY', src:'cnbc.com · Sep 25', risk:'HIGH RISK', high:true, region:'RUSSIA',
+        title:'Oil rises amid worries of Russian supply disruption',
+        pin:'Oil rises amid worries…',
+        bg:'Russia is one of the world’s largest oil exporters. Attacks on its refineries and ports can take barrels off the market within days.',
+        why:'Traders priced in fewer Russian barrels after new strikes on export terminals. Since the headline, Brent is up 1.8% and XLE (an energy fund) is up 1.1%.',
+        noteB:'XOM is up 1.4% today.',
+        watch:'Coming up: the weekly EIA crude inventory report on Oct 1.',
+        noteG:'Higher oil helps producers but raises fuel costs for airlines.',
+        next:'NEXT · EIA OCT 1 · OPEC+ OCT 5', a:['EIA','OPEC+'],
+        aff:['XOM','Exxon Mobil Corp.','+1.42%'],
+        ro:[['BRENT','71.42','+1.84%'],['WTI','67.90','+1.91%'],['XLE · ENERGY ETF','94.36','+1.12%'],['USD/RUB','82.40','+0.31%']],
+        since:['XLE','+1.12%','From Sep 24 20:10 ET'], spark:[4,3,5,4,7,6,9,8,11,10,13,12,15,14,16],
+        sec:[['Energy',1.42],['Materials',0.51],['Industrials',0.22],['Info Tech',-0.14],['Discret.',-0.38],['Utilities',-0.61]] },
+      { tag:'MARKETS', src:'invezz.com · Sep 24', risk:'HIGH RISK', high:true, region:'MIDDLE EAST',
+        title:'Dow closes 360 points higher as ceasefire hopes lift stocks',
+        pin:'Dow closes 360 points…',
+        bg:'Conflict in the Middle East puts oil shipping lanes at risk, which pushes up energy prices and weighs on stocks broadly.',
+        why:'Reports of progress in ceasefire talks eased fears of a wider conflict. The Dow closed up 360 points (+0.8%) and SPY is up 0.6% since the headline.',
+        noteB:'DAL is up 3.1% today.',
+        watch:'Coming up: the September jobs report on Oct 2.',
+        noteG:'Airlines like DAL gain when fuel prices fall.',
+        next:'NEXT · JOBS OCT 2 · CPI OCT 14', a:['JOBS','CPI'],
+        aff:['DAL','Delta Air Lines','+3.08%'],
+        ro:[['DIA · DOW ETF','462.18','+0.81%'],['SPY','668.40','+0.62%'],['BRENT','69.10','−1.20%'],['GOLD','4,298.6','−0.38%']],
+        since:['SPY','+0.61%','From Sep 24 09:30 ET'], spark:[3,5,4,6,5,8,7,9,11,10,12,13,12,14,15],
+        sec:[['Industrials',1.08],['Financials',0.91],['Discret.',0.72],['Info Tech',0.48],['Utilities',-0.21],['Energy',-0.98]] },
+      { tag:'GEOPOLITICS', src:'reuters.com · Sep 25', risk:'MEDIUM RISK', high:false, region:'CHINA',
+        title:'China expands export control list to more US firms',
+        pin:'China expands export c…',
+        bg:'Most advanced chips are made in Taiwan and South Korea, using tools and rare earths from a handful of countries. Governments decide who can buy them.',
+        why:'Beijing added more US companies to its export control list, limiting their access to rare earths. Since the headline, SOXX (a chip-stock fund) is down 0.9%.',
+        noteB:'MP is up 6.2% today.',
+        watch:'Coming up: the US trade balance report on Oct 7.',
+        noteG:'Rare-earth miners like MP gain when China limits supply.',
+        next:'NEXT · CPI OCT 14 · FOMC OCT 28', a:['CPI','FOMC'],
+        aff:['MP','MP Materials Corp.','+6.21%'],
+        ro:[['TSM','450.61','−0.12%'],['SOXX · SEMIS ETF','572.68','−0.94%'],['USD/CNY','7.1125','+0.13%'],['GOLD','4,321.2','+0.54%']],
+        since:['SOXX','−0.94%','From Sep 25 04:12 ET'], spark:[14,15,13,14,12,13,11,12,10,11,9,10,8,9,8],
+        sec:[['Materials',0.95],['Industrials',0.41],['Health Care',0.33],['Staples',0.18],['Info Tech',-0.64],['Telecom',-0.90]] }
+    ];
+    var dt = document.getElementById('sp-dt'), bar = document.getElementById('sp-dt-bar'), closeBtn = document.getElementById('sp-dt-x');
+    var isOpen = false, openTimer = 0, visible = false, hovering = false, lastFocus = null;
+    var f = {}; dt.querySelectorAll('[data-f]').forEach(function(el) { f[el.getAttribute('data-f')] = el; });
+    var dpins = Array.prototype.slice.call(dt.querySelectorAll('.sp-dpin'));
+    var tdots = Array.prototype.slice.call(dt.querySelectorAll('button.sp-tl-d'));
+    function sign(v) { return v.charAt(0) === '+' ? 'sp-up' : 'sp-dn'; }
+    function spark(pts, up) {
+      var max = Math.max.apply(null, pts), min = Math.min.apply(null, pts), d = '';
+      pts.forEach(function(p, k) { d += (k ? 'L' : 'M') + (k / (pts.length - 1) * 100).toFixed(1) + ' ' + (22 - (p - min) / (max - min || 1) * 20).toFixed(1); });
+      return '<svg viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true"><path d="' + d + '" fill="none" stroke="' + (up ? '#34d399' : '#f87171') + '" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>';
+    }
+    function fill(i) {
+      var e = EVENTS[i];
+      ['tag','src','region','title','bg','why','noteB','watch','noteG','next'].forEach(function(k) { f[k].textContent = e[k]; });
+      f.risk.textContent = e.risk; f.risk.classList.toggle('is-high', e.high);
+      f.pinLbl.textContent = e.pin; f.pinLbl.style.left = dpins[i].style.left; f.pinLbl.style.top = dpins[i].style.top;
+      f.a1.textContent = e.a[0]; f.a2.textContent = e.a[1];
+      f.pos.textContent = (i + 1) + ' / ' + EVENTS.length;
+      f.aff.innerHTML = '<i>' + e.aff[0] + '</i><b>' + e.aff[0] + '</b><span>' + e.aff[1] + '</span><em class="' + sign(e.aff[2]) + '">' + e.aff[2] + '</em>';
+      f.ro.innerHTML = e.ro.map(function(r) { return '<div><small>' + r[0] + '</small><b>' + r[1] + '</b><span class="' + sign(r[2]) + '">' + r[2] + '</span></div>'; }).join('');
+      f.sinceLab.textContent = 'SINCE HEADLINE · ' + e.since[0];
+      f.since.innerHTML = '<div><b class="' + sign(e.since[1]) + '">' + e.since[1] + '</b><small>' + e.since[2] + '</small></div>' + spark(e.spark, e.since[1].charAt(0) === '+');
+      var mx = Math.max.apply(null, e.sec.map(function(s) { return Math.abs(s[1]); }));
+      f.sec.innerHTML = e.sec.map(function(s) {
+        var up = s[1] >= 0;
+        return '<div class="sp-sec-r"><span>' + s[0] + '</span><span class="sp-sec-t"><i class="' + (up ? 'up' : 'dn') + '" data-w="' + (Math.abs(s[1]) / mx * 50).toFixed(1) + '%"></i></span><em class="' + (up ? 'sp-up' : 'sp-dn') + '">' + (up ? '+' : '−') + Math.abs(s[1]).toFixed(2) + '%</em></div>';
+      }).join('');
+      dpins.forEach(function(p, k) { p.classList.toggle('is-on', k === i); });
+      tdots.forEach(function(d) { d.classList.toggle('is-on', +d.getAttribute('data-ev') === i); });
+      // grow the sector bars after layout so the width transition runs
+      requestAnimationFrame(function() { requestAnimationFrame(function() {
+        f.sec.querySelectorAll('i').forEach(function(b) { b.style.width = b.getAttribute('data-w'); });
+      }); });
+    }
+    function runBar() {
+      bar.classList.remove('run'); void bar.offsetWidth;
+      if (!reduce) bar.classList.add('run');
+    }
+    function open(i, focusIt) {
+      clearTimeout(openTimer); clearInterval(timer);
+      select(i); fill(i); runBar();
+      if (!isOpen) {
+        isOpen = true;
+        lastFocus = document.activeElement;
+        dt.classList.add('is-open'); dt.removeAttribute('inert'); dt.setAttribute('aria-hidden', 'false');
+      }
+      if (focusIt) closeBtn.focus({ preventScroll: true });
+    }
+    function close(advance) {
+      if (!isOpen) return;
+      var hadFocus = dt.contains(document.activeElement);
+      isOpen = false;
+      bar.classList.remove('run');
+      dt.classList.remove('is-open'); dt.setAttribute('inert', ''); dt.setAttribute('aria-hidden', 'true');
+      if (advance) select((cur + 1) % evs.length);
+      if (hadFocus) (lastFocus && app.contains(lastFocus) ? lastFocus : evs[cur]).focus({ preventScroll: true });
+      auto(); schedule();
+    }
+    function go(d) { open((cur + d + EVENTS.length) % EVENTS.length, false); }
+    // Auto cycle: 15 s on the list, then the current event opens for 15 s (the progress bar), then back and on to the next
+    function schedule() {
+      clearTimeout(openTimer);
+      if (reduce || isOpen || !visible || hovering) return;
+      openTimer = setTimeout(function() { open(cur, false); }, 15000);
+    }
+    bar.addEventListener('animationend', function() { close(true); });
+    closeBtn.addEventListener('click', function() { close(false); });
+    document.getElementById('sp-dt-prev').addEventListener('click', function() { go(-1); });
+    document.getElementById('sp-dt-next').addEventListener('click', function() { go(1); });
+    dpins.concat(tdots).forEach(function(b) { b.addEventListener('click', function() { open(+b.getAttribute('data-ev'), false); }); });
+    dt.addEventListener('keydown', function(ev) {
+      if (ev.key === 'Escape') { ev.stopPropagation(); close(false); }
+      else if (ev.key === 'ArrowRight') go(1);
+      else if (ev.key === 'ArrowLeft') go(-1);
+    });
+    // Clicking the globe opens the nearest pinned event
+    document.getElementById('sp-globe').addEventListener('click', function(ev) {
+      var best = cur, bd = 1e9;
+      pins.forEach(function(p, k) {
+        var b = p.getBoundingClientRect(), dx = b.left + b.width / 2 - ev.clientX, dy = b.top + b.height / 2 - ev.clientY, dd = dx * dx + dy * dy;
+        if (dd < bd) { bd = dd; best = k; }
+      });
+      open(bd < 60 * 60 ? best : cur, false);
+    });
+    // Pause the auto cycle while the pointer is on the app or it is off-screen
+    app.addEventListener('mouseenter', function() { hovering = true; clearTimeout(openTimer); });
+    app.addEventListener('mouseleave', function() { hovering = false; schedule(); });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function(en) {
+        visible = en[0].isIntersecting;
+        app.classList.toggle('is-off', !visible);
+        schedule();
+      }, { threshold: 0.35 }).observe(app);
+    } else { visible = true; schedule(); }
     auto();
 
     // Pointer: slight 3D tilt of the whole app + globe drifts the other way (depth)
