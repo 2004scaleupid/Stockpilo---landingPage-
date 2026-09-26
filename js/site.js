@@ -863,9 +863,18 @@
   })();
 
   // ── ColorBends hero background ─────────────────────
+  // Desktop only: phones get the CSS gradient in #colorbends-container (index.html) and never download three.js
   (function() {
     const container = document.getElementById('colorbends-container');
-    if (!container || typeof THREE === 'undefined') return;
+    if (!container || !window.matchMedia('(min-width: 768px)').matches) return;
+    if (typeof THREE !== 'undefined') start();
+    else {
+      const sc = document.createElement('script');
+      sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js';
+      sc.onload = start;
+      document.head.appendChild(sc);
+    }
+    function start() {
 
     const MAX_COLORS = 8;
     const COLORS = ['#0b00c6'];
@@ -977,6 +986,7 @@ void main(){
       renderer.render(scene,camera);
     }
     spWhenVisible(container,v=>{onScreen=v;if(v&&!running){running=true;clock.start();requestAnimationFrame(loop);}});
+    }
   })();
 
   // ── ASCIIText (removed) ────────────────────────────
