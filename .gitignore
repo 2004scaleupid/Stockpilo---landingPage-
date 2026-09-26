@@ -10,3 +10,5 @@ node_modules/
 .claude/
 docs/superpowers/
 skills-lock.json
+
+.DS_Store

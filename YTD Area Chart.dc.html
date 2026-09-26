@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/styles.css">
+  <script src="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/_ds_bundle.js"></script>
+  <style>
+    body { background:#000; margin:0; font-family:'Geist',sans-serif; }
+    a { color:#479ffa; text-decoration:none; }
+    a:hover { color:#ffffff; }
+  </style>
+</helmet>
+<section style="padding:40px; display:flex; justify-content:center;">
+  <div style="width:1100px; background:#0b0b0b; border:1px solid #1f1f1f; border-radius:12px; padding:20px 24px 18px;">
+
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-family:'Geist Mono',monospace; font-size:12px; font-weight:700; letter-spacing:0.08em; color:#000000; background:#e8a33d; border-radius:3px; padding:3px 8px;">XBI</span>
+        <div style="display:flex; flex-direction:column; gap:2px;">
+          <div style="font-size:15px; font-weight:500; color:#ffffff;">Year to date</div>
+          <div style="font-family:'Geist Mono',monospace; font-size:10px; letter-spacing:0.1em; color:#868f97; text-transform:uppercase;">Daily close · 2026</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:baseline; gap:8px;">
+        <span style="font-size:24px; font-weight:300; color:#ffffff; font-variant-numeric:tabular-nums;">{{ last }}</span>
+        <span style="font-family:'Geist Mono',monospace; font-size:12px; font-weight:600; color:#22c55e;">{{ delta }}</span>
+      </div>
+    </div>
+
+    <svg viewBox="0 0 1100 420" style="width:100%; display:block;">
+      <defs>
+        <linearGradient id="xbiFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#2563eb"></stop>
+          <stop offset="1" stop-color="#0a1a4a"></stop>
+        </linearGradient>
+      </defs>
+      <sc-for list="{{ gridLines }}" as="g" hint-placeholder-count="4">
+        <line x1="0" y1="{{ g.y }}" x2="1050" y2="{{ g.y }}" stroke="#1a1a1a" stroke-width="1"></line>
+      </sc-for>
+      <sc-for list="{{ vLines }}" as="v" hint-placeholder-count="4">
+        <line x1="{{ v.x }}" y1="6" x2="{{ v.x }}" y2="390" stroke="#1a1a1a" stroke-width="1"></line>
+      </sc-for>
+      <path d="{{ areaPath }}" fill="url(#xbiFill)"></path>
+      <path d="{{ linePath }}" fill="none" stroke="#ffffff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
+      <line x1="0" y1="390" x2="1050" y2="390" stroke="#1f1f1f" stroke-width="1"></line>
+      {{ svgLabels }}
+    </svg>
+
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:540}}">
+class Component extends DCLogic {
+  lerp(anchors, m) {
+    for (let i = 0; i < anchors.length - 1; i++) {
+      const [m0, v0] = anchors[i], [m1, v1] = anchors[i + 1];
+      if (m >= m0 && m <= m1) return v0 + (v1 - v0) * (m - m0) / (m1 - m0);
+    }
+    return anchors[anchors.length - 1][1];
+  }
+  noise(seed, N, amp) {
+    const out = [];
+    let v = 0, s = seed;
+    const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647 - 0.5; };
+    for (let i = 0; i < N; i++) { v = v * 0.9 + rnd() * amp; out.push(v); }
+    return out;
+  }
+  renderVals() {
+    const N = 160; // Jan .. mid Aug
+    const A = [[0,82],[8,84],[14,86.5],[20,85],[26,86],[32,84],[38,83],[44,79],[48,80.5],[52,77],[58,75.5],[64,76.5],[70,75],[76,78],[80,77],[86,82],[92,84],[98,86],[104,85],[110,87],[114,85.5],[120,86.5],[126,88],[132,92],[138,95],[142,93],[146,94.5],[150,91],[154,93.5],[159,97]];
+    const n = this.noise(31337, N, 1.1);
+    const vals = [];
+    for (let i = 0; i < N; i++) vals.push(this.lerp(A, i) + n[i]);
+    const plotW = 1050, plotTop = 6, plotBot = 390;
+    const vMin = 72, vMax = 99;
+    const y = v => plotBot - (v - vMin) / (vMax - vMin) * (plotBot - plotTop);
+    const x = i => i / (N - 1) * plotW;
+    const linePath = vals.map((v, i) => (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(v).toFixed(1)).join('');
+    const areaPath = linePath + `L${plotW} ${plotBot}L0 ${plotBot}Z`;
+    const gridVals = [75, 80, 85, 90, 95];
+    const gridLines = gridVals.map(v => ({ y: y(v).toFixed(1), v }));
+    const months = ['Feb','Apr','Jun','Aug'];
+    const monthIdx = [22, 66, 110, 152];
+    const vLines = months.map((m, i) => ({ x: x(monthIdx[i]).toFixed(1), label: m }));
+    const last = vals[N - 1];
+    const first = vals[0];
+    const pct = ((last - first) / first * 100);
+    const e = React.createElement, mono = 'Geist Mono,monospace';
+    const svgLabels = e('g', null,
+      gridLines.map((g, i) => e('text', { key:'g'+i, x:1060, y:(+g.y + 3.5).toFixed(1), fill:'#868f97', fontSize:10, fontFamily:mono }, String(g.v))),
+      vLines.map((v, i) => e('text', { key:'v'+i, x:v.x, y:410, fill:'#868f97', fontSize:10, fontFamily:mono, textAnchor:'middle' }, v.label))
+    );
+    return {
+      linePath, areaPath, gridLines, vLines, svgLabels,
+      last: last.toFixed(2),
+      delta: (pct >= 0 ? '+' : '') + pct.toFixed(1) + '% YTD'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/styles.css">
+  <script src="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/_ds_bundle.js"></script>
+  <style>
+    body { background:#000; margin:0; font-family:'Geist',sans-serif; }
+    a { color:#479ffa; text-decoration:none; }
+    a:hover { color:#ffffff; }
+  </style>
+</helmet>
+<section style="padding:40px; display:flex; justify-content:center;">
+  <div style="width:1160px; background:#0b0b0b; border:1px solid #1f1f1f; border-radius:12px; padding:20px 24px 18px;">
+
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+      <div style="display:flex; flex-direction:column; gap:3px;">
+        <div style="font-size:15px; font-weight:500; color:#ffffff;">SPX vs XAUUSD — relative performance</div>
+        <div style="font-family:'Geist Mono',monospace; font-size:10px; letter-spacing:0.1em; color:#868f97; text-transform:uppercase;">Normalized % change · daily · 5Y</div>
+      </div>
+      <div style="display:flex; gap:18px;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <div style="width:14px; height:2px; background:#ffffff;"></div>
+          <div style="font-family:'Geist Mono',monospace; font-size:11px; color:#c8cdd2;">SPX</div>
+          <div style="font-family:'Geist Mono',monospace; font-size:11px; font-weight:600; color:#22c55e;">{{ spxLast }}</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <div style="width:14px; height:2px; background:#e8a33d;"></div>
+          <div style="font-family:'Geist Mono',monospace; font-size:11px; color:#c8cdd2;">XAUUSD</div>
+          <div style="font-family:'Geist Mono',monospace; font-size:11px; font-weight:600; color:#ef4444;">{{ goldLast }}</div>
+        </div>
+      </div>
+    </div>
+
+    <svg viewBox="0 0 1160 440" style="width:100%; display:block;">
+      <sc-for list="{{ gridLines }}" as="g" hint-placeholder-count="6">
+        <line x1="0" y1="{{ g.y }}" x2="1080" y2="{{ g.y }}" stroke="{{ g.stroke }}" stroke-width="1"></line>
+      </sc-for>
+      <sc-for list="{{ vLines }}" as="v" hint-placeholder-count="5">
+        <line x1="{{ v.x }}" y1="6" x2="{{ v.x }}" y2="408" stroke="#141414" stroke-width="1"></line>
+      </sc-for>
+      <path d="{{ goldPath }}" fill="none" stroke="#e8a33d" stroke-width="1.5" stroke-linejoin="round"></path>
+      <path d="{{ spxPath }}" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linejoin="round"></path>
+      <rect x="1084" y="{{ spxTagY }}" width="52" height="16" rx="2" fill="#ffffff"></rect>
+      <rect x="1084" y="{{ goldTagY }}" width="52" height="16" rx="2" fill="#e8a33d"></rect>
+      <line x1="0" y1="408" x2="1080" y2="408" stroke="#1f1f1f" stroke-width="1"></line>
+      {{ svgLabels }}
+    </svg>
+
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1240,&quot;height&quot;:560}}">
+class Component extends DCLogic {
+  lerp(anchors, m) {
+    for (let i = 0; i < anchors.length - 1; i++) {
+      const [m0, v0] = anchors[i], [m1, v1] = anchors[i + 1];
+      if (m >= m0 && m <= m1) return v0 + (v1 - v0) * (m - m0) / (m1 - m0);
+    }
+    return anchors[anchors.length - 1][1];
+  }
+  noise(seed, N, amp) {
+    // deterministic pseudo-random walk
+    const out = [];
+    let v = 0, s = seed;
+    const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647 - 0.5; };
+    for (let i = 0; i < N; i++) { v = v * 0.92 + rnd() * amp; out.push(v); }
+    return out;
+  }
+  renderVals() {
+    const N = 620;
+    const spxA = [[0,-28],[30,-18],[55,-30],[80,-38],[110,-44],[140,-34],[170,-38],[200,-40],[230,-36],[260,-24],[290,-16],[320,-10],[350,-14],[380,-6],[400,-2],[420,2],[440,-4],[460,4],[480,12],[500,28],[515,24],[530,34],[545,40],[560,44],[575,50],[590,46],[605,54],[619,58]];
+    const goldA = [[0,-22],[25,-32],[45,-40],[60,-48],[75,-42],[95,-38],[115,-45],[140,-52],[170,-46],[200,-44],[220,-40],[240,-44],[260,-42],[280,-46],[300,-48],[330,-50],[360,-49],[390,-52],[420,-51],[450,-53],[480,-52],[510,-54],[540,-52],[570,-56],[590,-60],[605,-64],[619,-68.9]];
+    const nS = this.noise(48271, N, 2.6), nG = this.noise(9377, N, 1.6);
+    const spx = [], gold = [];
+    for (let i = 0; i < N; i++) {
+      spx.push(this.lerp(spxA, i) + nS[i]);
+      gold.push(this.lerp(goldA, i) + nG[i]);
+    }
+    const plotW = 1080, plotTop = 6, plotBot = 408;
+    const vMin = -75, vMax = 65;
+    const y = v => plotBot - (v - vMin) / (vMax - vMin) * (plotBot - plotTop);
+    const x = i => i / (N - 1) * plotW;
+    const toPath = arr => arr.map((v, i) => (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(v).toFixed(1)).join('');
+    const gridLines = [];
+    for (let v = -60; v <= 60; v += 20) gridLines.push({
+      y: y(v).toFixed(1), v,
+      stroke: v === 0 ? '#2e2e2e' : '#141414'
+    });
+    const years = ['2022','2023','2024','2025','2026'];
+    const vLines = years.map((yr, i) => ({ x: (((i + 1) * N / 5.16) / (N - 1) * plotW).toFixed(1), label: yr }));
+    const spxEndY = y(spx[N - 1]), goldEndY = y(gold[N - 1]);
+    const spxLast = spx[N - 1].toFixed(2) + '%', goldLast = gold[N - 1].toFixed(2) + '%';
+    const e = React.createElement, mono = 'Geist Mono,monospace';
+    const svgLabels = e('g', null,
+      gridLines.map((g, i) => e('text', { key:'g'+i, x:1092, y:(+g.y + 3.5).toFixed(1), fill:'#868f97', fontSize:10, fontFamily:mono }, g.v.toFixed(2) + '%')),
+      vLines.map((v, i) => e('text', { key:'v'+i, x:v.x, y:428, fill:'#868f97', fontSize:10, fontFamily:mono, textAnchor:'middle' }, v.label)),
+      e('text', { key:'ts', x:1110, y:(spxEndY + 3.5).toFixed(1), fill:'#000000', fontSize:9.5, fontWeight:700, fontFamily:mono, textAnchor:'middle' }, spxLast),
+      e('text', { key:'tg', x:1110, y:(goldEndY + 3.5).toFixed(1), fill:'#000000', fontSize:9.5, fontWeight:700, fontFamily:mono, textAnchor:'middle' }, goldLast)
+    );
+    return {
+      spxPath: toPath(spx), goldPath: toPath(gold),
+      gridLines, vLines, svgLabels, spxLast, goldLast,
+      spxTagY: (spxEndY - 8).toFixed(1), goldTagY: (goldEndY - 8).toFixed(1)
+    };
+  }
+}
+</script>
+</body>
+</html>

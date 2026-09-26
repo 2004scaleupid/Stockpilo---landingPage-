@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/styles.css">
+  <script src="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/_ds_bundle.js"></script>
+  <script src="./image-slot.js"></script>
+  <style>
+    html, body { margin:0; padding:0; background:#000000; height:100%; overflow-y:hidden; overflow-x:auto; }
+    * { box-sizing:border-box; }
+    a { color:#479ffa; text-decoration:none; }
+    a:hover { color:#ffffff; }
+    @keyframes gvBlink { 0%,100% { opacity:1; } 50% { opacity:0.25; } }
+    @keyframes gvPulse { 0% { transform:scale(0.6); opacity:0.5; } 70% { transform:scale(2.4); opacity:0; } 100% { transform:scale(2.4); opacity:0; } }
+  </style>
+</helmet>
+
+<div style="position:relative;width:100%;min-width:1360px;height:100vh;background:#000;font-family:var(--font-primary);color:var(--text-primary);overflow:hidden;">
+
+  <!-- center: globe slot (globe itself rendered elsewhere) -->
+  <div data-screen-label="Globe slot" style="position:absolute;left:50%;top:51%;transform:translate(-50%,-50%);width:500px;height:500px;border-radius:99em;border:1px dashed #1f1f1f;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+    <span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.2em;color:#333;">GLOBE RENDERS HERE</span>
+    <sc-for list="{{ globeMarkers }}" as="gm" hint-placeholder-count="0">
+      <span style="position:absolute;left:{{ gm.x }};top:{{ gm.y }};transform:translate(-50%,-50%);width:9px;height:9px;border-radius:99px;background:{{ gm.color }};opacity:{{ gm.opacity }};transition:opacity 0.15s ease;"></span>
+    </sc-for>
+    <span style="position:absolute;left:50%;bottom:-26px;transform:translateX(-50%);font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.14em;color:#5a5f66;white-space:nowrap;">{{ visibleCount }} EVENTS VISIBLE · {{ scrubTimeLabel }}</span>
+  </div>
+
+  <!-- top bar -->
+  <header data-screen-label="Top bar" style="position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:16px;padding:18px 28px;z-index:10;">
+    <span style="display:flex;align-items:center;gap:9px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.2em;color:var(--danger);">
+      <span style="width:7px;height:7px;border-radius:99px;background:var(--danger);animation:gvBlink 1.6s ease infinite;"></span>
+      BREAKING
+    </span>
+    <span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.2em;color:var(--text-secondary);">GEOPOLITICS</span>
+    <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#5a5f66;">marketwatch.com · Aug 28</span>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+      <span style="font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:0.14em;color:var(--warning);border:1px solid var(--border);border-radius:99px;padding:6px 14px;">MEDIUM RISK</span>
+      <button title="Close" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--border);border-radius:99px;color:var(--text-secondary);cursor:pointer;transition:color 0.15s ease, border-color 0.15s ease;" style-hover="color:var(--text-primary);border-color:var(--border-hover);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- headline -->
+  <div data-screen-label="Headline" style="position:absolute;top:64px;left:50%;transform:translateX(-50%);width:600px;text-align:center;z-index:5;pointer-events:none;">
+    <h1 style="margin:0;font-size:30px;font-weight:500;letter-spacing:-0.02em;line-height:1.25;text-wrap:balance;">Kevin Warsh gets what every Fed chair hopes for: A bond market that trusts his words</h1>
+  </div>
+
+  <!-- LEFT RAIL: the story, one vertical thread -->
+  <aside data-screen-label="Story rail" style="position:absolute;left:28px;top:120px;bottom:28px;width:330px;display:flex;flex-direction:column;gap:24px;z-index:5;overflow-y:auto;">
+    <div style="position:relative;padding-left:22px;display:flex;flex-direction:column;gap:0;">
+      <div style="position:absolute;left:3px;top:10px;bottom:10px;width:1px;background:var(--border);"></div>
+
+      <div style="position:relative;padding:0 0 28px;">
+        <span style="position:absolute;left:-22px;top:4px;width:7px;height:7px;border-radius:99px;background:var(--text-secondary);"></span>
+        <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.2em;color:#5a5f66;padding-bottom:10px;">01 · THE BACKGROUND</div>
+        <p style="margin:0;font-size:14px;line-height:1.7;color:#c8cdd8;">The Federal Reserve, often called the Fed, influences the economy by setting interest rates and managing bonds. When the Fed speaks, investors pay attention because their words can change how people feel about the economy and the stock market.</p>
+      </div>
+
+      <div style="position:relative;padding:0 0 28px;">
+        <span style="position:absolute;left:-22px;top:4px;width:7px;height:7px;border-radius:99px;background:var(--accent);"></span>
+        <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.2em;color:#5a5f66;padding-bottom:10px;">02 · WHY THIS HAPPENED</div>
+        <p style="margin:0;font-size:14px;line-height:1.7;color:#c8cdd8;">Kevin Warsh, a candidate for Fed chair, has inspired confidence in the bond market. This trust means investors believe he will make decisions that help keep the economy stable.</p>
+      </div>
+
+      <div style="position:relative;">
+        <span style="position:absolute;left:-22px;top:4px;width:7px;height:7px;border-radius:99px;background:var(--success);"></span>
+        <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.2em;color:#5a5f66;padding-bottom:10px;">03 · GLOBAL IMPACT</div>
+        <p style="margin:0;font-size:14px;line-height:1.7;color:#c8cdd8;">When there is trust in the Fed's leadership, people tend to invest more, which can boost the economy. A stronger economy can lead to more jobs and better spending, benefiting ordinary people.</p>
+      </div>
+    </div>
+
+    <!-- most affected docked at rail bottom -->
+    <div style="margin-top:auto;border-top:1px solid var(--border-subtle);padding-top:16px;display:flex;flex-direction:column;gap:12px;">
+      <span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.2em;color:#5a5f66;">MOST AFFECTED</span>
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border-subtle);">
+          <img src="https://financialmodelingprep.com/image-stock/JPM.png" width="24" height="24" style="border-radius:6px;background:#181818;display:block;"></img>
+          <span style="font-family:'Geist Mono',monospace;font-size:13px;font-weight:500;">JPM</span>
+          <span style="font-size:12px;color:#868f97;">JPMorgan Chase</span>
+          <span style="margin-left:auto;font-family:'Geist Mono',monospace;font-size:12.5px;color:var(--success);font-variant-numeric:tabular-nums;">+0.96%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border-subtle);">
+          <img src="https://financialmodelingprep.com/image-stock/GS.png" width="24" height="24" style="border-radius:6px;background:#181818;display:block;"></img>
+          <span style="font-family:'Geist Mono',monospace;font-size:13px;font-weight:500;">GS</span>
+          <span style="font-size:12px;color:#868f97;">Goldman Sachs</span>
+          <span style="margin-left:auto;font-family:'Geist Mono',monospace;font-size:12.5px;color:var(--danger);font-variant-numeric:tabular-nums;">−0.66%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:9px 0;">
+          <img src="https://financialmodelingprep.com/image-stock/T.png" width="24" height="24" style="border-radius:6px;background:#181818;display:block;"></img>
+          <span style="font-family:'Geist Mono',monospace;font-size:13px;font-weight:500;">T</span>
+          <span style="font-size:12px;color:#868f97;">AT&amp;T</span>
+          <span style="margin-left:auto;font-family:'Geist Mono',monospace;font-size:12.5px;color:var(--success);font-variant-numeric:tabular-nums;">+2.24%</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RIGHT RAIL: image + live readout -->
+  <aside data-screen-label="Right rail" style="position:absolute;right:28px;top:120px;bottom:28px;width:330px;display:flex;flex-direction:column;gap:20px;z-index:5;overflow-y:auto;">
+    <div style="position:relative;border:1px solid var(--border);border-radius:12px;overflow:hidden;height:250px;flex:none;">
+      <image-slot id="gv-lead" shape="rect" placeholder="Article image — drop here" style="width:100%;height:100%;position:absolute;inset:0;"></image-slot>
+      <div style="position:absolute;left:0;right:0;bottom:0;padding:22px 16px 12px;background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);pointer-events:none;display:flex;justify-content:space-between;align-items:baseline;gap:10px;">
+        <span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#c8cdd8;">TRADING FLOOR · SEOUL</span>
+        <span style="font-family:'Geist Mono',monospace;font-size:10px;color:#868f97;">AP</span>
+      </div>
+    </div>
+
+    <!-- market readout -->
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.2em;color:#5a5f66;">MARKET READOUT</span>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border-subtle);border:1px solid var(--border-subtle);border-radius:12px;overflow:hidden;">
+        <div style="background:#000;padding:14px 16px;display:flex;flex-direction:column;gap:4px;">
+          <span style="font-family:'Geist Mono',monospace;font-size:10px;color:#5a5f66;">US10Y</span>
+          <span style="font-size:19px;font-weight:300;font-variant-numeric:tabular-nums;">4.18%</span>
+          <span style="font-family:'Geist Mono',monospace;font-size:11px;color:var(--success);">−6bp</span>
+        </div>
+        <div style="background:#000;padding:14px 16px;display:flex;flex-direction:column;gap:4px;">
+          <span style="font-family:'Geist Mono',monospace;font-size:10px;color:#5a5f66;">SPX</span>
+          <span style="font-size:19px;font-weight:300;font-variant-numeric:tabular-nums;">5,911</span>
+          <span style="font-family:'Geist Mono',monospace;font-size:11px;color:var(--success);">+0.4%</span>
+        </div>
+        <div style="background:#000;padding:14px 16px;display:flex;flex-direction:column;gap:4px;">
+          <span style="font-family:'Geist Mono',monospace;font-size:10px;color:#5a5f66;">MOVE INDEX</span>
+          <span style="font-size:19px;font-weight:300;font-variant-numeric:tabular-nums;">88.2</span>
+          <span style="font-family:'Geist Mono',monospace;font-size:11px;color:var(--success);">−4.1%</span>
+        </div>
+        <div style="background:#000;padding:14px 16px;display:flex;flex-direction:column;gap:4px;">
+          <span style="font-family:'Geist Mono',monospace;font-size:10px;color:#5a5f66;">FED CUT ODDS</span>
+          <span style="font-size:19px;font-weight:300;font-variant-numeric:tabular-nums;">72%</span>
+          <span style="font-family:'Geist Mono',monospace;font-size:11px;color:var(--text-secondary);">SEP MEETING</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- next on the wire -->
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--border-subtle);padding-top:16px;">
+      <span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.2em;color:#5a5f66;">UP NEXT</span>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="position:relative;width:7px;height:7px;flex:none;">
+          <span style="position:absolute;inset:0;border-radius:99px;background:var(--accent);"></span>
+          <span style="position:absolute;inset:0;border-radius:99px;background:var(--accent);animation:gvPulse 2.2s ease-out infinite;"></span>
+        </span>
+        <span style="font-size:13px;color:#c8cdd8;line-height:1.5;">Jackson Hole minutes release</span>
+        <span style="margin-left:auto;font-family:'Geist Mono',monospace;font-size:11px;color:#5a5f66;">SEP 2</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="width:7px;height:7px;border-radius:99px;background:var(--surface-2);flex:none;"></span>
+        <span style="font-size:13px;color:#c8cdd8;line-height:1.5;">Core PCE print</span>
+        <span style="margin-left:auto;font-family:'Geist Mono',monospace;font-size:11px;color:#5a5f66;">SEP 5</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- timeline scrubber -->
+  <div data-screen-label="Timeline" style="position:absolute;left:50%;bottom:64px;transform:translateX(-50%);width:620px;z-index:10;display:flex;flex-direction:column;gap:8px;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.2em;color:#5a5f66;">LAST 24H</span>
+      <span style="font-family:'Geist Mono',monospace;font-size:10px;color:{{ scrubLabelColor }};">{{ scrubLabel }}</span>
+    </div>
+    <div onMouseDown="{{ scrubDown }}" onMouseMove="{{ scrubMove }}" onMouseUp="{{ scrubUp }}" onMouseLeave="{{ scrubUp }}" style="position:relative;height:34px;cursor:ew-resize;">
+      <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:var(--border);"></div>
+      <sc-for list="{{ scrubEvents }}" as="ev" hint-placeholder-count="6">
+        <div style="position:absolute;top:50%;left:{{ ev.left }};transform:translate(-50%,-50%);width:7px;height:7px;border-radius:99px;background:{{ ev.color }};pointer-events:none;"></div>
+      </sc-for>
+      <div style="position:absolute;top:2px;bottom:2px;left:{{ scrubPos }};transform:translateX(-50%);width:1px;background:var(--text-primary);pointer-events:none;"></div>
+      <div style="position:absolute;top:-2px;left:{{ scrubPos }};transform:translateX(-50%);width:9px;height:9px;border-radius:99px;background:var(--text-primary);pointer-events:none;"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-family:'Geist Mono',monospace;font-size:9.5px;color:#333;letter-spacing:0.08em;">
+      <span>−24H</span><span>−18H</span><span>−12H</span><span>−6H</span><span>NOW</span>
+    </div>
+  </div>
+
+  <!-- bottom nav dots -->
+  <div data-screen-label="Story nav" style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:14px;z-index:10;">
+    <button style="width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--border);border-radius:99px;color:var(--text-secondary);cursor:pointer;transition:color 0.15s ease, border-color 0.15s ease;" style-hover="color:var(--text-primary);border-color:var(--border-hover);">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+    </button>
+    <div style="display:flex;gap:7px;align-items:center;">
+      <span style="width:18px;height:5px;border-radius:99px;background:var(--text-primary);"></span>
+      <span style="width:5px;height:5px;border-radius:99px;background:var(--surface-2);"></span>
+      <span style="width:5px;height:5px;border-radius:99px;background:var(--surface-2);"></span>
+      <span style="width:5px;height:5px;border-radius:99px;background:var(--surface-2);"></span>
+    </div>
+    <button style="width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--border);border-radius:99px;color:var(--text-secondary);cursor:pointer;transition:color 0.15s ease, border-color 0.15s ease;" style-hover="color:var(--text-primary);border-color:var(--border-hover);">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+    </button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { pos: 100, dragging: false };
+  // x/y = demo positions inside the globe slot; the real globe consumes the
+  // 'risklab:scrub' window event ({ hoursAgo, visibleEventIds }) instead.
+  events = [
+    { id: 'iselle', t: 2, label: 'Tropical storm Iselle · Pacific', color: 'var(--warning)', x: 18, y: 44 },
+    { id: 'b3', t: 12, label: 'B3 exchange closed · São Paulo', color: 'var(--surface-2)', x: 40, y: 78 },
+    { id: 'trump', t: 26, label: 'Trump: US taking partial control…', color: 'var(--danger)', x: 32, y: 30 },
+    { id: 'julio', t: 41, label: 'Tropical storm Julio · Pacific', color: 'var(--warning)', x: 14, y: 58 },
+    { id: 'panama', t: 58, label: 'Panama · 5% of sea trade alert', color: 'var(--warning)', x: 36, y: 62 },
+    { id: 'roman', t: 71, label: 'Nancy Grace Roman Sq. · Aug 30', color: 'var(--surface-2)', x: 58, y: 40 },
+    { id: 'warsh', t: 84, label: "Fed's Warsh talks hikes, clears path for stocks", color: 'var(--accent)', x: 46, y: 24 },
+    { id: 'cristo', t: 96, label: 'Tropical storm Cristo · Atlantic', color: 'var(--warning)', x: 66, y: 52 }
+  ];
+  emitScrub(pos) {
+    const hoursAgo = 24 - (pos / 100) * 24;
+    window.dispatchEvent(new CustomEvent('risklab:scrub', { detail: {
+      hoursAgo,
+      visibleEventIds: this.events.filter(ev => ev.t <= pos).map(ev => ev.id)
+    }}));
+  }
+  posFromEvent(e) {
+    const r = e.currentTarget.getBoundingClientRect();
+    return Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100));
+  }
+  renderVals() {
+    const pos = this.state.pos;
+    const near = this.events.reduce((a, b) => Math.abs(b.t - pos) < Math.abs(a.t - pos) ? b : a);
+    const showEvent = Math.abs(near.t - pos) < 6;
+    const hrsAgo = Math.round(24 - (pos / 100) * 24);
+    return {
+      scrubPos: pos.toFixed(1) + '%',
+      scrubLabel: showEvent ? near.label.toUpperCase() : (hrsAgo === 0 ? 'NOW' : hrsAgo + 'H AGO'),
+      scrubLabelColor: showEvent ? 'var(--text-primary)' : '#5a5f66',
+      scrubEvents: this.events.map(ev => ({ left: ev.t + '%', color: ev.color })),
+      globeMarkers: this.events.map(ev => ({ x: ev.x + '%', y: ev.y + '%', color: ev.color, opacity: ev.t <= pos ? 0.9 : 0 })),
+      visibleCount: this.events.filter(ev => ev.t <= pos).length,
+      scrubTimeLabel: hrsAgo === 0 ? 'NOW' : 'AS OF −' + hrsAgo + 'H',
+      scrubDown: (e) => { const p = this.posFromEvent(e); this.setState({ dragging: true, pos: p }); this.emitScrub(p); },
+      scrubMove: (e) => { if (this.state.dragging) { const p = this.posFromEvent(e); this.setState({ pos: p }); this.emitScrub(p); } },
+      scrubUp: () => this.setState({ dragging: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

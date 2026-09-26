@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/styles.css">
+  <script src="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/_ds_bundle.js"></script>
+  <style>
+    body { background:#000; margin:0; font-family:'Geist',sans-serif; }
+    a { color:#479ffa; text-decoration:none; }
+    a:hover { color:#ffffff; }
+  </style>
+</helmet>
+<section style="padding:40px; display:flex; justify-content:center;">
+  <div style="width:1060px; background:#0b0b0b; border:1px solid #1f1f1f; border-radius:12px; padding:20px 24px 18px;">
+
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
+      <div style="display:flex; flex-direction:column; gap:3px;">
+        <div style="font-size:15px; font-weight:500; color:#ffffff;">Contributions to US CPI YoY% NSA</div>
+        <div style="font-family:'Geist Mono',monospace; font-size:10px; letter-spacing:0.1em; color:#868f97; text-transform:uppercase;">All items · monthly · 2016–2026</div>
+      </div>
+      <div style="font-family:'Geist Mono',monospace; font-size:10px; color:#4a4f56; text-align:right; line-height:1.6;">Latest release 06/10/26 08:30<br>Next release 07/14/26 08:30</div>
+    </div>
+
+    <div style="display:flex; gap:18px; margin-bottom:12px; flex-wrap:wrap;">
+      <sc-for list="{{ legend }}" as="l" hint-placeholder-count="5">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <div style="width:10px; height:10px; background:{{ l.color }}; border-radius:2px;"></div>
+          <div style="font-family:'Geist Mono',monospace; font-size:11px; color:#c8cdd2;">{{ l.name }}</div>
+          <div style="font-family:'Geist Mono',monospace; font-size:11px; font-weight:600; color:#ffffff; font-variant-numeric:tabular-nums;">{{ l.value }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <svg viewBox="0 0 1060 470" style="width:100%; display:block;">
+      <sc-for list="{{ gridLines }}" as="g" hint-placeholder-count="13">
+        <line x1="0" y1="{{ g.y }}" x2="1000" y2="{{ g.y }}" stroke="{{ g.stroke }}" stroke-width="1"></line>
+      </sc-for>
+      <sc-for list="{{ series }}" as="s" hint-placeholder-count="4">
+        <path d="{{ s.d }}" fill="{{ s.color }}"></path>
+      </sc-for>
+      <polyline points="{{ linePoints }}" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"></polyline>
+      <sc-for list="{{ endTags }}" as="t" hint-placeholder-count="4">
+        <rect x="1002" y="{{ t.y }}" width="46" height="15" rx="2" fill="{{ t.bg }}"></rect>
+      </sc-for>
+      <sc-for list="{{ yearTicks }}" as="yt" hint-placeholder-count="11">
+        <line x1="{{ yt.x }}" y1="440" x2="{{ yt.x }}" y2="446" stroke="#2a2a2a" stroke-width="1"></line>
+      </sc-for>
+      {{ svgLabels }}
+      <line x1="0" y1="440" x2="1000" y2="440" stroke="#1f1f1f" stroke-width="1"></line>
+    </svg>
+
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1140,&quot;height&quot;:600}}">
+class Component extends DCLogic {
+  lerp(anchors, m) {
+    for (let i = 0; i < anchors.length - 1; i++) {
+      const [m0, v0] = anchors[i], [m1, v1] = anchors[i + 1];
+      if (m >= m0 && m <= m1) return v0 + (v1 - v0) * (m - m0) / (m1 - m0);
+    }
+    return anchors[anchors.length - 1][1];
+  }
+  renderVals() {
+    const N = 126; // Jan 2016 .. Jun 2026
+    const wig = (m, a, f) => Math.sin(m * f) * a + Math.sin(m * f * 2.7 + 1.3) * a * 0.5;
+    const A = {
+      food:   [[0,0.15],[24,0.2],[48,0.35],[54,0.6],[60,0.55],[72,1.0],[78,1.4],[90,0.9],[102,0.35],[114,0.3],[125,0.42]],
+      energy: [[0,-0.9],[6,-0.4],[12,0.3],[24,0.5],[30,0.65],[36,0.2],[42,-0.2],[48,-0.3],[52,-1.2],[58,-0.8],[64,0.6],[70,1.8],[76,2.5],[78,2.9],[84,1.4],[88,-0.4],[92,-0.9],[98,-0.4],[104,-0.2],[110,0.1],[116,0.2],[120,0.5],[125,1.5]],
+      goods:  [[0,-0.15],[12,-0.1],[24,0.0],[36,0.05],[48,0.1],[56,0.15],[62,0.8],[68,1.6],[72,2.2],[74,2.4],[80,1.7],[86,0.7],[92,0.15],[98,-0.15],[104,-0.35],[110,-0.15],[116,0.0],[125,0.2]],
+      svcs:   [[0,1.8],[8,2.0],[12,1.6],[20,1.8],[28,2.0],[36,1.75],[44,1.8],[50,1.4],[54,0.9],[58,1.2],[62,1.5],[68,2.0],[74,2.9],[80,3.6],[84,4.0],[86,4.2],[92,3.7],[98,3.2],[104,2.9],[110,2.5],[116,2.2],[121,1.85],[125,2.08]]
+    };
+    const colors = { food:'#479ffa', energy:'#d1553a', goods:'#a855f7', svcs:'#eab308' };
+    const names = { food:'Food', energy:'Energy', goods:'Core goods', svcs:'Core services' };
+    const data = {};
+    Object.keys(A).forEach((k, ki) => {
+      data[k] = [];
+      for (let m = 0; m < N; m++) data[k].push(this.lerp(A[k], m) + wig(m, 0.05 + ki * 0.015, 0.9 + ki * 0.13));
+    });
+    // geometry
+    const plotW = 1000, top = 8, zeroFromTop = 340, pxPerUnit = 33; // y(v) = zeroFromTop - v*px
+    const y = v => zeroFromTop - v * pxPerUnit;
+    const step = plotW / N, bw = step * 0.68;
+    const order = ['food', 'energy', 'goods', 'svcs'];
+    const paths = { food:'', energy:'', goods:'', svcs:'' };
+    const line = [];
+    for (let m = 0; m < N; m++) {
+      const x = (m * step + (step - bw) / 2).toFixed(1);
+      let pos = 0, neg = 0, total = 0;
+      order.forEach(k => {
+        const v = data[k][m];
+        total += v;
+        let y0, y1;
+        if (v >= 0) { y0 = y(pos); y1 = y(pos + v); pos += v; }
+        else { y0 = y(neg + v); y1 = y(neg); neg += v; }
+        const hgt = Math.abs(y0 - y1);
+        if (hgt > 0.15) paths[k] += `M${x} ${Math.min(y0,y1).toFixed(1)}h${bw.toFixed(1)}v${hgt.toFixed(1)}h${(-bw).toFixed(1)}Z`;
+      });
+      line.push((m * step + step / 2).toFixed(1) + ',' + y(total).toFixed(1));
+    }
+    const last = k => data[k][N - 1];
+    const allLast = order.reduce((s, k) => s + last(k), 0);
+    const fmt = v => v.toFixed(3);
+    const legend = [{ name:'All items', value:fmt(allLast), color:'#ffffff' }]
+      .concat(order.map(k => ({ name:names[k], value:fmt(last(k)), color:colors[k] })));
+    const gridLines = [];
+    for (let v = -2; v <= 10; v++) gridLines.push({
+      y: y(v).toFixed(1), ty: (y(v) + 3.5).toFixed(1),
+      label: v.toFixed(3), stroke: v === 0 ? '#2e2e2e' : '#141414'
+    });
+    const yearTicks = [];
+    for (let yr = 2016; yr <= 2026; yr++) yearTicks.push({ x: ((yr - 2016) * 12 * step + step / 2).toFixed(1), label: String(yr) });
+    let cum = 0; const cums = {};
+    order.forEach(k => { cum += Math.max(last(k), 0); cums[k] = cum; });
+    let endTags = [
+      { bg: colors.svcs, fg:'#000000', yv: allLast, label: fmt(allLast) },
+      { bg: colors.goods, fg:'#ffffff', yv: cums.goods, label: fmt(cums.goods) },
+      { bg: colors.food, fg:'#ffffff', yv: last('food'), label: fmt(last('food')) }
+    ].map(t => ({ bg:t.bg, fg:t.fg, y:(y(t.yv) - 7.5).toFixed(1), ty:(y(t.yv) + 3).toFixed(1), label:t.label }));
+    const e = React.createElement;
+    const mono = 'Geist Mono,monospace';
+    const svgLabels = e('g', null,
+      gridLines.map((g, i) => e('text', { key:'g'+i, x:1010, y:g.ty, fill:'#868f97', fontSize:10, fontFamily:mono }, g.label)),
+      yearTicks.map((t, i) => e('text', { key:'y'+i, x:t.x, y:460, fill:'#868f97', fontSize:10, fontFamily:mono, textAnchor:'middle' }, t.label)),
+      endTags.map((t, i) => e('text', { key:'t'+i, x:1025, y:t.ty, fill:t.fg, fontSize:10, fontWeight:600, fontFamily:mono, textAnchor:'middle' }, t.label))
+    );
+    return { legend, gridLines, yearTicks, endTags, svgLabels, linePoints: line.join(' '),
+      series: order.map(k => ({ d: paths[k], color: colors[k] })) };
+  }
+}
+</script>
+</body>
+</html>
