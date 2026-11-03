@@ -1,21 +1,3 @@
-  // ── Pricing toggle (Monthly / Yearly) ──────────────
-  (function() {
-    const toggle = document.getElementById('plan-toggle');
-    const priceVal  = document.getElementById('plan-price-val');
-    const pricePer  = document.getElementById('plan-price-period');
-    if (!toggle) return;
-
-    toggle.querySelectorAll('.plan-toggle-opt').forEach(btn => {
-      btn.addEventListener('click', () => {
-        toggle.querySelectorAll('.plan-toggle-opt').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const yearly = btn.dataset.period === 'yearly';
-        if (priceVal)  priceVal.textContent  = yearly ? '$10.43' : '$14.90';
-        if (pricePer)  pricePer.textContent  = '/mo';
-      });
-    });
-  })();
-
   // ── Hero → Features scroll transition (GSAP scrub) ──
   (function() {
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;

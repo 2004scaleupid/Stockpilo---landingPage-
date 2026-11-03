@@ -29,7 +29,7 @@
   <meta name="twitter:title" content="Stockpilo — Invest smarter. Know why before you buy.">
   <meta name="twitter:description" content="Stockpilo is an AI stock market dashboard for retail investors: a daily market recap, news explained, earnings, Congress trades and world events in one view.">
   <meta name="twitter:image" content="https://stockpilo.com/brand_assets/og-image.jpg">
-  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://stockpilo.com/#org", "name": "Stockpilo", "url": "https://stockpilo.com/", "logo": "https://stockpilo.com/brand_assets/apple-touch-icon.png"}, {"@type": "WebSite", "@id": "https://stockpilo.com/#website", "url": "https://stockpilo.com/", "name": "Stockpilo", "publisher": {"@id": "https://stockpilo.com/#org"}}, {"@type": "SoftwareApplication", "name": "Stockpilo", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "url": "https://www.stockpiloapp.com", "description": "Stockpilo is an AI stock market dashboard for retail investors: a daily market recap, news explained, earnings, Congress trades and world events in one view.", "publisher": {"@id": "https://stockpilo.com/#org"}, "offers": [{"@type": "Offer", "name": "Starter", "price": "0", "priceCurrency": "USD"}, {"@type": "Offer", "name": "Pro", "price": "14.90", "priceCurrency": "USD"}]}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://stockpilo.com/#org", "name": "Stockpilo", "url": "https://stockpilo.com/", "logo": "https://stockpilo.com/brand_assets/apple-touch-icon.png"}, {"@type": "WebSite", "@id": "https://stockpilo.com/#website", "url": "https://stockpilo.com/", "name": "Stockpilo", "publisher": {"@id": "https://stockpilo.com/#org"}}, {"@type": "SoftwareApplication", "name": "Stockpilo", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "url": "https://www.stockpiloapp.com", "description": "Stockpilo is an AI stock market dashboard for retail investors: a daily market recap, news explained, earnings, Congress trades and world events in one view.", "publisher": {"@id": "https://stockpilo.com/#org"}, "offers": [{"@type": "Offer", "name": "Starter", "price": "0", "priceCurrency": "EUR"}, {"@type": "Offer", "name": "Pro", "price": "19.99", "priceCurrency": "EUR", "description": "€14.99/month for your first 3 months, then €19.99/month"}]}]}</script>
   <link rel="stylesheet" href="css/tailwind.css?v=1">
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -994,36 +994,6 @@
       padding: 110px 48px 100px;
       overflow: visible;
     }
-    /* Monthly/Yearly toggle */
-    .plan-toggle {
-      display: inline-flex;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 999px;
-      padding: 4px;
-      gap: 2px;
-    }
-    .plan-toggle-opt {
-      padding: 8px 22px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 500;
-      color: rgba(255,255,255,.45);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s ease-out, color 0.2s ease-out;
-      font-family: 'Geist', sans-serif;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-    .plan-toggle-opt.active { background: rgba(255,255,255,.1); color: #fff; }
-    .plan-toggle-badge {
-      display: inline-flex; align-items: center;
-      padding: 2px 7px; background: #2d6be4; color: #fff;
-      border-radius: 999px; font-size: 10px; font-weight: 700;
-    }
     /* Outer container: grid bg + corner markers */
     .plan-outer {
       position: relative;
@@ -1299,7 +1269,6 @@
 
     @media (max-width: 480px) {
       .hero-headline { font-size: clamp(30px, 9vw, 48px) !important; }
-      .plan-toggle { flex-wrap: wrap; justify-content: center; }
       .footer-links-grid { grid-template-columns: 1fr 1fr !important; }
       #about-h2 { font-size: clamp(22px, 6vw, 32px) !important; }
     }
@@ -2641,7 +2610,7 @@
     <div class="sb-card sb-chip">
       <span class="sb-ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <div>
-        <p class="sb-chip-t">No credit card</p>
+        <p class="sb-chip-t">7-day free trial</p>
         <p class="sb-note" style="margin-top:3px;">Cancel any time</p>
       </div>
     </div>
@@ -2694,13 +2663,6 @@
   <div class="reveal" style="position:relative;z-index:1;text-align:center;margin-bottom:56px;">
     <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">Pricing</h2>
 
-    <!-- Monthly / Yearly toggle -->
-    <div class="plan-toggle" id="plan-toggle">
-      <button class="plan-toggle-opt active" data-magnetic data-period="monthly">Monthly</button>
-      <button class="plan-toggle-opt" data-magnetic data-period="yearly">
-        Yearly <span class="plan-toggle-badge">30%</span>
-      </button>
-    </div>
   </div>
 
   <!-- Cards grid (2 plans only) -->
@@ -2710,7 +2672,7 @@
       <!-- ── STARTER ── -->
       <div class="plan-card">
         <div class="plan-name">Starter</div>
-        <div class="plan-desc">Free for 7 days — no credit card needed. Try everything before you decide.</div>
+        <div class="plan-desc">7-day free trial · cancel anytime. Try everything before you decide.</div>
         <div class="plan-price">Free</div>
         <div class="plan-divider"></div>
         <div class="plan-what">What's included:</div>
@@ -2734,8 +2696,9 @@
         </div>
         <div class="plan-desc">Everything you need to invest smarter — no limits, no noise.</div>
         <div class="plan-price">
-          <span class="tabnum" id="plan-price-val">$14.90</span><span class="plan-price-sub" id="plan-price-period">/mo</span>
+          <span class="tabnum">€14.99</span><span class="plan-price-sub">/mo</span>
         </div>
+        <div class="plan-desc" style="margin-top:-8px;">for your first 3 months, then €19.99/month</div>
         <div class="plan-divider"></div>
         <div class="plan-what">What's included:</div>
         <div class="plan-features">
@@ -2753,7 +2716,7 @@
 
     <!-- Trust line -->
     <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;font-size:13px;color:rgba(255,255,255,.3);font-family:'Geist',sans-serif;position:relative;z-index:1;">
-      Cancel any time · No credit card required
+      7-day free trial · cancel anytime
     </div>
   </div>
 
