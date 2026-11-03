@@ -1,0 +1,7 @@
+# Cloudflare Pages reads this file (it is not served). Static files that never change under the same URL: fonts.
+# brand_assets are replaced in place now and then, so they get 30 days, not "immutable". Measured 2026-11-03:
+# images were served max-age=14400 (4 h), so a returning visitor re-downloaded them every day.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/brand_assets/*
+  Cache-Control: public, max-age=2592000
