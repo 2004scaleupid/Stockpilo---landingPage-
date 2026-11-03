@@ -29,7 +29,7 @@
   <meta name="twitter:title" content="Stockpilo — Invest smarter. Know why before you buy.">
   <meta name="twitter:description" content="Stockpilo is an AI stock market dashboard for retail investors: a daily market recap, news explained, earnings, Congress trades and world events in one view.">
   <meta name="twitter:image" content="https://stockpilo.com/brand_assets/og-image.jpg">
-  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://stockpilo.com/#org", "name": "Stockpilo", "url": "https://stockpilo.com/", "logo": "https://stockpilo.com/brand_assets/apple-touch-icon.png"}, {"@type": "WebSite", "@id": "https://stockpilo.com/#website", "url": "https://stockpilo.com/", "name": "Stockpilo", "publisher": {"@id": "https://stockpilo.com/#org"}}, {"@type": "SoftwareApplication", "name": "Stockpilo", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "url": "https://www.stockpiloapp.com", "description": "Stockpilo is an AI stock market dashboard for retail investors: a daily market recap, news explained, earnings, Congress trades and world events in one view.", "publisher": {"@id": "https://stockpilo.com/#org"}, "offers": [{"@type": "Offer", "name": "Starter", "price": "0", "priceCurrency": "EUR"}, {"@type": "Offer", "name": "Pro", "price": "19.99", "priceCurrency": "EUR", "description": "€14.99/month for your first 3 months, then €19.99/month"}]}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://stockpilo.com/#org", "name": "Stockpilo", "url": "https://stockpilo.com/", "logo": "https://stockpilo.com/brand_assets/apple-touch-icon.png"}, {"@type": "WebSite", "@id": "https://stockpilo.com/#website", "url": "https://stockpilo.com/", "name": "Stockpilo", "publisher": {"@id": "https://stockpilo.com/#org"}}, {"@type": "SoftwareApplication", "name": "Stockpilo", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "url": "https://www.stockpiloapp.com", "description": "Stockpilo is an AI stock market dashboard for retail investors: a daily market recap, news explained, earnings, Congress trades and world events in one view.", "publisher": {"@id": "https://stockpilo.com/#org"}, "offers": [{"@type": "Offer", "name": "Pro", "price": "19.99", "priceCurrency": "EUR", "description": "€14.99/month for your first 3 months, then €19.99/month"}]}]}</script>
   <link rel="stylesheet" href="css/tailwind.css?v=1">
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -1001,11 +1001,11 @@
       max-width: 1060px;
       margin: 0 auto;
     }
-    /* Three-column card grid */
+    /* Single-plan card grid */
     .plan-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      max-width: 760px;
+      grid-template-columns: 1fr;
+      max-width: 400px;
       margin: 0 auto;
       gap: 1px;
       background: rgba(255,255,255,.08);
@@ -1013,8 +1013,7 @@
       border-radius: 16px;
       overflow: visible;
     }
-    .plan-grid > *:first-child { border-radius: 16px 0 0 16px; }
-    .plan-grid > *:last-child  { border-radius: 0 16px 16px 0; }
+    .plan-grid > * { border-radius: 16px; }
     .plan-card {
       background: rgba(10,10,10,.95);
       padding: 32px;
@@ -1033,7 +1032,7 @@
     .eb-wrap {
       --eb-color: #1a0aa5;
       position: relative;
-      border-radius: 0 16px 16px 0;
+      border-radius: 16px;
       overflow: visible;
       isolation: isolate;
     }
@@ -1077,16 +1076,6 @@
       filter: blur(32px);
       opacity: 0.3;
       background: linear-gradient(-30deg, #1a0aa5, transparent, #1a0aa5);
-    }
-    .plan-popular {
-      display: inline-flex; align-items: center;
-      padding: 3px 10px;
-      background: rgba(45,107,228,.15);
-      border: 1px solid rgba(45,107,228,.35);
-      border-radius: 999px;
-      font-size: 10px; font-weight: 700; letter-spacing: .08em;
-      text-transform: uppercase; color: var(--accent);
-      font-family: 'Geist', sans-serif;
     }
     .plan-name  { font-size: 16px; font-weight: 600; color: #fff; font-family: 'Geist', sans-serif; margin-bottom: 6px; }
     .plan-desc  { font-size: 13px; color: rgba(255,255,255,.4); line-height: 1.6; font-family: 'Geist', sans-serif; margin-bottom: 28px; }
@@ -2665,25 +2654,9 @@
 
   </div>
 
-  <!-- Cards grid (2 plans only) -->
+  <!-- Cards grid (single plan) -->
   <div class="plan-outer">
     <div class="plan-grid reveal">
-
-      <!-- ── STARTER ── -->
-      <div class="plan-card">
-        <div class="plan-name">Starter</div>
-        <div class="plan-desc">7-day free trial · cancel anytime. Try everything before you decide.</div>
-        <div class="plan-price">Free</div>
-        <div class="plan-divider"></div>
-        <div class="plan-what">What's included:</div>
-        <div class="plan-features">
-          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Market Snapshot</div>
-          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Top Gainers &amp; Losers</div>
-          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>5 AI queries per day</div>
-          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>7-day full access trial</div>
-        </div>
-        <a href="#" id="btn-trial-pricing" class="plan-cta" data-magnetic>Start free trial <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      </div>
 
       <!-- ── PRO (featured) ── -->
       <div class="eb-wrap" id="pro-eb-wrap">
@@ -2692,9 +2665,9 @@
       <div class="plan-card plan-card-featured" style="position:relative;z-index:1;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
           <div class="plan-name" style="margin-bottom:0;">Pro</div>
-          <span class="plan-popular">POPULAR</span>
+          
         </div>
-        <div class="plan-desc">Everything you need to invest smarter — no limits, no noise.</div>
+        <div class="plan-desc">Everything you need to follow the markets, in one place.</div>
         <div class="plan-price">
           <span class="tabnum">€14.99</span><span class="plan-price-sub">/mo</span>
         </div>
@@ -2704,7 +2677,7 @@
         <div class="plan-features">
           <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Full market suite unlocked</div>
           <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Portfolio Tracker</div>
-          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited AI queries</div>
+          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>AI chat: up to 20 messages a day</div>
           <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Smart Alerts</div>
           <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Priority support &amp; updates</div>
         </div>

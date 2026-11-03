@@ -415,7 +415,7 @@
   // ── CTA redirect ────────────────────────────────────
   (function() {
     const AUTH_URL = 'https://www.stockpiloapp.com/auth';
-    const ALL_IDS  = ['hero-cta', 'hero-cta-nav', 'btn-trial-pricing', 'btn-trial-fi', 'btn-pro-pricing'];
+    const ALL_IDS  = ['hero-cta', 'hero-cta-nav', 'btn-trial-fi', 'btn-pro-pricing'];
 
     ALL_IDS.forEach(function(id) {
       var btn = document.getElementById(id);
@@ -450,7 +450,7 @@
     const client = window.supabase.createClient(SUPABASE_URL, ANON_KEY);
 
     // All trial buttons + pro button IDs
-    const TRIAL_IDS = ['hero-cta', 'btn-trial-pricing', 'btn-trial-fi'];
+    const TRIAL_IDS = ['hero-cta', 'btn-trial-fi'];
     const PRO_IDS   = ['btn-pro-pricing'];
 
     // ── Toast notification ──────────────────────────
