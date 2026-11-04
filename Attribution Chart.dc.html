@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/styles.css">
+  <script src="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/_ds_bundle.js"></script>
+  <style>
+    body { background:#000; margin:0; font-family:'Geist',sans-serif; }
+    a { color:#479ffa; text-decoration:none; }
+    a:hover { color:#ffffff; }
+  </style>
+</helmet>
+<section style="padding:40px; display:flex; justify-content:center;">
+  <div style="width:1100px; background:#0b0b0b; border:1px solid #1f1f1f; border-radius:12px; padding:20px 24px 18px;">
+
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
+      <div style="display:flex; flex-direction:column; gap:3px;">
+        <div style="font-size:15px; font-weight:500; color:#ffffff;">Performance attribution</div>
+        <div style="font-family:'Geist Mono',monospace; font-size:10px; letter-spacing:0.1em; color:#868f97; text-transform:uppercase;">Monthly · trailing 18M · bps</div>
+      </div>
+      <div style="display:flex; gap:18px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <div style="width:10px; height:10px; background:#c8cdd2; border-radius:2px;"></div>
+          <div style="font-family:'Geist Mono',monospace; font-size:11px; color:#c8cdd2;">Asset allocation</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <div style="width:10px; height:10px; background:#479ffa; border-radius:2px;"></div>
+          <div style="font-family:'Geist Mono',monospace; font-size:11px; color:#c8cdd2;">Security selection</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <div style="width:10px; height:10px; background:#d1553a; border-radius:2px;"></div>
+          <div style="font-family:'Geist Mono',monospace; font-size:11px; color:#c8cdd2;">Currency</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <div style="width:14px; height:2px; background:#ffffff;"></div>
+          <div style="font-family:'Geist Mono',monospace; font-size:11px; color:#c8cdd2;">Total attribution</div>
+        </div>
+      </div>
+    </div>
+
+    <svg viewBox="0 0 1100 480" style="width:100%; display:block;">
+      <sc-for list="{{ gridLines }}" as="g" hint-placeholder-count="9">
+        <line x1="0" y1="{{ g.y }}" x2="1040" y2="{{ g.y }}" stroke="{{ g.stroke }}" stroke-width="1"></line>
+      </sc-for>
+      <sc-for list="{{ bars }}" as="b" hint-placeholder-count="54">
+        <rect x="{{ b.x }}" y="{{ b.y }}" width="{{ b.w }}" height="{{ b.h }}" fill="{{ b.fill }}"></rect>
+      </sc-for>
+      <polyline points="{{ linePoints }}" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"></polyline>
+      <sc-for list="{{ monthTicks }}" as="mt" hint-placeholder-count="18">
+        <line x1="{{ mt.x }}" y1="446" x2="{{ mt.x }}" y2="452" stroke="#2a2a2a" stroke-width="1"></line>
+      </sc-for>
+      <line x1="0" y1="446" x2="1040" y2="446" stroke="#1f1f1f" stroke-width="1"></line>
+      {{ svgLabels }}
+    </svg>
+
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:600}}">
+class Component extends DCLogic {
+  renderVals() {
+    // 18 months: [allocation, selection, currency] in bps
+    const data = [
+      [ -4,  -3, -14],
+      [ 62,  -6, -32],
+      [128,  -8, -10],
+      [ 96,  -5, -22],
+      [142,   6,   4],
+      [ 88,  -4,  22],
+      [ 78,  -6,  16],
+      [ 32,  -8,  38],
+      [-22, -18,  36],
+      [ 48, -10,  42],
+      [104,  -6,  40],
+      [238,  -4,  36],
+      [252,   5,  58],
+      [148,  -3,  82],
+      [236,   4,  84],
+      [268, -10,  92],
+      [150,  -8,  66],
+      [ 96,  -6,  60],
+      [130,  -8, 108]
+    ];
+    const labels = ['Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'];
+    const cols = ['#c8cdd2', '#479ffa', '#d1553a'];
+    const N = data.length;
+    const plotW = 1040, plotTop = 10, plotBot = 446;
+    const vMin = -80, vMax = 400;
+    const y = v => plotBot - (v - vMin) / (vMax - vMin) * (plotBot - plotTop);
+    const step = plotW / N, bw = step * 0.62;
+    const bars = [], line = [];
+    for (let i = 0; i < N; i++) {
+      const x = i * step + (step - bw) / 2;
+      let pos = 0, neg = 0, total = 0;
+      for (let k = 0; k < 3; k++) {
+        const v = data[i][k];
+        total += v;
+        let y0, y1;
+        if (v >= 0) { y0 = y(pos + v); y1 = y(pos); pos += v; }
+        else { y0 = y(neg); y1 = y(neg + v); neg += v; }
+        const h = Math.abs(y1 - y0);
+        if (h > 0.3) bars.push({ x: x.toFixed(1), y: Math.min(y0, y1).toFixed(1), w: bw.toFixed(1), h: h.toFixed(1), fill: cols[k] });
+      }
+      line.push((i * step + step / 2).toFixed(1) + ',' + y(total).toFixed(1));
+    }
+    const gridLines = [];
+    for (let v = -80; v <= 400; v += 60) gridLines.push({
+      y: y(v).toFixed(1), v,
+      stroke: v === 0 ? '#3a3a3a' : '#161616'
+    });
+    const monthTicks = labels.map((l, i) => ({ x: (i * step + step / 2).toFixed(1), label: l }));
+    const e = React.createElement, mono = 'Geist Mono,monospace';
+    const svgLabels = e('g', null,
+      gridLines.map((g, i) => e('text', { key:'g'+i, x:1050, y:(+g.y + 3.5).toFixed(1), fill:'#868f97', fontSize:10, fontFamily:mono }, String(g.v))),
+      monthTicks.map((t, i) => e('text', { key:'m'+i, x:t.x, y:468, fill:'#868f97', fontSize:10, fontFamily:mono, textAnchor:'middle' }, t.label))
+    );
+    return { bars, gridLines, monthTicks, svgLabels, linePoints: line.join(' ') };
+  }
+}
+</script>
+</body>
+</html>

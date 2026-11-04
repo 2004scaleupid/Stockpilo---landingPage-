@@ -10,8 +10,8 @@
         toggle.querySelectorAll('.plan-toggle-opt').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const yearly = btn.dataset.period === 'yearly';
-        if (priceVal)  priceVal.textContent  = yearly ? '$10.43' : '$14.90';
-        if (pricePer)  pricePer.textContent  = '/mo';
+        if (priceVal)  priceVal.textContent  = yearly ? '$10.49' : '$14.99';
+        if (pricePer)  pricePer.textContent  = document.documentElement.lang === 'et' ? '/kuu' : '/mo';
       });
     });
   })();
@@ -226,6 +226,15 @@
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
     gsap.registerPlugin(ScrollTrigger);
 
+    // A refresh measures positions by jumping to scroll 0. With CSS smooth scrolling
+    // that jump doesn't land in time, so every start comes out too early by the current
+    // scroll (reload/resize while scrolled pins this section over Features).
+    // The style read is required: scrollTo(0,0) doesn't flush styles, so without it
+    // the browser still uses the old "smooth" value.
+    const rootEl = document.documentElement;
+    ScrollTrigger.addEventListener('refreshInit', () => { rootEl.style.scrollBehavior = 'auto'; void getComputedStyle(rootEl).scrollBehavior; });
+    ScrollTrigger.addEventListener('refresh', () => { rootEl.style.scrollBehavior = ''; });
+
     const section = document.getElementById('about');
     const stage   = document.getElementById('about-stage');
     const h2      = document.getElementById('about-h2');
@@ -234,13 +243,20 @@
 
     const type2    = document.getElementById('about-type');       // Layer-2 overlay <h2>
     const type2Txt = document.getElementById('about-type-txt');   // text sink (cursor is a sibling)
-    const SECOND   = 'We are eliminating the chaos of everyday investing.';
+    const ET       = document.documentElement.lang === 'et';
+    const SECOND   = ET ? 'Kaotame igapäevasest investeerimisest kaose.' : 'We are eliminating the chaos of everyday investing.';
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Word tokens. Each word fades in independently; the highlight phrase
     // stays a single shiny token (comma glued on) so the assembled end-state
     // matches the typewriter output — "all in one place,".
-    const tokens = [
+    const tokens = ET ? [
+      { t: 'Turuandmed,' }, { t: 'AI' }, { t: 'analüüs,' },
+      { t: 'portfelli' }, { t: 'jälgimine' }, { t: '—' },
+      { t: 'kõik ühes kohas,', hi: true },
+      { t: 'et' }, { t: 'saaksid' }, { t: 'investeerida' },
+      { t: 'enesekindlalt.' },
+    ] : [
       { t: 'Market' }, { t: 'data,' }, { t: 'AI' }, { t: 'insights,' },
       { t: 'portfolio' }, { t: 'tracking' }, { t: '—' },
       { t: 'all in one place,', hi: true },
@@ -409,7 +425,9 @@
   })();
 
   // Hero word cycle (matches animated-hero component behaviour)
-  const heroWords = ['smarter', 'faster', 'clearer', 'informed', 'bolder'];
+  const heroWords = document.documentElement.lang === 'et'
+    ? ['targemalt', 'kiiremini', 'selgemalt', 'teadlikumalt', 'julgemalt']
+    : ['smarter', 'faster', 'clearer', 'informed', 'bolder'];
   let heroIdx = 0;
   const heroWordEl = document.querySelector('.hero-word');
 
@@ -1442,36 +1460,106 @@ gl_FragColor=vec4(r,g,b,a);}`;
     setInterval(swapWithText, delay);
   })();
 
-  // ── Fi-section logos scatter animation ─────────────
+  // ── Fi-section: logos fly in, then converge into the Stockpilo mark ─
+  // The markup's default look is the finished state, so without GSAP or with
+  // reduced motion nothing is hidden.
   (function() {
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    gsap.registerPlugin(ScrollTrigger);
+
     const section = document.getElementById('fi-section');
     if (!section) return;
-    const items = Array.from(section.querySelectorAll('.fi-icon'));
-    if (!items.length) return;
+    const icons   = Array.from(section.querySelectorAll('.fi-icon'));
+    const cards   = icons.map(icon => icon.querySelector('.fi-card'));
+    const content = section.querySelector('.fi-content');
+    const head    = section.querySelector('.fi-head');
+    const reveal  = section.querySelector('.fi-reveal');
+    const hub     = section.querySelector('.fi-hub');
+    const hubIcon = section.querySelector('.fi-hub-icon');
+    const glow    = section.querySelector('.fi-glow');
+    if (!icons.length || !content || !head || !reveal || !hub || !hubIcon || !glow) return;
 
-    const offsets = [
-      { x: -160, y: -120 }, { x: 80,   y: -150 }, { x: -140, y: 120 },
-      { x: 150,  y: 100  }, { x: -60,  y: -160 }, { x: 120,  y: -80 },
-      { x: -120, y: 80   }, { x: 160,  y: -120 }, { x: -80,  y: 140 },
-      { x: 60,   y: 160  }, { x: 180,  y: 40   }, { x: -170, y: 20  },
-    ];
+    const isMobile = window.innerWidth <= 768;
 
-    items.forEach((el, i) => {
-      const off = offsets[i % offsets.length];
-      gsap.set(el, { x: off.x, y: off.y, opacity: 0, scale: 0.7 });
+    // Vector from the section's centre to a logo; layout offsets ignore transforms.
+    const fromCentre = icon => ({
+      x: icon.offsetLeft + icon.offsetWidth  / 2 - section.offsetWidth  / 2,
+      y: icon.offsetTop  + icon.offsetHeight / 2 - section.offsetHeight / 2,
+    });
+    // App icon's centre in section coordinates.
+    const hubCentre = () => ({
+      x: content.offsetLeft + hub.offsetLeft + hub.offsetWidth  / 2,
+      y: content.offsetTop  + hub.offsetTop  + hub.offsetHeight / 2,
     });
 
-    gsap.to(items, {
-      scrollTrigger: {
-        trigger: section,
-        start: 'top 85%',
-        end: 'top 10%',
-        scrub: 1.4,
-      },
-      x: 0, y: 0, opacity: 1, scale: 1,
-      ease: 'power2.out',
-      stagger: 0.06,
+    // ── Entrance: from beyond the edges, plays once with a springy overshoot
+    gsap.from(cards, {
+      x: i => { const v = fromCentre(icons[i]); return v.x / (Math.hypot(v.x, v.y) || 1) * 640; },
+      y: i => { const v = fromCentre(icons[i]); return v.y / (Math.hypot(v.x, v.y) || 1) * 640; },
+      scale: 0.6,
+      opacity: 0,
+      rotation: i => (i % 2 ? 24 : -24),
+      duration: 1.05,
+      ease: 'back.out(1.5)',
+      stagger: { each: 0.045, from: 'random' },
+      scrollTrigger: { trigger: section, start: 'top 72%', once: true },
+    });
+
+    // ── Convergence: logos pulled into the app icon, which pops with a blue
+    // pulse while the heading moves down into place; copy + CTA follow
+    gsap.set(hubIcon, { opacity: 0, scale: 0.4 });
+    gsap.set(reveal, { opacity: 0, y: 28, pointerEvents: 'none' });
+
+    const tl = gsap.timeline({
+      scrollTrigger: isMobile
+        ? { trigger: section, start: 'top 45%', once: true }
+        : {
+            trigger: section,
+            // Section is capped at 900px: on taller screens pin it centred.
+            start: () => (section.offsetHeight >= window.innerHeight ? 'top top' : 'center center'),
+            end: () => '+=' + Math.round(window.innerHeight * 0.9),
+            scrub: 0.8,
+            pin: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+    });
+
+    icons.forEach((icon, i) => {
+      const at = 0.1 + ((i * 5) % icons.length) / icons.length * 0.16; // shuffled start
+      tl.to(icon, {
+        x: () => hubCentre().x - (icon.offsetLeft + icon.offsetWidth  / 2),
+        y: () => hubCentre().y - (icon.offsetTop  + icon.offsetHeight / 2),
+        scale: 0.3,
+        rotation: i % 2 ? 90 : -90,
+        duration: 0.5,
+        ease: 'power2.in',
+      }, at);
+      // Vanish on arrival, so nothing lingers around the icon.
+      tl.to(icon, { autoAlpha: 0, duration: 0.06, ease: 'none' }, at + 0.44);
+    });
+
+    tl.fromTo(head,
+      { y: () => section.offsetHeight / 2 - (content.offsetTop + head.offsetTop + head.offsetHeight / 2) },
+      { y: 0, duration: 0.4, ease: 'power2.inOut' }, 0.3);
+
+    tl.to(hubIcon, { opacity: 1, scale: 1, duration: 0.2, ease: 'back.out(2.2)' }, 0.5);
+    tl.fromTo(glow, { opacity: 0, scale: 0.4 }, { keyframes: [
+      { opacity: 1, scale: 1,   duration: 0.14, ease: 'power2.out' },
+      { opacity: 0, scale: 1.3, duration: 0.3,  ease: 'power1.in'  },
+    ] }, 0.52);
+
+    tl.to(reveal, { opacity: 1, y: 0, duration: 0.2, ease: 'power2.out' }, 0.74);
+    tl.set(reveal, { pointerEvents: 'auto' }, 0.8);
+    if (!isMobile) tl.to({}, { duration: 0.14 }); // short hold before release
+    else tl.timeScale(0.55);
+
+    // Keyboard users tabbing onto the still-hidden CTA: finish the sequence.
+    reveal.addEventListener('focusin', () => {
+      const st = tl.scrollTrigger;
+      if (st && !isMobile && st.progress < 1) window.scrollTo(0, st.end);
+      else if (isMobile) tl.progress(1);
     });
   })();
 

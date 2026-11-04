@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/styles.css">
+  <script src="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/_ds_bundle.js"></script>
+  <style>
+    body { background:#000; margin:0; font-family:'Geist',sans-serif; }
+    a { color:#479ffa; text-decoration:none; }
+    a:hover { color:#ffffff; }
+  </style>
+</helmet>
+<section style="padding:40px; display:flex; justify-content:center;">
+  <div style="width:1060px; background:#0b0b0b; border:1px solid #1f1f1f; border-radius:12px; padding:20px 24px 18px;">
+
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+      <div style="display:flex; flex-direction:column; gap:3px;">
+        <div style="font-size:15px; font-weight:500; color:#ffffff;">US CPI YoY vs Core CPI YoY</div>
+        <div style="font-family:'Geist Mono',monospace; font-size:10px; letter-spacing:0.1em; color:#868f97; text-transform:uppercase;">Monthly · 2001–2026 · Bureau of Labor Statistics</div>
+      </div>
+      <div style="display:flex; gap:18px;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <div style="width:14px; height:2px; background:#ffffff;"></div>
+          <div style="font-family:'Geist Mono',monospace; font-size:11px; color:#c8cdd2;">Core CPI YoY</div>
+          <div style="font-family:'Geist Mono',monospace; font-size:11px; font-weight:600; color:#ffffff;">{{ coreLast }}</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <div style="width:14px; height:2px; background:#eab308;"></div>
+          <div style="font-family:'Geist Mono',monospace; font-size:11px; color:#c8cdd2;">CPI YoY</div>
+          <div style="font-family:'Geist Mono',monospace; font-size:11px; font-weight:600; color:#ffffff;">{{ cpiLast }}</div>
+        </div>
+      </div>
+    </div>
+
+    <svg viewBox="0 0 1060 480" style="width:100%; display:block;">
+      <sc-for list="{{ gridLines }}" as="g" hint-placeholder-count="7">
+        <line x1="0" y1="{{ g.y }}" x2="1000" y2="{{ g.y }}" stroke="{{ g.stroke }}" stroke-width="1" stroke-dasharray="2 3"></line>
+      </sc-for>
+      <path d="{{ coreArea }}" fill="#132540"></path>
+      <path d="{{ corePath }}" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linejoin="round"></path>
+      <path d="{{ cpiPath }}" fill="none" stroke="#eab308" stroke-width="1.8" stroke-linejoin="round"></path>
+      <text x="430" y="150" fill="#eab308" font-size="34" font-weight="700" font-family="Geist,sans-serif">US CPI YoY</text>
+      <text x="480" y="380" fill="#ffffff" font-size="34" font-weight="700" font-family="Geist,sans-serif">US Core CPI YoY</text>
+      <rect x="1004" y="{{ cpiTagY }}" width="40" height="17" rx="2" fill="#eab308"></rect>
+      <rect x="1004" y="{{ coreTagY }}" width="40" height="17" rx="2" fill="#ffffff"></rect>
+      <sc-for list="{{ yearTicks }}" as="yt" hint-placeholder-count="26">
+        <line x1="{{ yt.x }}" y1="448" x2="{{ yt.x }}" y2="454" stroke="#2a2a2a" stroke-width="1"></line>
+      </sc-for>
+      {{ svgLabels }}
+      <line x1="0" y1="448" x2="1000" y2="448" stroke="#1f1f1f" stroke-width="1"></line>
+    </svg>
+
+    <div style="font-family:'Geist Mono',monospace; font-size:9.5px; color:#4a4f56; margin-top:8px;">Source: demo data</div>
+
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1140,&quot;height&quot;:620}}">
+class Component extends DCLogic {
+  lerp(anchors, m) {
+    for (let i = 0; i < anchors.length - 1; i++) {
+      const [m0, v0] = anchors[i], [m1, v1] = anchors[i + 1];
+      if (m >= m0 && m <= m1) return v0 + (v1 - v0) * (m - m0) / (m1 - m0);
+    }
+    return anchors[anchors.length - 1][1];
+  }
+  renderVals() {
+    const N = 306; // Jan 2001 .. Jun 2026
+    const yr = (y, mo) => (y - 2001) * 12 + (mo || 0);
+    const cpiA = [
+      [0,3.7],[yr(2001,6),2.7],[yr(2002),1.1],[yr(2002,6),1.8],[yr(2003),3.0],[yr(2003,8),2.2],[yr(2004,5),3.3],[yr(2005),3.0],[yr(2005,8),4.7],[yr(2006,5),4.3],[yr(2006,9),1.3],[yr(2007,5),2.7],[yr(2007,10),4.3],[yr(2008,6),5.6],[yr(2008,11),0.1],[yr(2009,6),-2.1],[yr(2009,11),1.8],[yr(2010,5),1.1],[yr(2010,11),1.5],[yr(2011,8),3.9],[yr(2012,5),1.7],[yr(2013),1.6],[yr(2013,10),1.0],[yr(2014,5),2.1],[yr(2015),-0.1],[yr(2015,8),0.0],[yr(2016,6),1.0],[yr(2017,1),2.7],[yr(2017,5),1.6],[yr(2018,6),2.9],[yr(2019,1),1.5],[yr(2019,10),1.8],[yr(2020,4),0.1],[yr(2020,11),1.2],[yr(2021,4),4.2],[yr(2021,11),6.8],[yr(2022,5),9.1],[yr(2022,11),7.1],[yr(2023,5),4.0],[yr(2023,11),3.1],[yr(2024,5),3.3],[yr(2024,11),2.7],[yr(2025,5),2.4],[yr(2025,11),2.8],[yr(2026,2),2.6],[305,4.2]
+    ];
+    const coreA = [
+      [0,2.6],[yr(2001,11),2.7],[yr(2003),1.9],[yr(2003,11),1.1],[yr(2005),2.2],[yr(2006,8),2.9],[yr(2008),2.5],[yr(2008,11),1.8],[yr(2009,11),1.7],[yr(2010,9),0.6],[yr(2011,11),2.2],[yr(2013),1.9],[yr(2014),1.6],[yr(2015,11),2.0],[yr(2016,7),2.3],[yr(2017,7),1.7],[yr(2018,6),2.3],[yr(2019,8),2.4],[yr(2020,5),1.2],[yr(2021,2),1.3],[yr(2021,5),4.5],[yr(2022,2),6.4],[yr(2022,8),6.6],[yr(2023,4),5.5],[yr(2023,11),4.0],[yr(2024,5),3.4],[yr(2024,11),3.3],[yr(2025,5),2.8],[yr(2025,11),3.0],[305,2.9]
+    ];
+    const wig = (m, a, f) => Math.sin(m * f) * a + Math.sin(m * f * 2.3 + 0.7) * a * 0.6;
+    const cpi = [], core = [];
+    for (let m = 0; m < N; m++) {
+      cpi.push(this.lerp(cpiA, m) + wig(m, 0.22, 1.7));
+      core.push(this.lerp(coreA, m) + wig(m, 0.09, 1.1));
+    }
+    const plotW = 1000, yMin = -2.6, yMax = 9.6, plotTop = 6, plotBot = 448;
+    const y = v => plotBot - (v - yMin) / (yMax - yMin) * (plotBot - plotTop);
+    const x = m => m / (N - 1) * plotW;
+    const toPath = arr => arr.map((v, m) => (m ? 'L' : 'M') + x(m).toFixed(1) + ' ' + y(v).toFixed(1)).join('');
+    const corePath = toPath(core), cpiPath = toPath(cpi);
+    const coreArea = corePath + `L${plotW} ${y(yMin).toFixed(1)}L0 ${y(yMin).toFixed(1)}Z`;
+    const gridLines = [];
+    for (let v = -2; v <= 8; v += 2) gridLines.push({
+      y: y(v).toFixed(1), ty: (y(v) + 4).toFixed(1),
+      label: v.toFixed(1), stroke: v === 0 ? '#2e2e2e' : '#1a1a1a'
+    });
+    const yearTicks = [];
+    for (let Y = 2001; Y <= 2026; Y++) yearTicks.push({ x: x(yr(Y)).toFixed(1), label: "'" + String(Y).slice(2) });
+    const cpiEndY = y(cpi[N - 1]), coreEndY = y(core[N - 1]);
+    const cpiLast = cpi[N - 1].toFixed(1), coreLast = core[N - 1].toFixed(1);
+    const e = React.createElement;
+    const mono = 'Geist Mono,monospace';
+    const svgLabels = e('g', null,
+      gridLines.map((g, i) => e('text', { key:'g'+i, x:1012, y:g.ty, fill:'#868f97', fontSize:11, fontFamily:mono }, g.label)),
+      yearTicks.map((t, i) => e('text', { key:'y'+i, x:t.x, y:470, fill:'#868f97', fontSize:10, fontFamily:mono, textAnchor:'middle' }, t.label)),
+      e('text', { key:'tc', x:1024, y:(cpiEndY + 3.5).toFixed(1), fill:'#000000', fontSize:11, fontWeight:700, fontFamily:mono, textAnchor:'middle' }, cpiLast),
+      e('text', { key:'tk', x:1024, y:(coreEndY + 3.5).toFixed(1), fill:'#000000', fontSize:11, fontWeight:700, fontFamily:mono, textAnchor:'middle' }, coreLast)
+    );
+    return {
+      corePath, cpiPath, coreArea, gridLines, yearTicks, svgLabels,
+      cpiLast, coreLast,
+      cpiTagY: (cpiEndY - 8.5).toFixed(1),
+      coreTagY: (coreEndY - 8.5).toFixed(1)
+    };
+  }
+}
+</script>
+</body>
+</html>

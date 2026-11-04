@@ -41,7 +41,7 @@
     const container = document.getElementById('clear-noise-text');
     if (!container) return;
 
-    const words = ['Clear', 'The', 'Noise.'];
+    const words = document.documentElement.lang === 'et' ? ['Vähem', 'müra.'] : ['Clear', 'The', 'Noise.'];
     const els = words.map(w => {
       const span = document.createElement('span');
       span.textContent = w;
@@ -725,6 +725,6 @@
 
     // Pricing already uses .reveal IntersectionObserver — no extra animation needed
 
-    // fi-section heading + button
-    revealSection('.fi-section', '.fi-section .fi-title, .fi-section .fi-btn', { stagger: 0.12, y: 36 });
+    // fi-section heading (the rest of that section is driven from site.js)
+    revealSection('.fi-section', '.fi-section .fi-title', { y: 36 });
   })();

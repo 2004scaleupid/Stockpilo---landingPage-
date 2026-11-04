@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/styles.css">
+  <script src="_ds/stockpilo-design-system-2d3130c2-ab99-4b56-a9d9-ab8c33318fec/_ds_bundle.js"></script>
+  <style>
+    body { margin: 0; background: #000000; }
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#000000;font-family:'Geist', sans-serif;color:#ffffff;display:flex;justify-content:center;padding:36px 28px;box-sizing:border-box;">
+  <div style="width:100%;max-width:560px;display:flex;gap:24px;align-items:stretch;">
+
+<!-- Top Gainers card, price chart, optional earnings chart -->
+    <div style="width:560px;flex:none;display:flex;flex-direction:column;gap:20px;">
+
+      <div style="background:#0d0d0d;border:1px solid #141414;border-radius:16px;padding:32px 34px 34px;box-sizing:border-box;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:19px;font-weight:600;letter-spacing:-0.01em;">Top gainers today</div>
+          <div style="display:flex;gap:8px;">
+            <button onClick="{{ onPrevGainer }}" style="width:34px;height:34px;border-radius:99px;background:transparent;border:1px solid #242424;color:#868f97;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s ease;" style-hover="border-color:#2a2a2a;color:#ffffff;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+            </button>
+            <button onClick="{{ onNextGainer }}" style="width:34px;height:34px;border-radius:99px;background:transparent;border:1px solid #242424;color:#868f97;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s ease;" style-hover="border-color:#2a2a2a;color:#ffffff;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:8px;margin-top:18px;">
+          <div style="position:relative;">
+            <button onClick="{{ onToggleSectorMenu }}" style="display:flex;align-items:center;gap:7px;font-family:'Geist', sans-serif;font-size:13px;color:#e2e2e2;background:transparent;border:1px solid #242424;border-radius:99px;padding:7px 12px;cursor:pointer;transition:border-color 0.15s ease;" style-hover="border-color:#2a2a2a;">
+              {{ sectorLabel }}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+            </button>
+            <sc-if value="{{ sectorMenuOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;top:calc(100% + 6px);left:0;background:#141414;border:1px solid #262626;border-radius:12px;padding:6px;z-index:5;min-width:160px;box-sizing:border-box;">
+                <sc-for list="{{ sectors }}" as="s" hint-placeholder-count="6">
+                  <div onClick="{{ s.onClick }}" style="{{ s.style }}">{{ s.label }}</div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="position:relative;margin-left:auto;">
+            <button onClick="{{ onToggleCapMenu }}" style="display:flex;align-items:center;gap:7px;font-family:'Geist', sans-serif;font-size:13px;color:#e2e2e2;background:transparent;border:1px solid #242424;border-radius:99px;padding:7px 12px;cursor:pointer;transition:border-color 0.15s ease;" style-hover="border-color:#2a2a2a;">
+              {{ capLabel }}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+            </button>
+            <sc-if value="{{ capMenuOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;top:calc(100% + 6px);right:0;background:#141414;border:1px solid #262626;border-radius:12px;padding:6px;z-index:5;min-width:140px;box-sizing:border-box;">
+                <sc-for list="{{ caps }}" as="c" hint-placeholder-count="2">
+                  <div onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+
+        <div style="margin-top:24px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+            <div style="display:flex;align-items:center;gap:14px;min-width:0;">
+              <span style="{{ gainer.logoStyle }}"></span>
+              <div style="min-width:0;">
+                <div style="display:flex;align-items:baseline;gap:10px;">
+                  <span style="font-size:28px;font-weight:600;letter-spacing:-0.01em;">{{ gainer.ticker }}</span>
+                  <span style="font-size:16px;color:#22c55e;font-variant-numeric:tabular-nums;">{{ gainer.pct }}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap;">
+                  <span style="font-size:15px;color:#868f97;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ gainer.name }}</span>
+                  <span style="{{ gainer.catalystStyle }}">{{ gainer.catalystLabel }}</span>
+                </div>
+              </div>
+            </div>
+            <div style="text-align:right;flex:none;">
+              <div style="font-size:30px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-0.01em;">{{ gainer.price }}</div>
+              <div style="font-size:13px;color:#868f97;margin-top:4px;">{{ gainer.ago }}</div>
+            </div>
+          </div>
+
+          <div style="margin-top:22px;font-size:16.5px;line-height:1.7;color:#c8cdd2;font-weight:300;text-wrap:pretty;">{{ gainer.body }}</div>
+
+          <div style="display:flex;align-items:center;gap:8px;margin-top:20px;">
+            <sc-for list="{{ gainerDots }}" as="d" hint-placeholder-count="3">
+              <span style="{{ d.style }}"></span>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- Price chart: hidden when the earnings chart takes its place -->
+        <sc-if value="{{ gainer.showPriceChart }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top:28px;padding-top:26px;border-top:1px solid #141414;">
+            <div style="position:relative;height:280px;">
+              <canvas ref="{{ priceChartRef }}" style="width:100%;height:100%;display:block;"></canvas>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;">
+              <div style="display:flex;gap:4px;">
+                <sc-for list="{{ ranges }}" as="r" hint-placeholder-count="6">
+                  <button onClick="{{ r.onClick }}" style="{{ r.style }}">{{ r.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- Earnings chart: only surfaces when the rally is earnings-driven, replacing the price chart -->
+        <sc-if value="{{ gainer.hasEarnings }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:28px;padding-top:26px;border-top:1px solid #141414;text-align:center;">
+            <div style="font-size:17px;font-weight:600;letter-spacing:-0.01em;">Earnings per share</div>
+            <div style="font-size:13.5px;color:#22c55e;margin-top:6px;">{{ gainer.epsNote }}</div>
+            <div style="position:relative;margin-top:18px;height:230px;">
+              <canvas ref="{{ epsChartRef }}" style="width:100%;height:100%;display:block;"></canvas>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- Momentum & technical signals: 52-week range -->
+        <div style="margin-top:26px;padding-top:22px;border-top:1px solid #141414;">
+          <div style="font-size:14.5px;font-weight:600;letter-spacing:-0.01em;">Momentum &amp; technical signals</div>
+          <div style="margin-top:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#868f97;">
+              <span>52w Low</span>
+              <span>52w High</span>
+            </div>
+            <div style="position:relative;height:6px;background:#1f1f1f;border-radius:99px;margin-top:8px;">
+              <div style="{{ gainer.rangeFillStyle }}"></div>
+              <div style="{{ gainer.rangeDotStyle }}"></div>
+            </div>
+            <div style="position:relative;height:16px;margin-top:6px;">
+              <span style="position:absolute;left:0;font-size:13px;color:#868f97;font-variant-numeric:tabular-nums;">{{ gainer.low52 }}</span>
+              <span style="{{ gainer.rangeCurrentStyle }}">{{ gainer.price }}</span>
+              <span style="position:absolute;right:0;font-size:13px;color:#868f97;font-variant-numeric:tabular-nums;">{{ gainer.high52 }}</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 980, &quot;height&quot;: 900}, &quot;showChange&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Card&quot;}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { gainerIdx: 0, range: "1D", sector: "All", cap: "Large", sectorMenuOpen: false, capMenuOpen: false };
+    this.onToggleSectorMenu = this.onToggleSectorMenu.bind(this);
+    this.onToggleCapMenu = this.onToggleCapMenu.bind(this);
+    this.priceChartRef = React.createRef();
+    this.epsChartRef = React.createRef();
+    this.onPrevGainer = this.onPrevGainer.bind(this);
+    this.onNextGainer = this.onNextGainer.bind(this);
+    this.onResize = this.onResize.bind(this);
+  }
+
+  getGainers() {
+    return [
+      {
+        ticker: "PLBL", name: "Polibeli Group Ltd", price: "$8.12", pct: "+26.48%", ago: "6m ago",
+        body: "Shares jumped sharply after announcing a new partnership expected to expand market reach. Investor sentiment has been energized by the growth outlook.",
+        hasEarnings: false, seed: 11, low52: 3.10, high52: 8.90, current52: 8.12,
+        catalyst: "Contract Win"
+      },
+      {
+        ticker: "RXT", name: "Rackspace Technology", price: "$5.34", pct: "+22.20%", ago: "8m ago",
+        body: "Shares surged following a better-than-expected earnings report, which included raised guidance for future quarters and an improved financial outlook.",
+        hasEarnings: true, epsNote: "Next EPS estimate up 11.23% vs last quarter", seed: 47, low52: 2.85, high52: 6.20, current52: 5.34,
+        catalyst: "Earnings Beat"
+      },
+      {
+        ticker: "EQPT", name: "EquipmentShare.com", price: "$18.65", pct: "+16.56%", ago: "5m ago",
+        body: "Shares rose after the company revealed a new product line for the construction sector, with the potential to boost sales and attract new customers.",
+        hasEarnings: false, seed: 83, low52: 12.40, high52: 21.00, current52: 18.65,
+        catalyst: "Analyst Upgrade"
+      }
+    ];
+  }
+
+  onToggleSectorMenu() {
+    this.setState(function(s) { return { sectorMenuOpen: !s.sectorMenuOpen, capMenuOpen: false }; });
+  }
+
+  onToggleCapMenu() {
+    this.setState(function(s) { return { capMenuOpen: !s.capMenuOpen, sectorMenuOpen: false }; });
+  }
+
+  onPrevGainer() {
+    const n = this.getGainers().length;
+    this.setState(function(s) { return { gainerIdx: (s.gainerIdx - 1 + n) % n }; });
+  }
+
+  onNextGainer() {
+    const n = this.getGainers().length;
+    this.setState(function(s) { return { gainerIdx: (s.gainerIdx + 1) % n }; });
+  }
+
+  rng(seed) {
+    let a = seed >>> 0;
+    return function() {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  drawPriceChart() {
+    const canvas = this.priceChartRef.current;
+    if (!canvas) return;
+    const cw = canvas.clientWidth || 500, ch = canvas.clientHeight || 280;
+    const W = cw * 2, H = ch * 2;
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, W, H);
+
+    const g = this.getGainers()[this.state.gainerIdx];
+    const rnd = this.rng(g.seed + this.state.range.length);
+    const n = 60;
+    const vals = [];
+    let v = 100;
+    for (let i = 0; i < n; i++) {
+      v += (rnd() - 0.42) * 3.2;
+      vals.push(v);
+    }
+    const minV = Math.min.apply(null, vals), maxV = Math.max.apply(null, vals);
+    const padL = 14, padR = 78, padT = 10, padB = 60;
+    const plotW = W - padL - padR, plotH = H - padT - padB - 70;
+
+    // dot-grid background
+    ctx.fillStyle = "rgba(255,255,255,0.05)";
+    for (let x = padL; x < W - padR; x += 34) {
+      for (let y = padT; y < padT + plotH; y += 34) {
+        ctx.beginPath(); ctx.arc(x, y, 1.4, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+
+    const yOf = function(val) { return padT + (1 - (val - minV) / (maxV - minV)) * plotH; };
+    const xOf = function(i) { return padL + (i / (n - 1)) * plotW; };
+    const isPos = maxV >= vals[0];
+    const lineColor = isPos ? "#22c55e" : "#ef4444";
+
+    // gridlines
+    ctx.strokeStyle = "#1a1a1a";
+    ctx.lineWidth = 1;
+    ctx.font = "20px 'Geist Mono', monospace";
+    ctx.fillStyle = "#868f97";
+    ctx.textAlign = "left";
+    for (let k = 0; k <= 4; k++) {
+      const val = minV + (maxV - minV) * (k / 4);
+      const y = yOf(val);
+      ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+      ctx.fillText(val.toFixed(2), W - padR + 12, y + 7);
+    }
+
+    // high dotted reference line + chip
+    const hiY = yOf(maxV);
+    ctx.strokeStyle = lineColor;
+    ctx.setLineDash([3, 4]);
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(padL, hiY); ctx.lineTo(W - padR, hiY); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // low dashed reference line + chip
+    const loVal = minV + (maxV - minV) * 0.22;
+    const loY = yOf(loVal);
+    ctx.strokeStyle = "#4a4a4a";
+    ctx.setLineDash([8, 6]);
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(padL, loY); ctx.lineTo(W - padR, loY); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // area fill
+    const grad = ctx.createLinearGradient(0, padT, 0, padT + plotH);
+    grad.addColorStop(0, isPos ? "rgba(34,197,94,0.18)" : "rgba(239,68,68,0.18)");
+    grad.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.beginPath();
+    ctx.moveTo(xOf(0), yOf(vals[0]));
+    for (let i = 1; i < n; i++) ctx.lineTo(xOf(i), yOf(vals[i]));
+    ctx.lineTo(xOf(n - 1), padT + plotH);
+    ctx.lineTo(xOf(0), padT + plotH);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // line
+    ctx.beginPath();
+    ctx.moveTo(xOf(0), yOf(vals[0]));
+    for (let i = 1; i < n; i++) ctx.lineTo(xOf(i), yOf(vals[i]));
+    ctx.strokeStyle = lineColor;
+    ctx.lineWidth = 3.5;
+    ctx.lineJoin = "round";
+    ctx.stroke();
+
+    // chips
+    ctx.font = "bold 21px 'Geist Mono', monospace";
+    ctx.textAlign = "left";
+    const chipW = 74, chipH = 30;
+    ctx.fillStyle = lineColor;
+    ctx.beginPath(); ctx.roundRect(W - padR + 4, hiY - chipH / 2, chipW, chipH, 5); ctx.fill();
+    ctx.fillStyle = "#00160a";
+    ctx.fillText(maxV.toFixed(2), W - padR + 12, hiY + 7);
+    ctx.fillStyle = "#1a1a2e";
+    ctx.beginPath(); ctx.roundRect(W - padR + 4, loY - chipH / 2, chipW, chipH, 5); ctx.fill();
+    ctx.fillStyle = "#dfe3ff";
+    ctx.fillText(loVal.toFixed(2), W - padR + 12, loY + 7);
+
+    // volume bars
+    const volTop = padT + plotH + 24, volH = 46;
+    const bw = plotW / n * 0.55;
+    for (let i = 0; i < n; i++) {
+      const vh = 6 + rnd() * volH;
+      ctx.fillStyle = "#26272b";
+      ctx.beginPath(); ctx.roundRect(xOf(i) - bw / 2, volTop + volH - vh, bw, vh, 2); ctx.fill();
+    }
+
+    // x labels
+    ctx.fillStyle = "#868f97";
+    ctx.font = "20px 'Geist Mono', monospace";
+    ctx.textAlign = "center";
+    const times = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"];
+    for (let k = 0; k < times.length; k++) {
+      const i = Math.round((k / (times.length - 1)) * (n - 1));
+      ctx.fillText(times[k], xOf(i), H - 14);
+    }
+  }
+
+  drawEpsChart() {
+    const canvas = this.epsChartRef.current;
+    if (!canvas) return;
+    const cw = canvas.clientWidth || 460, ch = canvas.clientHeight || 230;
+    const W = cw * 2, H = ch * 2;
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, W, H);
+
+    const quarters = ["Q2 2025", "Q3 2025", "Q4 2025", "Q1 2026", "Q2 2026"];
+    const estimate = [0.92, 1.30, 1.65, 1.95, 2.08];
+    const actual = [1.01, 1.37, 1.72, 2.08, null];
+    const padL = 16, padR = 100, padT = 46, padB = 40;
+    const plotW = W - padL - padR, plotH = H - padT - padB;
+    const minV = 0.85, maxV = 2.30;
+    const yOf = function(val) { return padT + (1 - (val - minV) / (maxV - minV)) * plotH; };
+    const n = quarters.length;
+    const xOf = function(i) { return padL + ((i + 0.5) / n) * plotW; };
+
+    const gridVals = [1.01, 1.37, 1.72, 2.08];
+    ctx.strokeStyle = "#1c1c1c";
+    ctx.setLineDash([2, 5]);
+    ctx.lineWidth = 1;
+    ctx.font = "20px 'Geist Mono', monospace";
+    ctx.fillStyle = "#868f97";
+    ctx.textAlign = "left";
+    for (let k = 0; k < gridVals.length; k++) {
+      const y = yOf(gridVals[k]);
+      ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+      ctx.fillText(gridVals[k].toFixed(2), W - padR + 14, y + 7);
+    }
+    ctx.setLineDash([]);
+
+    for (let i = 0; i < n; i++) {
+      const x = xOf(i);
+      const estY = yOf(estimate[i]);
+      const isFuture = actual[i] == null;
+
+      if (isFuture) {
+        ctx.beginPath(); ctx.arc(x, estY, 11, 0, Math.PI * 2);
+        ctx.strokeStyle = "#479ffa"; ctx.lineWidth = 3; ctx.stroke();
+      } else {
+        const actY = yOf(actual[i]);
+        ctx.beginPath(); ctx.arc(x, estY, 9, 0, Math.PI * 2);
+        ctx.strokeStyle = "#5a5f66"; ctx.lineWidth = 2.5; ctx.stroke();
+        ctx.beginPath(); ctx.arc(x, actY, 11, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffffff"; ctx.fill();
+
+        ctx.fillStyle = "#22c55e";
+        ctx.font = "22px 'Geist', sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("beat \u25B2", x, padT - 18);
+      }
+
+      ctx.fillStyle = "#868f97";
+      ctx.font = "20px 'Geist Mono', monospace";
+      ctx.textAlign = "center";
+      ctx.fillText(quarters[i], x, H - 12);
+    }
+  }
+
+  onResize() { this.drawPriceChart(); this.drawEpsChart(); }
+
+  componentDidMount() {
+    this.drawPriceChart();
+    this.drawEpsChart();
+    window.addEventListener("resize", this.onResize);
+  }
+
+  componentDidUpdate() {
+    this.drawPriceChart();
+    this.drawEpsChart();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.onResize);
+  }
+
+  renderVals() {
+    const showPct = this.props.showChange ?? true;
+    const data = [
+      {
+        ticker: "PEG", ago: "29m ago", pct: 0.96,
+        pre: "Public Service Enterprise ",
+        post: " projected higher 2025 profits and expanded capital spending to address increased energy demand."
+      },
+      {
+        ticker: "HSIC", ago: "1h ago", pct: -0.37,
+        pre: "Henry Schein ",
+        post: " lowers 2025 profit forecast, citing weak dental product demand amidst inflation."
+      },
+      {
+        ticker: "BP", ago: "1h ago", pct: null,
+        pre: "Iraq and BP signed a deal to redevelop four Kirkuk oil and gas fields, boosting energy cooperation.",
+        post: ""
+      },
+      {
+        ticker: "NVDA", ago: "2h ago", pct: 1.84,
+        pre: "NVIDIA ",
+        post: " announced expanded data-center capacity commitments with two hyperscale cloud providers."
+      }
+    ];
+    const items = data.map(function(d) {
+      const pos = d.pct != null && d.pct >= 0;
+      const hasPct = d.pct != null && showPct;
+      return {
+        ticker: d.ticker,
+        ago: d.ago,
+        pre: d.pre,
+        post: d.post,
+        pct: hasPct ? (pos ? "+" : "") + d.pct.toFixed(2) + "%" : "",
+        badgeStyle: hasPct ? {
+          display: "inline-block",
+          verticalAlign: "baseline",
+          fontFamily: "'Geist Mono', monospace",
+          fontSize: "13px",
+          fontWeight: "500",
+          lineHeight: "1",
+          padding: "5px 9px",
+          borderRadius: "6px",
+          margin: "0 2px",
+          background: pos ? "rgba(34,197,94,0.12)" : "rgba(239,68,68,0.12)",
+          border: pos ? "1px solid rgba(34,197,94,0.25)" : "1px solid rgba(239,68,68,0.25)",
+          color: pos ? "#22c55e" : "#ef4444"
+        } : { display: "none" },
+        logoStyle: {
+          width: "26px", height: "26px", borderRadius: "99px",
+          backgroundColor: "#242424",
+          backgroundImage: "url(https://financialmodelingprep.com/image-stock/" + d.ticker + ".png)",
+          backgroundSize: "cover", backgroundPosition: "center",
+          flex: "none",
+          border: "1px solid #2a2a2a",
+          boxSizing: "border-box"
+        }
+      };
+    });
+    const gainersRaw = this.getGainers();
+    const idx = this.state.gainerIdx;
+    const g = gainersRaw[idx];
+    const self2 = this;
+
+    const sectorOpts = ["All", "Technology", "Healthcare", "Energy", "Defense", "Space"];
+    const sectors = sectorOpts.map(function(s) {
+      const active = self2.state.sector === s;
+      return {
+        label: s,
+        onClick: function() { self2.setState({ sector: s, sectorMenuOpen: false }); },
+        style: {
+          fontFamily: "'Geist', sans-serif",
+          fontSize: "13px",
+          borderRadius: "8px",
+          padding: "8px 10px",
+          cursor: "pointer",
+          background: active ? "rgba(71,159,250,0.12)" : "transparent",
+          color: active ? "#479ffa" : "#c8cdd2",
+          transition: "background 0.15s ease",
+          whiteSpace: "nowrap"
+        }
+      };
+    });
+    const capOpts = ["Large cap", "Mid cap"];
+    const caps = capOpts.map(function(c) {
+      const active = self2.state.cap === c.split(" ")[0];
+      return {
+        label: c,
+        onClick: function() { self2.setState({ cap: c.split(" ")[0], capMenuOpen: false }); },
+        style: {
+          fontFamily: "'Geist', sans-serif",
+          fontSize: "13px",
+          borderRadius: "8px",
+          padding: "8px 10px",
+          cursor: "pointer",
+          background: active ? "#1c1c1c" : "transparent",
+          color: active ? "#ffffff" : "#c8cdd2",
+          transition: "background 0.15s ease",
+          whiteSpace: "nowrap"
+        }
+      };
+    });
+    const sectorLabel = self2.state.sector;
+    const capLabel = self2.state.cap + " cap";
+
+    const rangeOpts = ["1D", "5D", "1M", "6M", "1Y", "5Y"];
+    const ranges = rangeOpts.map(function(r) {
+      const active = self2.state.range === r;
+      return {
+        label: r,
+        onClick: function() { self2.setState({ range: r }); },
+        style: {
+          fontFamily: "'Geist Mono', monospace",
+          fontSize: "13px",
+          border: "none",
+          borderRadius: "8px",
+          padding: "7px 12px",
+          cursor: "pointer",
+          background: active ? "#1c1c1c" : "transparent",
+          color: active ? "#ffffff" : "#868f97",
+          transition: "all 0.15s ease"
+        }
+      };
+    });
+    const catalystColors = {
+      "Earnings Beat": "#22c55e",
+      "Guidance Raised": "#479ffa",
+      "Analyst Upgrade": "#a78bfa",
+      "FDA Approval": "#2dd4bf",
+      "M&A Rumor": "#f59e0b",
+      "Contract Win": "#e2e2e2"
+    };
+    const catColor = catalystColors[g.catalyst] || "#868f97";
+    const rangePct = Math.max(0, Math.min(100, ((g.current52 - g.low52) / (g.high52 - g.low52)) * 100));
+
+    const gainer = {
+      ticker: g.ticker,
+      name: g.name,
+      price: g.price,
+      pct: g.pct,
+      ago: g.ago,
+      body: g.body,
+      hasEarnings: !!g.hasEarnings,
+      showPriceChart: !g.hasEarnings,
+      epsNote: g.epsNote,
+      low52: "$" + g.low52.toFixed(2),
+      high52: "$" + g.high52.toFixed(2),
+      rangeFillStyle: {
+        position: "absolute", left: "0", top: "0", bottom: "0",
+        width: rangePct + "%", background: "#3a3a3a", borderRadius: "99px"
+      },
+      rangeDotStyle: {
+        position: "absolute", left: rangePct + "%", top: "50%",
+        transform: "translate(-50%, -50%)", width: "13px", height: "13px",
+        borderRadius: "99px", background: "#479ffa", border: "2px solid #0d0d0d",
+        boxSizing: "border-box"
+      },
+      rangeCurrentStyle: {
+        position: "absolute", left: rangePct + "%", transform: "translateX(-50%)",
+        fontSize: "13px", fontWeight: "600", color: "#ffffff",
+        fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap"
+      },
+      catalystLabel: g.catalyst,
+      catalystStyle: {
+        display: "inline-flex",
+        alignItems: "center",
+        fontSize: "11.5px",
+        fontWeight: "500",
+        padding: "5px 11px",
+        borderRadius: "99px",
+        background: catColor + "1f",
+        border: "1px solid " + catColor + "40",
+        color: catColor
+      },
+      logoStyle: {
+        width: "36px", height: "36px", borderRadius: "8px",
+        backgroundColor: "#242424",
+        backgroundImage: "url(https://financialmodelingprep.com/image-stock/" + g.ticker + ".png)",
+        backgroundSize: "cover", backgroundPosition: "center",
+        flex: "none",
+        border: "1px solid #2a2a2a",
+        boxSizing: "border-box"
+      }
+    };
+    const gainerDots = gainersRaw.map(function(_, i) {
+      return {
+        style: {
+          width: "6px", height: "6px", borderRadius: "99px",
+          background: i === idx ? "#479ffa" : "#2a2a2a",
+          transition: "background 0.15s ease"
+        }
+      };
+    });
+
+    return {
+      items: items, gainer: gainer, gainerDots: gainerDots,
+      onPrevGainer: this.onPrevGainer, onNextGainer: this.onNextGainer,
+      priceChartRef: this.priceChartRef, epsChartRef: this.epsChartRef,
+      ranges: ranges, sectors: sectors, caps: caps,
+      sectorLabel: sectorLabel, capLabel: capLabel,
+      sectorMenuOpen: this.state.sectorMenuOpen, capMenuOpen: this.state.capMenuOpen,
+      onToggleSectorMenu: this.onToggleSectorMenu, onToggleCapMenu: this.onToggleCapMenu
+    };
+  }
+}
+</script>
+</body>
+</html>

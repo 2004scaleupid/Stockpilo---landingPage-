@@ -4,6 +4,7 @@
      The app (www.stockpiloapp.com) has its own sitemap. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://stockpilo.com/</loc></url>
+  <url><loc>https://stockpilo.com/et/</loc></url>
   <url><loc>https://stockpilo.com/faqs</loc></url>
   <url><loc>https://stockpilo.com/help</loc></url>
   <url><loc>https://stockpilo.com/privacy</loc></url>

@@ -54,7 +54,7 @@ createServer(async (req, res) => {
   }
 
   const path = decodeURIComponent(req.url.split('?')[0]); // ignore ?v= cache-busting params
-  let url = path === '/' ? '/index.html' : path;
+  let url = path.endsWith('/') ? path + 'index.html' : path;
   const filePath = join(__dirname, url);
   const ext = extname(filePath);
 

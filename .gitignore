@@ -10,3 +10,7 @@ node_modules/
 .claude/
 docs/superpowers/
 skills-lock.json
+
+tools/archive/video-originals/
+.DS_Store
+!brand_assets/video/*.jpg
