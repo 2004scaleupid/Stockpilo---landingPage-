@@ -12,7 +12,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stockpilo — Investeeri targemalt. Tea, miks, enne kui ostad.</title>
-  <meta name="description" content="Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: igapäevane turuülevaade, selgitatud uudised, tulemusteadaanded, USA Kongressi tehingud ja maailmasündmused ühes vaates.">
+  <meta name="description" content="Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: turuülevaade, selgitatud uudised, tulemused, USA Kongressi tehingud ja maailmasündmused.">
   <link rel="canonical" href="https://stockpilo.com/et/">
   <link rel="alternate" hreflang="en" href="https://stockpilo.com/">
   <link rel="alternate" hreflang="et" href="https://stockpilo.com/et/">
@@ -23,7 +23,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Stockpilo">
   <meta property="og:title" content="Stockpilo — Investeeri targemalt. Tea, miks, enne kui ostad.">
-  <meta property="og:description" content="Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: igapäevane turuülevaade, selgitatud uudised, tulemusteadaanded, USA Kongressi tehingud ja maailmasündmused ühes vaates.">
+  <meta property="og:description" content="Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: turuülevaade, selgitatud uudised, tulemused, USA Kongressi tehingud ja maailmasündmused.">
   <meta property="og:url" content="https://stockpilo.com/et/">
   <meta property="og:locale" content="et_EE">
   <meta property="og:image" content="https://stockpilo.com/brand_assets/og-image.jpg">
@@ -31,13 +31,13 @@
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Stockpilo — Investeeri targemalt. Tea, miks, enne kui ostad.">
-  <meta name="twitter:description" content="Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: igapäevane turuülevaade, selgitatud uudised, tulemusteadaanded, USA Kongressi tehingud ja maailmasündmused ühes vaates.">
+  <meta name="twitter:description" content="Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: turuülevaade, selgitatud uudised, tulemused, USA Kongressi tehingud ja maailmasündmused.">
   <meta name="twitter:image" content="https://stockpilo.com/brand_assets/og-image.jpg">
-  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://stockpilo.com/#org", "name": "Stockpilo", "url": "https://stockpilo.com/", "logo": "https://stockpilo.com/brand_assets/apple-touch-icon.png"}, {"@type": "WebSite", "@id": "https://stockpilo.com/#website", "url": "https://stockpilo.com/", "name": "Stockpilo", "publisher": {"@id": "https://stockpilo.com/#org"}}, {"@type": "SoftwareApplication", "name": "Stockpilo", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "url": "https://www.stockpiloapp.com", "description": "Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: igapäevane turuülevaade, selgitatud uudised, tulemusteadaanded, USA Kongressi tehingud ja maailmasündmused ühes vaates.", "publisher": {"@id": "https://stockpilo.com/#org"}, "offers": [{"@type": "Offer", "name": "Pro", "price": "19.99", "priceCurrency": "EUR", "description": "14,99 €/kuu esimesed 3 kuud, seejärel 19,99 €/kuu"}]}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://stockpilo.com/#org", "name": "Stockpilo", "url": "https://stockpilo.com/", "logo": "https://stockpilo.com/brand_assets/apple-touch-icon.png"}, {"@type": "WebSite", "@id": "https://stockpilo.com/#website", "url": "https://stockpilo.com/", "name": "Stockpilo", "publisher": {"@id": "https://stockpilo.com/#org"}}, {"@type": "SoftwareApplication", "name": "Stockpilo", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "url": "https://www.stockpiloapp.com", "description": "Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: turuülevaade, selgitatud uudised, tulemused, USA Kongressi tehingud ja maailmasündmused.", "publisher": {"@id": "https://stockpilo.com/#org"}, "offers": [{"@type": "Offer", "name": "Pro", "price": "19.99", "priceCurrency": "EUR", "description": "14,99 €/kuu esimesed 3 kuud, seejärel 19,99 €/kuu"}]}]}</script>
   <link rel="stylesheet" href="/css/tailwind.css?v=1">
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <script>/* Matter drives only the below-the-fold falling-text effect (it polls for window.Matter): fetch it after load, not beside the first paint. */addEventListener('load',function(){(window.requestIdleCallback||setTimeout)(function(){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js';document.head.appendChild(s)})})</script>
   <link rel="preload" href="/fonts/geist-400-800-latin.woff2" as="font" type="font/woff2" crossorigin>
   <style>
     /* Self-hosted fonts (latin + latin-ext, variable weight) */
@@ -1098,6 +1098,8 @@
     }
 
     /* ── ElectricBorder ────────────────────────────── */
+    /* The canvas is wider than the card; clip it so phones do not get a wider layout. */
+    .plan-section { overflow-x: clip; }
     .eb-wrap {
       --eb-color: #1a0aa5;
       position: relative;
@@ -1296,8 +1298,6 @@
       #about-root > div:last-child { flex-direction: column !important; gap: 20px !important; }
 
       /* Features */
-      #features > div { grid-template-columns: 1fr !important; gap: 48px !important; }
-      #features .reveal:last-child { justify-self: unset !important; max-width: 100% !important; }
 
       /* Footer */
       .footer-links-grid { grid-template-columns: repeat(2, 1fr) !important; margin-top: 20px !important; }
@@ -1322,7 +1322,6 @@
       .about-btn { font-size: 13px !important; padding: 10px 18px !important; }
 
       /* Features card */
-      #features > div:last-child { padding: 80px 20px !important; }
     }
 
     @media (max-width: 480px) {
@@ -1760,6 +1759,7 @@
       .card-swap-container { transform: scale(0.75) translate(25%, 25%); }
     }
   </style>
+  <link rel="stylesheet" href="/css/why-video.css?v=1">
 </head>
 <body>
 <!-- ── Stars background ─────────────────────────────── -->
@@ -1791,7 +1791,7 @@
   <nav id="site-nav" style="display:flex;height:56px;width:100%;align-items:center;justify-content:space-between;padding:0 16px;">
     <!-- Logo -->
     <a href="/et/" style="display:flex;align-items:center;padding:6px;border-radius:6px;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
-      <img src="/brand_assets/logo12-crop.png" alt="Stockpilo" style="height:28px;width:auto;">
+      <img src="/brand_assets/logo12-crop-sm.png" alt="Stockpilo" width="118" height="28" style="height:28px;width:auto;">
     </a>
 
     <!-- Desktop nav -->
@@ -1799,7 +1799,7 @@
       <div class="gooey-nav-container" id="gooey-nav">
         <nav>
           <ul id="gooey-nav-ul">
-            <li><a href="#features">Funktsioonid</a></li>
+            <li><a href="#why">Funktsioonid</a></li>
             <li><a href="#pricing">Hinnad</a></li>
             <li><a href="#about">Meist</a></li>
             <li><a href="/blog.html">Blogi</a></li>
@@ -1831,7 +1831,7 @@
   <div id="mobile-menu" style="display:none;position:fixed;inset:0;z-index:290;flex-direction:column;" aria-hidden="true">
     <div id="mobile-backdrop" style="position:absolute;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);"></div>
     <div style="position:relative;top:56px;margin:0 auto;width:100%;max-width:56rem;background:rgba(0,0,0,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.08);padding:12px 8px;">
-      <a href="#features" class="mobile-nav-link">Funktsioonid</a>
+      <a href="#why" class="mobile-nav-link">Funktsioonid</a>
       <a href="#pricing" class="mobile-nav-link">Hinnad</a>
       <a href="#about" class="mobile-nav-link">Meist</a>
       <a href="/blog.html" class="mobile-nav-link">Blogi</a>
@@ -1922,10 +1922,7 @@
 <style>
   .feat-grid { position:relative; z-index:1; max-width:1320px; margin:0 auto; padding:140px 24px;
     display:grid; grid-template-columns:minmax(280px,360px) 1fr; gap:64px; align-items:center; }
-  .feat-grid--video { grid-template-columns:1fr; gap:48px; max-width:1040px; }
-  .feat-video-head { display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center; }
   /* ── Stockpilo app mock: Geopolitical Events (real app UI, built in HTML) ── */
-  .sp-video-slot { display:flex; align-items:center; justify-content:center; width:100%; aspect-ratio:16 / 9; border:1px dashed rgba(255,255,255,.25); border-radius:20px; color:rgba(255,255,255,.6); font-size:14px; }
   .sp-stage { perspective:1800px; }
   .sp-app { --sp-line:#1f2024; --sp-mute:#8a8f98; --sp-dim:#5b606a; display:grid; grid-template-columns:62px 1fr;
     background:#060607; border:1px solid #232428; border-radius:22px; overflow:hidden; font-family:'Geist',sans-serif; color:#e8f0fe;
@@ -2136,29 +2133,6 @@
     .sp-tape-row, .sp-globe-img img, .sp-pin::after { animation:none; }
   }
 </style>
-<section id="features" data-inner style="position:relative;z-index:10;background:#000;overflow:visible;">
-  <!-- Top fade from hero -->
-  <div style="position:absolute;top:-60px;left:0;right:0;height:120px;background:linear-gradient(to bottom,#000 0%,transparent 100%);pointer-events:none;z-index:5;"></div>
-  <div class="feat-grid feat-grid--video">
-
-    <!-- Top: text -->
-    <div class="feat-video-head reveal">
-      <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);opacity:.8;">Funktsioonid</div>
-      <h2 style="font-size:clamp(28px,4vw,44px);font-weight:700;line-height:1.1;letter-spacing:-0.025em;margin:0;">
-        <span class="shiny-text">Vaata Stockpilot töös</span>
-      </h2>
-      <p style="font-size:16px;color:rgba(255,255,255,.5);line-height:1.75;margin:0;max-width:520px;">
-        Sinu aktsiad, turg ja uudised, kõik ühes kohas. See lühike video näitab, kuidas see käib.
-      </p>
-    </div>
-
-    <!-- Below: placeholder for the ad video -->
-    <div class="sp-video-slot reveal">Reklaamvideo tuleb siia</div>
-
-  </div>
-</section>
-
-
 <!-- ── ABOUT / TIMELINE SECTION ──────────────────── -->
 <section id="about" style="position:relative;overflow:hidden;scroll-margin-top:80px;">
   <div id="about-stage" style="height:85vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:0 24px;box-sizing:border-box;">
@@ -2176,7 +2150,7 @@
     <div id="about-tagline" style="opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease;display:flex;flex-direction:column;gap:2px;">
       <div style="display:flex;align-items:center;gap:10px;">
         <span style="font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;">Me oleme</span>
-        <img src="/brand_assets/logo12-crop.png" alt="Stockpilo" style="height:18px;width:auto;opacity:0.75;">
+        <img src="/brand_assets/logo12-crop-sm.png" alt="Stockpilo" width="76" height="18" loading="lazy" style="height:18px;width:auto;opacity:0.75;">
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
         <span style="font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;">Meie eesmärk</span>
@@ -2391,7 +2365,7 @@
 
         <article class="why-block" data-block="0">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc why-shot"><img src="/brand_assets/screens/daily-brief.webp" alt="Pilo päeva kokkuvõte: sinu jälgimisnimekiri ja S&amp;P 500 eelmisel kauplemispäeval, sektorite liikumised ja päeva taust" width="1600" height="1200" loading="lazy" decoding="async"></div>
+          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/brief.mp4" poster="/brand_assets/video/brief.jpg" width="1280" height="904" muted loop playsinline preload="metadata" aria-label="Pilo päeva kokkuvõte: sinu jälgimisnimekiri ja S&amp;P 500 eelmisel kauplemispäeval, sektorite liikumised ja päeva taust"></video></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">01</span>
@@ -2407,7 +2381,7 @@
 
         <article class="why-block" data-block="1">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc why-shot"><img src="/brand_assets/screens/news-feed.webp" alt="Uudistevoog peauudise ja jälgimisnimekirja pealkirjadega, märgitud tickeri ja hinnangulise mõjuga" width="1600" height="729" loading="lazy" decoding="async"></div>
+          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/news.mp4" poster="/brand_assets/video/news.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Uudistevoog peauudise ja jälgimisnimekirja pealkirjadega, märgitud tickeri ja hinnangulise mõjuga"></video></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">02</span>
@@ -2422,7 +2396,7 @@
 
         <article class="why-block" data-block="2">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc why-shot"><img src="/brand_assets/screens/congress-trades.webp" alt="Kongressi viimased avalikustamised: liige, vara, tehingu tüüp, summavahemik ja kuupäevad" width="1600" height="1227" loading="lazy" decoding="async"></div>
+          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/congress.mp4" poster="/brand_assets/video/congress.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Kongressi viimased avalikustamised: liige, vara, tehingu tüüp, summavahemik ja kuupäevad"></video></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">03</span>
@@ -2438,7 +2412,7 @@
 
         <article class="why-block" data-block="3">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc why-shot"><img src="/brand_assets/screens/geopolitical-events.webp" alt="Geopoliitiliste sündmuste gloobus kolme suurima mõjuga sündmusega" width="1600" height="900" loading="lazy" decoding="async"></div>
+          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/geo.mp4" poster="/brand_assets/video/geo.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Geopoliitiliste sündmuste gloobus kolme suurima mõjuga sündmusega"></video></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">04</span>
@@ -2453,7 +2427,7 @@
 
         <article class="why-block" data-block="4">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc why-shot"><img src="/brand_assets/screens/earnings-calendar-full.webp" alt="Tulemuste kalender ettevõtete tulemuste ja majandusraportitega, nagu CPI, PMI ja tööturu raport" width="1600" height="880" loading="lazy" decoding="async"></div>
+          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/earnings.mp4" poster="/brand_assets/video/earnings.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Tulemuste kalender ettevõtete tulemuste ja majandusraportitega, nagu CPI, PMI ja tööturu raport"></video></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">05</span>
@@ -2468,7 +2442,7 @@
 
         <article class="why-block" data-block="5">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc why-shot"><img src="/brand_assets/screens/risk-lab.webp" alt="Mis võib turge liigutada: geopoliitiliste ja makrosündmuste riskikaardid inflatsioonigraafikute kohal" width="1600" height="864" loading="lazy" decoding="async"></div>
+          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/risk.mp4" poster="/brand_assets/video/risk.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Mis võib turge liigutada: geopoliitiliste ja makrosündmuste riskikaardid inflatsioonigraafikute kohal"></video></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">06</span>
@@ -2483,7 +2457,7 @@
 
         <article class="why-block" data-block="6">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc why-shot"><img src="/brand_assets/screens/market-snapshot.webp" alt="Turu ülevaade: nädala suurim liikumine, indeksite ja intresside kaardid kolme kuu ajalooga" width="1600" height="992" loading="lazy" decoding="async"></div>
+          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/snapshot.mp4" poster="/brand_assets/video/snapshot.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Turu ülevaade: nädala suurim liikumine, indeksite ja intresside kaardid kolme kuu ajalooga"></video></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">07</span>
@@ -3713,7 +3687,7 @@
         <div class="footer-anim" style="transition-delay:0.2s;">
           <h3 class="footer-section-label">Toode</h3>
           <ul class="footer-link-list">
-            <li><a href="#features" class="footer-link" data-magnetic>Funktsioonid</a></li>
+            <li><a href="#why" class="footer-link" data-magnetic>Funktsioonid</a></li>
             <li><a href="#pricing" class="footer-link" data-magnetic>Hinnad</a></li>
             <li><a href="#testimonials" class="footer-link" data-magnetic>Miks Stockpilo</a></li>
             <li><a href="/et/" class="footer-link" data-magnetic>Integratsioonid</a></li>
@@ -3734,7 +3708,6 @@
           <h3 class="footer-section-label">Ressursid</h3>
           <ul class="footer-link-list">
             <li><a href="/blog.html" class="footer-link" data-magnetic>Blogi</a></li>
-            <li><a href="/changelog" class="footer-link" data-magnetic>Muudatuste logi</a></li>
                         <li><a href="/help.html" class="footer-link" data-magnetic>Abi</a></li>
           </ul>
         </div>
@@ -3761,7 +3734,7 @@
   </footer>
 </div>
 
-<script defer src="/js/site.js?v=8"></script>
+<script defer src="/js/site.js?v=9"></script>
 
 <!-- ── Cookie Consent Banner ─────────────────────── -->
 <div id="cookie-banner" style="
@@ -3813,5 +3786,6 @@
 
 <script defer src="/js/site-effects.js?v=3"></script>
 <script defer src="/js/site-features.js?v=2"></script>
+<script defer src="/js/why-video.js?v=1"></script>
 </body>
 </html>
