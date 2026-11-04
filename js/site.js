@@ -436,7 +436,8 @@
 
   // ── CTA redirect ────────────────────────────────────
   (function() {
-    const AUTH_URL = 'https://www.stockpiloapp.com/auth';
+    // The app is on another domain, so the Estonian page hands its language over in the link.
+    const AUTH_URL = 'https://www.stockpiloapp.com/auth' + (document.documentElement.lang === 'et' ? '?lang=et' : '');
     const ALL_IDS  = ['hero-cta', 'hero-cta-nav', 'btn-trial-fi', 'btn-pro-pricing'];
 
     ALL_IDS.forEach(function(id) {
