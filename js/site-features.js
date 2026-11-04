@@ -28,47 +28,35 @@
     });
 
     // ── Event detail ────────────────────────────────
-    // Illustrative data for the three pinned events (mock of the in-app event view)
+    // Data for the three pinned events, taken from the in-app event view (Nov 3)
+    // Shared market readout for the three events (session of Nov 2)
+    var AFF = ['XOM','Exxon Mobil Corp.','−4.05%'];
+    var RO = [['BNO · BRENT','65.95','−7.62%'],['USO · WTI','156.87','−7.08%'],['XLE · ENERGY','67.25','−3.96%'],['UUP · DOLLAR','28.96','−0.14%']];
+    var SINCE = ['XLE','−3.96%','Last session · Nov 2'];
+    var SPARK = [16,15,15,14,14,13,12,12,11,10,9,8,7,6,5];
+    var SEC = [['Discret.',2.4],['Financials',1.9],['Staples',1.6],['Industrials',1.4],['Info Tech',-2.9],['Energy',-4.0]];
     var EVENTS = [
-      { tag:'ENERGY', src:'cnbc.com · Sep 25', risk:'HIGH RISK', high:true, region:'RUSSIA',
-        title:'Oil rises amid worries of Russian supply disruption',
-        pin:'Oil rises amid worries…',
-        bg:'Russia is one of the world’s largest oil exporters. Attacks on its refineries and ports can take barrels off the market within days.',
-        why:'Traders priced in fewer Russian barrels after new strikes on export terminals. Since the headline, Brent is up 1.8% and XLE (an energy fund) is up 1.1%.',
-        noteB:'XOM is up 1.4% today.',
-        watch:'Coming up: the weekly EIA crude inventory report on Oct 1.',
-        noteG:'Higher oil helps producers but raises fuel costs for airlines.',
-        next:'NEXT · EIA OCT 1 · OPEC+ OCT 5', a:['EIA','OPEC+'],
-        aff:['XOM','Exxon Mobil Corp.','+1.42%'],
-        ro:[['BRENT','71.42','+1.84%'],['WTI','67.90','+1.91%'],['XLE · ENERGY ETF','94.36','+1.12%'],['USD/RUB','82.40','+0.31%']],
-        since:['XLE','+1.12%','From Sep 24 20:10 ET'], spark:[4,3,5,4,7,6,9,8,11,10,13,12,15,14,16],
-        sec:[['Energy',1.42],['Materials',0.51],['Industrials',0.22],['Info Tech',-0.14],['Discret.',-0.38],['Utilities',-0.61]] },
-      { tag:'MARKETS', src:'invezz.com · Sep 24', risk:'HIGH RISK', high:true, region:'MIDDLE EAST',
-        title:'Dow closes 360 points higher as ceasefire hopes lift stocks',
-        pin:'Dow closes 360 points…',
-        bg:'Conflict in the Middle East puts oil shipping lanes at risk, which pushes up energy prices and weighs on stocks broadly.',
-        why:'Reports of progress in ceasefire talks eased fears of a wider conflict. The Dow closed up 360 points (+0.8%) and SPY is up 0.6% since the headline.',
-        noteB:'DAL is up 3.1% today.',
-        watch:'Coming up: the September jobs report on Oct 2.',
-        noteG:'Airlines like DAL gain when fuel prices fall.',
-        next:'NEXT · JOBS OCT 2 · CPI OCT 14', a:['JOBS','CPI'],
-        aff:['DAL','Delta Air Lines','+3.08%'],
-        ro:[['DIA · DOW ETF','462.18','+0.81%'],['SPY','668.40','+0.62%'],['BRENT','69.10','−1.20%'],['GOLD','4,298.6','−0.38%']],
-        since:['SPY','+0.61%','From Sep 24 09:30 ET'], spark:[3,5,4,6,5,8,7,9,11,10,12,13,12,14,15],
-        sec:[['Industrials',1.08],['Financials',0.91],['Discret.',0.72],['Info Tech',0.48],['Utilities',-0.21],['Energy',-0.98]] },
-      { tag:'GEOPOLITICS', src:'reuters.com · Sep 25', risk:'MEDIUM RISK', high:false, region:'CHINA',
-        title:'China expands export control list to more US firms',
-        pin:'China expands export c…',
-        bg:'Most advanced chips are made in Taiwan and South Korea, using tools and rare earths from a handful of countries. Governments decide who can buy them.',
-        why:'Beijing added more US companies to its export control list, limiting their access to rare earths. Since the headline, SOXX (a chip-stock fund) is down 0.9%.',
-        noteB:'MP is up 6.2% today.',
-        watch:'Coming up: the US trade balance report on Oct 7.',
-        noteG:'Rare-earth miners like MP gain when China limits supply.',
-        next:'NEXT · CPI OCT 14 · FOMC OCT 28', a:['CPI','FOMC'],
-        aff:['MP','MP Materials Corp.','+6.21%'],
-        ro:[['TSM','450.61','−0.12%'],['SOXX · SEMIS ETF','572.68','−0.94%'],['USD/CNY','7.1125','+0.13%'],['GOLD','4,321.2','+0.54%']],
-        since:['SOXX','−0.94%','From Sep 25 04:12 ET'], spark:[14,15,13,14,12,13,11,12,10,11,9,10,8,9,8],
-        sec:[['Materials',0.95],['Industrials',0.41],['Health Care',0.33],['Staples',0.18],['Info Tech',-0.64],['Telecom',-0.90]] }
+      { tag:'GEOPOLITICS', src:'wsj.com · Nov 3', risk:'HIGH RISK', high:true, region:'UNITED STATES · IRAN',
+        title:'Oil Prices Rebound as U.S. Strikes on Iran Renew Supply Concerns',
+        pin:'Oil prices rebound as…',
+        bg:'Oil is bought and sold on one world market, so a supply problem in one country changes the price everywhere. Fuel costs for drivers, airlines and shipping companies follow the price of crude oil.',
+        why:'The Wall Street Journal reports that oil prices rose as fresh U.S. strikes on Iran occurred. Dated Brent (EIA), the main global oil price, was $123.1 a barrel on Oct 27.',
+        noteB:'XOM closed down 4.05% in the last session.', watch:'Coming up: the weekly US crude oil stockpile report from the EIA on Nov 4.', noteG:'Energy stocks like XOM are among the most sensitive to changes in the oil price.', next:'NEXT · CPI NOV 10 · FOMC DEC 9', a:['CPI','FOMC'],
+        aff:AFF, ro:RO, since:SINCE, spark:SPARK, sec:SEC },
+      { tag:'GEOPOLITICS', src:'cnbc.com · Nov 3', risk:'HIGH RISK', high:true, region:'SAUDI ARABIA',
+        title:'Aramco\u2019s profit rises as refining margins strengthen amid Iran war',
+        pin:'Aramco\u2019s profit rises…',
+        bg:'Oil is bought and sold on one world market, so a supply problem in one country changes the price everywhere. Fuel costs for drivers, airlines and shipping companies follow the price of crude oil.',
+        why:'CNBC reports that Aramco\u2019s adjusted net income rose 9% to $31.2 billion in the third quarter, with downstream earnings up 234%.',
+        noteB:'XOM closed down 4.05% in the last session.', watch:'Coming up: the weekly US crude oil stockpile report from the EIA on Nov 4.', noteG:'Energy stocks like XOM are among the most sensitive to changes in the oil price.', next:'NEXT · CPI NOV 10 · FOMC DEC 9', a:['CPI','FOMC'],
+        aff:AFF, ro:RO, since:SINCE, spark:SPARK, sec:SEC },
+      { tag:'GEOPOLITICS', src:'reuters.com · Nov 3', risk:'HIGH RISK', high:true, region:'EUROPE',
+        title:'Europe stocks set to fall as US-Iran tensions fuel oil rebound',
+        pin:'Europe stocks set to fall…',
+        bg:'Oil is bought and sold on one world market, so a supply problem in one country changes the price everywhere. Fuel costs for drivers, airlines and shipping companies follow the price of crude oil.',
+        why:'Reuters reports that US-Iran tensions are causing a rebound in oil prices. Dated Brent (EIA), the main global oil price, was $123.1 a barrel on Oct 27.',
+        noteB:'XOM closed down 4.05% in the last session.', watch:'Coming up: the weekly US crude oil stockpile report from the EIA on Nov 4.', noteG:'Energy stocks like XOM are among the most sensitive to changes in the oil price.', next:'NEXT · CPI NOV 10 · FOMC DEC 9', a:['CPI','FOMC'],
+        aff:AFF, ro:RO, since:SINCE, spark:SPARK, sec:SEC }
     ];
     var dt = document.getElementById('sp-dt'), bar = document.getElementById('sp-dt-bar'), closeBtn = document.getElementById('sp-dt-x');
     var isOpen = false, openTimer = 0, visible = false, hovering = false, lastFocus = null;

@@ -1,0 +1,23 @@
+/* #why cards: real screen recordings — driven by js/why-video.js */
+.why-shot { position: relative; }
+.why-video { display: block; width: 100%; height: auto; }
+
+.why-vbtn {
+  position: absolute; right: 10px; bottom: 10px; z-index: 2;
+  width: 32px; height: 32px; padding: 0; border: 1px solid rgba(232, 240, 254, .18); border-radius: 8px;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+  color: #e8f0fe; background: rgba(5, 13, 26, .72); touch-action: manipulation;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.why-vbtn:hover { background: rgba(30, 58, 95, .9); border-color: rgba(232, 240, 254, .35); }
+.why-vbtn:active { background: rgba(45, 107, 228, .6); }
+.why-vbtn:focus-visible { outline: 2px solid #2d6be4; outline-offset: 2px; }
+/* Visual size stays small over the recording; the hit area reaches 44px on touch */
+.why-vbtn::after { content: ''; position: absolute; inset: -6px; }
+
+/* Phones: give the recording the card's full width, or it is too small to read */
+@media (max-width: 900px) {
+  .why-blocks .why-block:has(.why-video) { padding: 8px 8px 22px; grid-template-columns: minmax(0, 1fr); }
+  .why-blocks .why-block:has(.why-video) .why-text { padding: 0 12px; }
+  .why-blocks .why-panel:has(.why-video) { padding: 0; max-width: none; }
+}
