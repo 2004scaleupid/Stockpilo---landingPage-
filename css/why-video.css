@@ -16,7 +16,7 @@
 .why-vbtn::after { content: ''; position: absolute; inset: -6px; }
 
 /* Phones: give the recording the card's full width, or it is too small to read */
-@media (max-width: 900px) {
+@media (min-width: 768px) and (max-width: 900px) {
   .why-blocks .why-block:has(.why-video) { padding: 8px 8px 22px; grid-template-columns: minmax(0, 1fr); }
   .why-blocks .why-block:has(.why-video) .why-text { padding: 0 12px; }
   .why-blocks .why-panel:has(.why-video) { padding: 0; max-width: none; }

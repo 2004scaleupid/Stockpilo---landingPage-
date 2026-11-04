@@ -1751,7 +1751,9 @@
       .card-swap-container { transform: scale(0.75) translate(25%, 25%); }
     }
   </style>
-  <link rel="stylesheet" href="/css/why-video.css?v=1">
+  <link rel="stylesheet" href="/css/why-video.css?v=2">
+  <script>(function(){var d=document.documentElement,g;function m(){return innerWidth<=767}function f(){if(g)g.style.marginBottom=m()?-g.offsetHeight*(1-innerWidth/920)+'px':''}function z(){d.style.setProperty('--mz',Math.min(innerWidth,767)/920);f()}z();addEventListener('resize',z);document.addEventListener('DOMContentLoaded',function(){g=document.querySelector('#testimonials .sb-grid');if(g&&window.ResizeObserver)new ResizeObserver(f).observe(g);f()})})()</script>
+  <link rel="stylesheet" href="/css/mobile-compact.css?v=8" media="(max-width:767px)">
 </head>
 <body>
 <!-- ── Stars background ─────────────────────────────── -->
@@ -1897,13 +1899,13 @@
   <div class="hero-triple-wrap" id="hero-mockup">
     <div class="hero-triple-row">
       <div class="hero-mock-card hero-mock-side-l">
-        <img src="/brand_assets/screens/macro-charts.webp" alt="" width="2000" height="1240" loading="eager">
+        <img src="/brand_assets/screens/macro-charts.webp?v=2" alt="" width="2000" height="1240" loading="eager">
       </div>
       <div class="hero-mock-card hero-mock-center">
-        <img src="/brand_assets/screens/stock-detail-aapl.webp" alt="Stockpilo aktsia detailvaade: AAPL päevasisese graafiku, põhinäitajate ja uudistega" width="2000" height="1440" loading="eager">
+        <img src="/brand_assets/screens/stock-detail-aapl.webp?v=2" alt="Stockpilo aktsia detailvaade: AAPL päevasisese graafiku, põhinäitajate ja uudistega" width="2000" height="1440" loading="eager">
       </div>
       <div class="hero-mock-card hero-mock-side-r">
-        <img src="/brand_assets/screens/earnings-calendar.webp" alt="" width="2000" height="1101" loading="eager">
+        <img src="/brand_assets/screens/earnings-calendar.webp?v=2" alt="" width="2000" height="1101" loading="eager">
       </div>
     </div>
   </div>
@@ -2267,7 +2269,7 @@
     font-family:'Geist',sans-serif; font-size:14px; line-height:1.5; color:#cdd9ee; }
 
   /* Responsive <900px: rail → horizontal strip, blocks → single column */
-  @media (max-width:900px) {
+  @media (min-width:768px) and (max-width:900px) {
     .why-section { padding:64px 0 48px; }
     .why-wrap { padding:0 24px; }
     .why-grid { grid-template-columns:1fr; gap:28px; margin-top:40px; }
@@ -2408,7 +2410,7 @@
           </div></div>
           <div class="why-text">
             <span class="why-num">04</span>
-            <h3 class="why-h3">Maailmasündmused reaalajas gloobusel</h3>
+            <h3 class="why-h3">Maailma&shy;sündmused reaalajas gloobusel</h3>
             <p class="why-desc">Turgu mõjutavad maailmasündmused 3D-gloobusel, kolm olulisemat mõju järgi järjestatud.</p>
             <ul class="why-list">
               <li>Iga sündmuse juures mõju tase, aeg ja allikas</li>
@@ -2739,8 +2741,8 @@
   .sb-sub { font-size:16px; line-height:1.6; color:rgba(255,255,255,.5); margin:0; }
 
   .sb-grid { max-width:1100px; margin:0 auto; padding:0 48px; display:grid; grid-template-columns:1fr; gap:16px; }
-  @media (min-width:900px) { .sb-grid { grid-template-columns:repeat(6,1fr); } .sb-primary { grid-column:span 3; grid-row:span 2; } .sb-wide, .sb-trial { grid-column:span 3; } }
-  @media (max-width:899px) { .sb-grid { padding:0 16px; } }
+  @media (min-width:900px), (max-width:767px) { .sb-grid { grid-template-columns:repeat(6,1fr); } .sb-primary { grid-column:span 3; grid-row:span 2; } .sb-wide, .sb-trial { grid-column:span 3; } }
+  @media (min-width:768px) and (max-width:899px) { .sb-grid { padding:0 16px; } }
 
   .sb-card { position:relative; overflow:hidden; border-radius:24px; border:1px solid rgba(26,10,165,.6); background:rgba(15,15,20,.98);
     box-shadow:0 0 5px rgba(26,10,165,.7), 0 0 34px -4px rgba(26,10,165,.4); transition:border-color .25s ease, box-shadow .25s ease, transform .25s ease; }
@@ -2786,14 +2788,6 @@
     box-shadow:0 8px 24px rgba(45,107,228,.4); transition:transform .15s ease, box-shadow .15s ease; }
   .sb-cta:hover { transform:translateY(-1px); box-shadow:0 12px 30px rgba(45,107,228,.6); }
 
-  @media (max-width:560px) {
-    .sb-section { padding:72px 0; }
-    .sb-primary, .sb-wide { padding:24px; }
-    .sb-tools { grid-template-columns:repeat(2,1fr); }
-    .sb-wide { flex-direction:column; align-items:stretch; }
-    .sb-trial { flex-wrap:wrap; padding:24px; gap:20px; }
-    .sb-cta { width:100%; justify-content:center; }
-  }
   @media (prefers-reduced-motion:reduce) { .sb-card:hover { transform:none; } }
 
   /* ═══════════ Bento: compact layout, cursor glow, added cards ═══════════ */
@@ -2808,7 +2802,7 @@
   .sb-card { border-color:rgba(255,255,255,.1); box-shadow:none; }
   .sb-card:hover { border-color:rgba(255,255,255,.18); box-shadow:none; }
   .sb-grid .sb-card:hover .sb-c { border-color:rgba(255,255,255,.55); }
-  @media (min-width:900px) {
+  @media (min-width:900px), (max-width:767px) {
     .sb-stock { grid-column:span 6; }
     .sb-gainer, .sb-ipo, .sb-heat, .sb-feedcard { grid-column:span 3; }
   }
@@ -3089,7 +3083,6 @@
   .st-tabs button[aria-pressed="true"] { background:rgba(255,255,255,.1); color:#fff; }
   .st-kpis { grid-template-columns:repeat(10,1fr); margin-top:6px; }
   @media (max-width:1040px) { .st-kpis { grid-template-columns:repeat(5,1fr); } .st-kpis div:nth-child(6) { border-left:0; } }
-  @media (max-width:560px) { .st-kpis { grid-template-columns:repeat(3,1fr); } .st-kpis div:nth-child(3n+1) { border-left:0; } .st-add { display:none; } .st-pr .st-price { font-size:30px; } }
 
   /* biggest movers orbit */
   .sb-movers { padding:18px 22px; flex-direction:column; align-items:stretch; justify-content:flex-start; gap:8px; }
@@ -3120,11 +3113,6 @@
   .mv-replay:hover { background:rgba(255,255,255,.1); }
   .mv-replay:active { background:rgba(255,255,255,.16); }
   .mv-replay:focus-visible { outline:2px solid #5b8ff0; outline-offset:2px; }
-  @media (max-width:620px) {
-    .mv-body { flex-direction:column; gap:12px; align-items:stretch; }
-    .mv-orbit { align-self:center; }
-    .sb-card .mv-why { min-height:110px; }
-  }
   @media (prefers-reduced-motion:reduce) {
     .mv-node { animation:none; }
     .mv-node img, .mv-node span { transition:none; }
@@ -3153,31 +3141,13 @@
 
   @media (max-width:1040px) and (min-width:900px) { .st-news { flex-basis:180px; } }
   /* Wide screens: the six added cards sit in two rows of three */
-  @media (min-width:1100px) {
+  @media (min-width:1100px), (max-width:767px) {
     .sb-grid { max-width:1260px; grid-template-columns:repeat(12,1fr); }
     .sb-primary, .sb-wide, .sb-trial { grid-column:span 6; }
     .sb-stock, .sb-ipo { grid-column:span 8; }
     .sb-gainer { grid-column:span 4; grid-row:span 2; }
     .sb-heat, .sb-feedcard { grid-column:span 6; }
     .hm { min-height:200px; }
-  }
-  @media (max-width:760px) {
-    .st-body { flex-direction:column; }
-    .st-ex { display:none; }
-    .st-chart { flex:none; height:190px; }
-  }
-  @media (max-width:560px) {
-    .sb-section { padding:48px 0; }
-    .sb-primary, .sb-wide, .sb-trial, .sb-stock, .sb-gainer, .sb-heat, .sb-feedcard, .sb-ipo { padding:16px; }
-    .sb-trial { gap:10px 12px; }
-    .sb-trial-days { padding-right:12px; }
-    .sb-cta { width:100%; justify-content:center; }
-    .st-price { margin-left:0; }
-    .ip-tl { max-height:360px; }
-    .ip-card { flex-wrap:wrap; }
-    .ip-main { flex:1 1 calc(100% - 42px); }
-    .ip-val { flex:1 1 100%; max-width:none; display:flex; align-items:baseline; gap:8px; padding-left:42px; text-align:left; }
-    .hm { min-height:320px; }
   }
   @media (prefers-reduced-motion:reduce) {
     .st-bands, .hm-c { transition:none; }
@@ -3841,7 +3811,7 @@
   })();
 </script>
 
-<script defer src="/js/site.js?v=11"></script>
+<script defer src="/js/site.js?v=12"></script>
 
 <!-- ── Cookie Consent Banner ─────────────────────── -->
 <div id="cookie-banner" style="

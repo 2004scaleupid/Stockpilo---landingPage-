@@ -312,9 +312,10 @@
     //   back half) → C exit
     // C spans the full exit so the timeline's duration == TOTAL (its last tween
     // ends the timeline); ScrollTrigger maps PIN linearly onto that duration, so
-    // PIN = TOTAL*UNIT keeps 547.6px/unit and lands the exit exactly at release.
+    // PIN = TOTAL*UNIT keeps the px/unit rate and lands the exit exactly at release.
+    // Phones get a much shorter pin so the typewriter doesn't eat three screens of scrolling.
     const A = 1.6, HOLD = 0.3, B1 = 0.60, B2 = 0.18, C = 0.55;
-    const UNIT = 547.6, TOTAL = A + HOLD + B1 + B2 + C, PIN = Math.round(TOTAL * UNIT);
+    const UNIT = window.innerWidth <= 767 ? 150 : 547.6, TOTAL = A + HOLD + B1 + B2 + C, PIN = Math.round(TOTAL * UNIT);
     const holdEnd = A + HOLD, b1End = holdEnd + B1, b2End = b1End + B2;
     let ctnFired = false;
 

@@ -1,0 +1,115 @@
+/* Phones only (loaded with media="(max-width:767px)"), shared by the EN and ET pages.
+   Goal: the desktop placement seen from further away, on a short page.
+   #ids beat the page's later inline <style>s. */
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+/* ── Hero: the desktop three-card formation, with big cards ── */
+#hero-section {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 82%, transparent 100%) !important;
+  mask-image: linear-gradient(to bottom, #000 0%, #000 82%, transparent 100%) !important;
+  padding-bottom: 0 !important;
+}
+#hero-section .hero-mock-card { width: 60vw; padding: 4px; }
+#hero-section .hero-mock-card img { aspect-ratio: 4 / 3; }
+
+/* ── About: the typed overlay must match the heading that reserves its space, or long
+   headlines (the Estonian one) run over the tagline below ── */
+#about-h2, #about-type { font-size: clamp(22px, 6vw, 32px) !important; }
+
+/* ── Cookie notice: small enough to leave the hero button visible ── */
+#cookie-banner {
+  bottom: 12px !important;
+  width: calc(100vw - 24px) !important;
+  padding: 12px 14px !important;
+  border-radius: 14px !important;
+}
+#cookie-banner > div:first-of-type { display: none !important; }
+#cookie-banner > p { font-size: 12px !important; line-height: 1.45 !important; margin-bottom: 8px !important; }
+
+/* ── "Your portfolio is complex": left rail + sticky stacking cards, sized for the phone.
+   Real pixel sizes, not scaling: sticky positioning breaks inside a scaled parent. ── */
+#why { padding: 56px 0 64px !important; }
+#why .why-wrap { padding: 0; }
+#why .why-head { padding: 0 20px 14px; }
+#why .why-heading { font-size: 27px; margin-top: 14px; max-width: none; }
+#why .why-grid { grid-template-columns: 28px minmax(0, 1fr); gap: 6px; margin-top: 0; padding: 0 8px 0 6px; }
+#why .why-rail { top: 66px; gap: 4px; }
+#why .why-rail-item { justify-content: center; padding: 7px 0; border-radius: 7px; }
+#why .why-rail-num { font-size: 10px; letter-spacing: 0; }
+#why .why-rail-label { display: none; }
+#why .why-blocks { gap: 14px; }
+#why .why-blocks::after { height: 70px; }
+#why .why-blocks .why-block { top: 66px; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); gap: 8px;
+  padding: 6px 8px 6px 6px; border-radius: 14px; }
+#why .why-panel:has(.why-shot) { padding: 3px; border-radius: 11px; }
+#why .why-panel .csc.why-shot { border-radius: 8px; }
+#why .why-vbtn { width: 22px; height: 22px; right: 5px; bottom: 5px; border-radius: 6px; }
+#why .why-vbtn::after { inset: -11px; }
+#why .why-num { font-size: 9px; padding: 1px 5px; border-radius: 4px; }
+#why .why-h3 { font-size: 13px; line-height: 1.15; margin: 5px 0 3px; overflow-wrap: break-word; }
+#why .why-desc { font-size: 10px; line-height: 1.32; margin: 0; }
+#why .why-list { display: none; }
+
+/* ── "Why investors are switching": the desktop 12-column grid at 920px, scaled to fit.
+   `scale` keeps the text layout identical on every browser (Safari's minimum font size
+   breaks `zoom`) and leaves .reveal's `transform` free. The script in <head> pulls the
+   leftover height back with a negative margin. ── */
+#testimonials { padding: 64px 0 72px !important; overflow: hidden; }
+#testimonials .sb-head { margin-bottom: 22px; padding: 0 20px; }
+#testimonials .sb-h2 { font-size: 27px; margin: 14px 0 8px; }
+#testimonials .sb-sub { font-size: 14px; }
+#testimonials .sb-grid {
+  width: 920px;
+  max-width: none;
+  margin: 0;
+  padding: 0 18px;
+  gap: 30px; /* about 13px on screen */
+  box-sizing: border-box;
+  scale: var(--mz, .42);
+  transform-origin: 0 0;
+}
+#testimonials .mv-lab span { display: none; }
+
+/* Card headings: readable once scaled (30px here is about 13px on screen) */
+#testimonials .sb-card .sb-lab,
+#testimonials .sb-card .mv-lab,
+#testimonials .sb-card .sb-mid.nx-small,
+#testimonials .sb-card .fd-title,
+#testimonials .sb-card .sb-big-sub {
+  margin: 0 !important;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -.02em;
+  text-transform: none;
+  color: #fff;
+}
+#testimonials .sb-card .sb-mid.nx-small { margin-bottom: 12px !important; }
+#testimonials .nx-head { align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+#testimonials .gn-title { font-size: 22px; }
+/* These two lost their label, so the "Example" tag sits alone: keep it in the top corner */
+#testimonials .sb-ipo .nx-head,
+#testimonials .sb-heat .nx-head { position: absolute; top: 18px; right: 18px; margin: 0; }
+#testimonials .sb-card.sb-heat .sb-mid.nx-small { font-size: 26px; } /* clears the tag */
+
+/* Removed so the headings have room */
+#testimonials .sb-pill,
+#testimonials .sb-stock .st-add,
+#testimonials .sb-stock .st-dl,
+#testimonials .sb-stock .st-ex,
+#testimonials .sb-stock .st-banner,
+#testimonials .gn-title small,
+#testimonials .gn-arrows,
+#testimonials .fd-note,
+#testimonials .sb-ipo .sb-lab,
+#testimonials .sb-heat .sb-lab { display: none; }
+/* Top gainers spans two rows: shorter neighbours keep its chart from stretching */
+#testimonials .st-about-t { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
+#testimonials .ip-tl { max-height: 230px; }
+
+/* ── Pricing, closing call to action, footer ── */
+#pricing { padding-top: 56px !important; padding-bottom: 120px !important; }
+#pricing > .reveal:first-child { margin-bottom: 0 !important; }
+#fi-section { height: auto !important; min-height: 560px !important; padding-top: 32px !important; padding-bottom: 72px !important; }
+.footer-inner { padding-top: 24px !important; padding-bottom: 24px !important; }
