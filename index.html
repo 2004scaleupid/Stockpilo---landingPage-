@@ -32,16 +32,18 @@
   <meta name="twitter:title" content="Stockpilo — Invest smarter. Know why before you buy.">
   <meta name="twitter:description" content="Stockpilo is an AI stock market dashboard for retail investors: a daily market recap, news explained, earnings, Congress trades and world events in one view.">
   <meta name="twitter:image" content="https://stockpilo.com/brand_assets/og-image.jpg">
-  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://stockpilo.com/#org", "name": "Stockpilo", "url": "https://stockpilo.com/", "logo": "https://stockpilo.com/brand_assets/apple-touch-icon.png"}, {"@type": "WebSite", "@id": "https://stockpilo.com/#website", "url": "https://stockpilo.com/", "name": "Stockpilo", "publisher": {"@id": "https://stockpilo.com/#org"}}, {"@type": "SoftwareApplication", "name": "Stockpilo", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "url": "https://www.stockpiloapp.com", "description": "Stockpilo is an AI stock market dashboard for retail investors: a daily market recap, news explained, earnings, Congress trades and world events in one view.", "publisher": {"@id": "https://stockpilo.com/#org"}, "offers": [{"@type": "Offer", "name": "Starter", "price": "0", "priceCurrency": "USD"}, {"@type": "Offer", "name": "Pro", "price": "14.99", "priceCurrency": "USD"}]}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://stockpilo.com/#org", "name": "Stockpilo", "url": "https://stockpilo.com/", "logo": "https://stockpilo.com/brand_assets/apple-touch-icon.png"}, {"@type": "WebSite", "@id": "https://stockpilo.com/#website", "url": "https://stockpilo.com/", "name": "Stockpilo", "publisher": {"@id": "https://stockpilo.com/#org"}}, {"@type": "SoftwareApplication", "name": "Stockpilo", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "url": "https://www.stockpiloapp.com", "description": "Stockpilo is an AI stock market dashboard for retail investors: a daily market recap, news explained, earnings, Congress trades and world events in one view.", "publisher": {"@id": "https://stockpilo.com/#org"}, "offers": [{"@type": "Offer", "name": "Pro", "price": "19.99", "priceCurrency": "EUR", "description": "€14.99/month for your first 3 months, then €19.99/month"}]}]}</script>
   <link rel="stylesheet" href="css/tailwind.css?v=1">
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <script>/* Matter drives only the below-the-fold falling-text effect (it polls for window.Matter): fetch it after load, not beside the first paint. */addEventListener('load',function(){(window.requestIdleCallback||setTimeout)(function(){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js';document.head.appendChild(s)})})</script>
   <link rel="preload" href="/fonts/geist-400-800-latin.woff2" as="font" type="font/woff2" crossorigin>
   <style>
     /* Self-hosted fonts (latin + latin-ext, variable weight) */
     @font-face { font-family: 'Geist'; font-style: normal; font-weight: 400 800; font-display: swap; src: url(/fonts/geist-400-800-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
     @font-face { font-family: 'Geist'; font-style: normal; font-weight: 400 800; font-display: swap; src: url(/fonts/geist-400-800-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    @font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/ibm-plex-mono-500-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+    @font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/ibm-plex-mono-600-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
   </style>
   <style>
     :root {
@@ -1069,36 +1071,6 @@
       padding: 110px 48px 100px;
       overflow: visible;
     }
-    /* Monthly/Yearly toggle */
-    .plan-toggle {
-      display: inline-flex;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 999px;
-      padding: 4px;
-      gap: 2px;
-    }
-    .plan-toggle-opt {
-      padding: 8px 22px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 500;
-      color: rgba(255,255,255,.45);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s ease-out, color 0.2s ease-out;
-      font-family: 'Geist', sans-serif;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-    .plan-toggle-opt.active { background: rgba(255,255,255,.1); color: #fff; }
-    .plan-toggle-badge {
-      display: inline-flex; align-items: center;
-      padding: 2px 7px; background: #2d6be4; color: #fff;
-      border-radius: 999px; font-size: 10px; font-weight: 700;
-    }
     /* Outer container: grid bg + corner markers */
     .plan-outer {
       position: relative;
@@ -1106,11 +1078,11 @@
       max-width: 1060px;
       margin: 0 auto;
     }
-    /* Three-column card grid */
+    /* Single-plan card grid */
     .plan-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      max-width: 760px;
+      grid-template-columns: 1fr;
+      max-width: 400px;
       margin: 0 auto;
       gap: 1px;
       background: rgba(255,255,255,.08);
@@ -1118,8 +1090,7 @@
       border-radius: 16px;
       overflow: visible;
     }
-    .plan-grid > *:first-child { border-radius: 16px 0 0 16px; }
-    .plan-grid > *:last-child  { border-radius: 0 16px 16px 0; }
+    .plan-grid > * { border-radius: 16px; }
     .plan-card {
       background: rgba(10,10,10,.95);
       padding: 32px;
@@ -1138,7 +1109,7 @@
     .eb-wrap {
       --eb-color: #1a0aa5;
       position: relative;
-      border-radius: 0 16px 16px 0;
+      border-radius: 16px;
       overflow: visible;
       isolation: isolate;
     }
@@ -1182,16 +1153,6 @@
       filter: blur(32px);
       opacity: 0.3;
       background: linear-gradient(-30deg, #1a0aa5, transparent, #1a0aa5);
-    }
-    .plan-popular {
-      display: inline-flex; align-items: center;
-      padding: 3px 10px;
-      background: rgba(45,107,228,.15);
-      border: 1px solid rgba(45,107,228,.35);
-      border-radius: 999px;
-      font-size: 10px; font-weight: 700; letter-spacing: .08em;
-      text-transform: uppercase; color: var(--accent);
-      font-family: 'Geist', sans-serif;
     }
     .plan-name  { font-size: 16px; font-weight: 600; color: #fff; font-family: 'Geist', sans-serif; margin-bottom: 6px; }
     .plan-desc  { font-size: 13px; color: rgba(255,255,255,.4); line-height: 1.6; font-family: 'Geist', sans-serif; margin-bottom: 28px; }
@@ -1374,7 +1335,6 @@
 
     @media (max-width: 480px) {
       .hero-headline { font-size: clamp(30px, 9vw, 48px) !important; }
-      .plan-toggle { flex-wrap: wrap; justify-content: center; }
       .footer-links-grid { grid-template-columns: 1fr 1fr !important; }
       #about-h2 { font-size: clamp(22px, 6vw, 32px) !important; }
     }
@@ -1840,7 +1800,7 @@
   <nav id="site-nav" style="display:flex;height:56px;width:100%;align-items:center;justify-content:space-between;padding:0 16px;">
     <!-- Logo -->
     <a href="/" style="display:flex;align-items:center;padding:6px;border-radius:6px;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
-      <img src="brand_assets/logo12-crop.png" alt="Stockpilo" style="height:28px;width:auto;">
+      <img src="brand_assets/logo12-crop-sm.png" alt="Stockpilo" width="118" height="28" style="height:28px;width:auto;">
     </a>
 
     <!-- Desktop nav -->
@@ -2225,7 +2185,7 @@
     <div id="about-tagline" style="opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease;display:flex;flex-direction:column;gap:2px;">
       <div style="display:flex;align-items:center;gap:10px;">
         <span style="font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;">We are</span>
-        <img src="brand_assets/logo12-crop.png" alt="Stockpilo" style="height:18px;width:auto;opacity:0.75;">
+        <img src="brand_assets/logo12-crop-sm.png" alt="Stockpilo" width="76" height="18" loading="lazy" style="height:18px;width:auto;opacity:0.75;">
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
         <span style="font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;">We will</span>
@@ -3634,34 +3594,11 @@
   <div class="reveal" style="position:relative;z-index:1;text-align:center;margin-bottom:56px;">
     <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">Pricing</h2>
 
-    <!-- Monthly / Yearly toggle -->
-    <div class="plan-toggle" id="plan-toggle">
-      <button class="plan-toggle-opt active" data-magnetic data-period="monthly">Monthly</button>
-      <button class="plan-toggle-opt" data-magnetic data-period="yearly">
-        Yearly <span class="plan-toggle-badge">30%</span>
-      </button>
-    </div>
   </div>
 
-  <!-- Cards grid (2 plans only) -->
+  <!-- Cards grid (single plan) -->
   <div class="plan-outer">
     <div class="plan-grid reveal">
-
-      <!-- ── STARTER ── -->
-      <div class="plan-card">
-        <div class="plan-name">Starter</div>
-        <div class="plan-desc">Free for 7 days. Try everything before you decide.</div>
-        <div class="plan-price">Free</div>
-        <div class="plan-divider"></div>
-        <div class="plan-what">What's included:</div>
-        <div class="plan-features">
-          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Market Snapshot</div>
-          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Top Gainers &amp; Losers</div>
-          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>5 AI queries per day</div>
-          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>7-day full access trial</div>
-        </div>
-        <a href="#" id="btn-trial-pricing" class="plan-cta" data-magnetic>Start free trial <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      </div>
 
       <!-- ── PRO (featured) ── -->
       <div class="eb-wrap" id="pro-eb-wrap">
@@ -3670,18 +3607,19 @@
       <div class="plan-card plan-card-featured" style="position:relative;z-index:1;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
           <div class="plan-name" style="margin-bottom:0;">Pro</div>
-          <span class="plan-popular">POPULAR</span>
+          
         </div>
-        <div class="plan-desc">Everything you need to invest smarter — no limits, no noise.</div>
+        <div class="plan-desc">Everything you need to follow the markets, in one place.</div>
         <div class="plan-price">
-          <span class="tabnum" id="plan-price-val">$14.99</span><span class="plan-price-sub" id="plan-price-period">/mo</span>
+          <span class="tabnum">€14.99</span><span class="plan-price-sub">/mo</span>
         </div>
+        <div class="plan-desc" style="margin-top:-8px;">for your first 3 months, then €19.99/month</div>
         <div class="plan-divider"></div>
         <div class="plan-what">What's included:</div>
         <div class="plan-features">
           <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Full market suite unlocked</div>
           <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Portfolio Tracker</div>
-          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited AI queries</div>
+          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>AI chat: up to 20 messages a day</div>
           <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Smart Alerts</div>
           <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Priority support &amp; updates</div>
         </div>
@@ -3693,7 +3631,7 @@
 
     <!-- Trust line -->
     <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;font-size:13px;color:rgba(255,255,255,.3);font-family:'Geist',sans-serif;position:relative;z-index:1;">
-      Cancel any time
+      7-day free trial · cancel anytime
     </div>
   </div>
 
