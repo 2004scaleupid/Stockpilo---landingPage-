@@ -33,7 +33,7 @@
   <meta name="twitter:title" content="Stockpilo — Investeeri targemalt. Tea, miks, enne kui ostad.">
   <meta name="twitter:description" content="Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: igapäevane turuülevaade, selgitatud uudised, tulemusteadaanded, USA Kongressi tehingud ja maailmasündmused ühes vaates.">
   <meta name="twitter:image" content="https://stockpilo.com/brand_assets/og-image.jpg">
-  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://stockpilo.com/#org", "name": "Stockpilo", "url": "https://stockpilo.com/", "logo": "https://stockpilo.com/brand_assets/apple-touch-icon.png"}, {"@type": "WebSite", "@id": "https://stockpilo.com/#website", "url": "https://stockpilo.com/", "name": "Stockpilo", "publisher": {"@id": "https://stockpilo.com/#org"}}, {"@type": "SoftwareApplication", "name": "Stockpilo", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "url": "https://www.stockpiloapp.com", "description": "Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: igapäevane turuülevaade, selgitatud uudised, tulemusteadaanded, USA Kongressi tehingud ja maailmasündmused ühes vaates.", "publisher": {"@id": "https://stockpilo.com/#org"}, "offers": [{"@type": "Offer", "name": "Starter", "price": "0", "priceCurrency": "USD"}, {"@type": "Offer", "name": "Pro", "price": "14.99", "priceCurrency": "USD"}]}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://stockpilo.com/#org", "name": "Stockpilo", "url": "https://stockpilo.com/", "logo": "https://stockpilo.com/brand_assets/apple-touch-icon.png"}, {"@type": "WebSite", "@id": "https://stockpilo.com/#website", "url": "https://stockpilo.com/", "name": "Stockpilo", "publisher": {"@id": "https://stockpilo.com/#org"}}, {"@type": "SoftwareApplication", "name": "Stockpilo", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "url": "https://www.stockpiloapp.com", "description": "Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: igapäevane turuülevaade, selgitatud uudised, tulemusteadaanded, USA Kongressi tehingud ja maailmasündmused ühes vaates.", "publisher": {"@id": "https://stockpilo.com/#org"}, "offers": [{"@type": "Offer", "name": "Pro", "price": "19.99", "priceCurrency": "EUR", "description": "14,99 €/kuu esimesed 3 kuud, seejärel 19,99 €/kuu"}]}]}</script>
   <link rel="stylesheet" href="/css/tailwind.css?v=1">
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -1070,48 +1070,11 @@
       padding: 110px 48px 100px;
       overflow: visible;
     }
-    /* Monthly/Yearly toggle */
-    .plan-toggle {
-      display: inline-flex;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 999px;
-      padding: 4px;
-      gap: 2px;
-    }
-    .plan-toggle-opt {
-      padding: 8px 22px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 500;
-      color: rgba(255,255,255,.45);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s ease-out, color 0.2s ease-out;
-      font-family: 'Geist', sans-serif;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-    .plan-toggle-opt.active { background: rgba(255,255,255,.1); color: #fff; }
-    .plan-toggle-badge {
-      display: inline-flex; align-items: center;
-      padding: 2px 7px; background: #2d6be4; color: #fff;
-      border-radius: 999px; font-size: 10px; font-weight: 700;
-    }
-    /* Outer container: grid bg + corner markers */
-    .plan-outer {
-      position: relative;
-      z-index: 1;
-      max-width: 1060px;
-      margin: 0 auto;
-    }
-    /* Three-column card grid */
+    /* Single-plan card grid */
     .plan-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      max-width: 760px;
+      grid-template-columns: 1fr;
+      max-width: 400px;
       margin: 0 auto;
       gap: 1px;
       background: rgba(255,255,255,.08);
@@ -1119,8 +1082,7 @@
       border-radius: 16px;
       overflow: visible;
     }
-    .plan-grid > *:first-child { border-radius: 16px 0 0 16px; }
-    .plan-grid > *:last-child  { border-radius: 0 16px 16px 0; }
+    .plan-grid > * { border-radius: 16px; }
     .plan-card {
       background: rgba(10,10,10,.95);
       padding: 32px;
@@ -1139,7 +1101,7 @@
     .eb-wrap {
       --eb-color: #1a0aa5;
       position: relative;
-      border-radius: 0 16px 16px 0;
+      border-radius: 16px;
       overflow: visible;
       isolation: isolate;
     }
@@ -1183,16 +1145,6 @@
       filter: blur(32px);
       opacity: 0.3;
       background: linear-gradient(-30deg, #1a0aa5, transparent, #1a0aa5);
-    }
-    .plan-popular {
-      display: inline-flex; align-items: center;
-      padding: 3px 10px;
-      background: rgba(45,107,228,.15);
-      border: 1px solid rgba(45,107,228,.35);
-      border-radius: 999px;
-      font-size: 10px; font-weight: 700; letter-spacing: .08em;
-      text-transform: uppercase; color: var(--accent);
-      font-family: 'Geist', sans-serif;
     }
     .plan-name  { font-size: 16px; font-weight: 600; color: #fff; font-family: 'Geist', sans-serif; margin-bottom: 6px; }
     .plan-desc  { font-size: 13px; color: rgba(255,255,255,.4); line-height: 1.6; font-family: 'Geist', sans-serif; margin-bottom: 28px; }
@@ -1375,7 +1327,6 @@
 
     @media (max-width: 480px) {
       .hero-headline { font-size: clamp(30px, 9vw, 48px) !important; }
-      .plan-toggle { flex-wrap: wrap; justify-content: center; }
       .footer-links-grid { grid-template-columns: 1fr 1fr !important; }
       #about-h2 { font-size: clamp(22px, 6vw, 32px) !important; }
     }
@@ -3571,34 +3522,11 @@
   <div class="reveal" style="position:relative;z-index:1;text-align:center;margin-bottom:56px;">
     <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">Hinnad</h2>
 
-    <!-- Monthly / Yearly toggle -->
-    <div class="plan-toggle" id="plan-toggle">
-      <button class="plan-toggle-opt active" data-magnetic data-period="monthly">Kuupõhine</button>
-      <button class="plan-toggle-opt" data-magnetic data-period="yearly">
-        Aastapõhine <span class="plan-toggle-badge">30%</span>
-      </button>
-    </div>
   </div>
 
-  <!-- Cards grid (2 plans only) -->
+  <!-- Cards grid (single plan) -->
   <div class="plan-outer">
     <div class="plan-grid reveal">
-
-      <!-- ── STARTER ── -->
-      <div class="plan-card">
-        <div class="plan-name">Starter</div>
-        <div class="plan-desc">7 päeva tasuta. Proovi kõike enne, kui otsustad.</div>
-        <div class="plan-price">Tasuta</div>
-        <div class="plan-divider"></div>
-        <div class="plan-what">Sisaldab:</div>
-        <div class="plan-features">
-          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Turu ülevaade</div>
-          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Suurimad tõusjad ja langejad</div>
-          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>5 AI päringut päevas</div>
-          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>7-päevane täisligipääsuga prooviperiood</div>
-        </div>
-        <a href="#" id="btn-trial-pricing" class="plan-cta" data-magnetic>Alusta tasuta prooviperioodi <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      </div>
 
       <!-- ── PRO (featured) ── -->
       <div class="eb-wrap" id="pro-eb-wrap">
@@ -3607,18 +3535,18 @@
       <div class="plan-card plan-card-featured" style="position:relative;z-index:1;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
           <div class="plan-name" style="margin-bottom:0;">Pro</div>
-          <span class="plan-popular">POPULAARNE</span>
         </div>
-        <div class="plan-desc">Kõik, mida vajad targemaks investeerimiseks — ilma piirangute ja mürata.</div>
+        <div class="plan-desc">Kõik, mida vajad turgude jälgimiseks, ühes kohas.</div>
         <div class="plan-price">
-          <span class="tabnum" id="plan-price-val">$14.99</span><span class="plan-price-sub" id="plan-price-period">/kuu</span>
+          <span class="tabnum">14,99 €</span><span class="plan-price-sub">/kuu</span>
         </div>
+        <div class="plan-desc" style="margin-top:-8px;">esimesed 3 kuud, seejärel 19,99 € kuus</div>
         <div class="plan-divider"></div>
         <div class="plan-what">Sisaldab:</div>
         <div class="plan-features">
           <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Kõik turutööriistad avatud</div>
           <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Portfelli jälgija</div>
-          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Piiramatult AI päringuid</div>
+          <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>AI-vestlus: kuni 20 sõnumit päevas</div>
           <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutikad hoiatused</div>
           <div class="plan-feat"><svg class="plan-feat-check" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Eelisjärjekorras tugi ja uuendused</div>
         </div>
@@ -3630,7 +3558,7 @@
 
     <!-- Trust line -->
     <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;font-size:13px;color:rgba(255,255,255,.3);font-family:'Geist',sans-serif;position:relative;z-index:1;">
-      Loobu igal ajal
+      7-päevane tasuta prooviperiood · loobu igal ajal
     </div>
   </div>
 
