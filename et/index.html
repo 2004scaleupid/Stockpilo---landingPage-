@@ -2968,15 +2968,15 @@
   .gn-ends.val { font-size:12px; color:rgba(255,255,255,.75); }
 
   /* heatmap */
-  .hm { flex:1; min-height:220px; display:flex; flex-wrap:wrap; gap:4px; align-content:stretch; }
-  .hm-s { display:flex; flex-direction:column; gap:3px; min-width:0; }
-  .hm-l { font-size:9.5px; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.5); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .hm-t { flex:1; min-height:0; display:flex; flex-direction:column; gap:3px; }
-  .hm-r { display:flex; gap:3px; min-height:0; }
-  .hm-c { display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:0; padding:2px; border-radius:7px; color:#fff; transition:transform .2s cubic-bezier(.2,.8,.2,1); }
-  .hm-c:hover { transform:scale(1.03); }
-  .hm-c b { font-size:12px; font-weight:600; line-height:1.2; }
-  .hm-c span { font-size:10.5px; color:rgba(255,255,255,.88); font-variant-numeric:tabular-nums; }
+  .hm { position:relative; flex:1; min-height:280px; }
+  .hm-f { position:absolute; container-type:inline-size; border:1px solid #333a42; border-radius:9px; pointer-events:none; }
+  @container (max-width:46px) { .hm-l { display:none; } }
+  .hm-l { position:absolute; left:5px; top:4px; max-width:calc(100% - 10px); padding:1px 5px; border:1px solid #333a42; border-radius:999px; background:#0a0a0c; font-size:8px; font-weight:500; letter-spacing:.03em; text-transform:uppercase; color:rgba(255,255,255,.6); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; z-index:1; }
+  .hm-c { position:absolute; container-type:size; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:9px; color:#fff; transition:transform .2s cubic-bezier(.2,.8,.2,1); }
+  .hm-c:hover { transform:scale(1.03); z-index:2; }
+  .hm-c img { display:block; width:clamp(13px,26cqmin,28px); height:clamp(13px,26cqmin,28px); border-radius:50%; background:#0b0d10; object-fit:contain; padding:2px; box-sizing:border-box; flex:none; }
+  .hm-c b { margin-top:2px; font-size:clamp(8px,min(16cqmin,24cqw),16px); font-weight:600; letter-spacing:.02em; line-height:1.15; }
+  .hm-c span { font-size:clamp(7px,min(12cqmin,17cqw),12px); color:rgba(255,255,255,.88); font-variant-numeric:tabular-nums; line-height:1.3; }
 
   /* top gainers: day/week switch and week view */
   .gn-dw { gap:1px; }
@@ -3177,10 +3177,7 @@
     .ip-card { flex-wrap:wrap; }
     .ip-main { flex:1 1 calc(100% - 42px); }
     .ip-val { flex:1 1 100%; max-width:none; display:flex; align-items:baseline; gap:8px; padding-left:42px; text-align:left; }
-    .hm { min-height:0; }
-    .hm-s { flex-basis:100% !important; }
-    .hm-t { min-height:76px; }
-    .hm-s.big .hm-t { min-height:124px; }
+    .hm { min-height:320px; }
   }
   @media (prefers-reduced-motion:reduce) {
     .st-bands, .hm-c { transition:none; }
@@ -3323,29 +3320,39 @@
   $('gn-next').addEventListener('click', function () { showGainer(gnI + 1); });
   showGainer(0);
 
-  /* Watchlist heatmap: sector > rows > [ticker, change, width] */
-  var HM = [
-    ['technology', 42, true, [[['NVDA', .22, 1.1], ['MSFT', 3.66, 1], ['AVGO', .7, .8]], [['AAPL', 1.53, 1.1], ['PLTR', -1.52, .7], ['ORCL', -1.76, .7], ['SHOP', -2, .7]]]],
-    ['comm', 27, false, [[['GOOGL', .46, 1], ['META', -3.33, 1]], [['DIS', .56, 1]]]],
-    ['other', 27, false, [[['AMZN', .12, 1], ['TSLA', -1.54, 1]], [['V', -.16, 1], ['XOM', -.97, 1], ['ABBV', -.27, 1]]]]
+  /* Watchlist heatmap: same layout and colours as the app's watchlist map.
+     Geometry is [x0, y0, x1, y1] in a 1955×850 box, scaled to the card. */
+  var HM_F = [
+    ['Tehnoloogia', 0, 0, 832, 850], ['Kommunikatsioon', 833, 0, 1411, 472], ['Tarbija', 833, 473, 1411, 850],
+    ['Tervishoid', 1413, 0, 1953, 293], ['Tööstus', 1413, 294, 1724, 634], ['Finants', 1725, 294, 1953, 634],
+    ['Energia', 1413, 637, 1775, 850], ['', 1776, 637, 1953, 850]
+  ];
+  var HM_C = [
+    ['AAPL', '−1,90', 'rgb(165,31,58)', 11, 53, 349, 444], ['NVDA', '+2,29', 'rgb(21,116,56)', 11, 450, 349, 839],
+    ['MSFT', '+2,74', 'rgb(21,122,59)', 356, 53, 821, 312], ['AVGO', '+3,07', 'rgb(21,126,60)', 356, 319, 638, 626],
+    ['PLTR', '−1,65', 'rgb(158,31,57)', 645, 319, 821, 626], ['ORCL', '+5,86', 'rgb(21,128,61)', 356, 633, 613, 839],
+    ['SHOP', '−8,74', 'rgb(180,33,63)', 619, 633, 821, 839], ['GOOGL', '+0,37', 'rgb(20,77,41)', 844, 53, 1107, 460],
+    ['META', '+2,36', 'rgb(21,117,57)', 1113, 53, 1400, 322], ['DIS', '+0,95', 'rgb(20,93,47)', 1113, 329, 1400, 460],
+    ['AMZN', '+2,06', 'rgb(21,112,55)', 844, 527, 1143, 839], ['TSLA', '−1,32', 'rgb(149,30,54)', 1150, 527, 1400, 839],
+    ['LLY', '−0,11', 'rgb(94,25,38)', 1424, 53, 1718, 281], ['ABBV', '−0,98', 'rgb(138,29,51)', 1725, 53, 1941, 281],
+    ['SPCX', '+3,62', 'rgb(21,128,61)', 1424, 347, 1713, 623], ['V', '−1,20', 'rgb(145,29,53)', 1736, 347, 1941, 623],
+    ['XOM', '−1,23', 'rgb(146,29,53)', 1424, 690, 1764, 839], ['TGT', '−2,51', 'rgb(180,33,63)', 1787, 653, 1941, 839]
   ];
   var hm = document.getElementById('hm');
-  HM.forEach(function (s) {
-    var sec = document.createElement('div'); sec.className = 'hm-s' + (s[2] ? ' big' : ''); sec.style.flex = s[1] + ' 1 0';
-    sec.innerHTML = '<span class="hm-l">' + T.sectors[s[0]] + '</span>';
-    var tiles = document.createElement('div'); tiles.className = 'hm-t';
-    s[3].forEach(function (row) {
-      var r = document.createElement('div'); r.className = 'hm-r'; r.style.flex = '1 1 0';
-      row.forEach(function (c) {
-        var t = document.createElement('div'); t.className = 'hm-c'; t.style.flex = c[2] + ' 1 0';
-        var a = Math.min(.92, .28 + Math.abs(c[1]) * .17);
-        t.style.background = c[1] >= 0 ? 'rgba(16,150,105,' + a + ')' : 'rgba(205,50,62,' + a + ')';
-        t.innerHTML = '<b>' + c[0] + '</b><span>' + (c[1] >= 0 ? '+' : '−') + num(Math.abs(c[1]), 2) + '%</span>';
-        r.appendChild(t);
-      });
-      tiles.appendChild(r);
-    });
-    sec.appendChild(tiles); hm.appendChild(sec);
+  function hmBox(el, x0, y0, x1, y1) {
+    el.style.left = (x0 / 19.55) + '%'; el.style.top = (y0 / 8.5) + '%';
+    el.style.width = ((x1 - x0) / 19.55) + '%'; el.style.height = ((y1 - y0) / 8.5) + '%';
+    hm.appendChild(el);
+  }
+  HM_F.forEach(function (f) {
+    var el = document.createElement('div'); el.className = 'hm-f';
+    if (f[0]) el.innerHTML = '<span class="hm-l">' + f[0] + '</span>';
+    hmBox(el, f[1], f[2], f[3], f[4]);
+  });
+  HM_C.forEach(function (c) {
+    var el = document.createElement('div'); el.className = 'hm-c'; el.style.background = c[2];
+    el.innerHTML = '<img src="/brand_assets/logos/' + c[0] + '.png" alt="" width="28" height="28" loading="lazy" decoding="async"><b>' + c[0] + '</b><span>' + c[1] + '%</span>';
+    hmBox(el, c[3], c[4], c[5], c[6]);
   });
 
 })();
@@ -3723,10 +3730,118 @@
         </div>
       </div>
     </div>
+
+    <!-- Halftone wordmark: dots part around the pointer, click sends a shock ring -->
+    <div class="hwf-rule"><button type="button" class="hwf-up" onclick="window.scrollTo({top:0,behavior:'smooth'})">Tagasi üles ↑</button></div>
+    <div class="hwf" aria-hidden="true"><canvas></canvas></div>
   </footer>
 </div>
 
-<script defer src="/js/site.js?v=9"></script>
+<style>
+  .hwf-rule { display:flex; justify-content:flex-end; margin-top:40px; padding-top:12px; border-top:1px solid rgba(255,255,255,.08);
+    font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; }
+  .hwf-up { color:rgba(232,240,254,.6); background:none; border:0; padding:0; font:inherit; letter-spacing:inherit; text-transform:inherit; cursor:pointer;
+    background-image:linear-gradient(currentColor,currentColor); background-size:0% 1px; background-repeat:no-repeat; background-position:0 100%;
+    transition:color .25s ease, background-size .35s cubic-bezier(.2,.7,.1,1); }
+  .hwf-up:hover, .hwf-up:focus-visible { color:#fff; background-size:100% 1px; }
+  .footer-inner:has(.hwf) { padding-bottom:0 !important; overflow:hidden; }
+  .hwf { position:relative; height:18vw; margin:28px -24px 0; cursor:crosshair; touch-action:pan-y; }
+  .hwf canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
+  @media (max-width:767px) { .hwf { margin:12px -20px 0; } }
+</style>
+<script>
+  (function () {
+    var root = document.querySelector('.hwf'); if (!root) return;
+    var canvas = root.querySelector('canvas'), ctx = canvas.getContext('2d'); if (!ctx) return;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var WORD = 'stockpilo', PRE = 'stock', ACC = 'p';           // same wordmark as the footer logo: "p" in accent
+    var FONT = "800 {s}px 'Geist', sans-serif", GAP = 6, RADIUS = 80, CROP = 0.12;
+    var INK = [233, 238, 248], BLUE = [45, 107, 228], WARM = [122, 165, 245];
+    var w = 0, h = 0, dpr = 1, px = -1e5, py = -1e5, raf = 0, visible = true, awake = true, ring = { x: 0, y: 0, t: -1 };
+    var dots = new Float32Array(0), count = 0; // x, y, vx, vy, hx, hy, r, accent
+
+    function layout() {
+      w = Math.max(1, Math.round(root.getBoundingClientRect().width));
+      GAP = w < 600 ? 3.5 : 6; RADIUS = w < 600 ? 50 : 80;
+      var mk = document.createElement('canvas');
+      var m = mk.getContext('2d', { willReadFrequently: true });
+      m.font = FONT.replace('{s}', 100);
+      var size = (w * 0.96) / m.measureText(WORD).width * 100;
+      m.font = FONT.replace('{s}', size);
+      var cap0 = m.measureText(WORD).actualBoundingBoxAscent || size * .72;
+      // height follows the word: whole cap height minus what hangs below the edge, plus room for the bar above "p"
+      h = Math.round(cap0 * (1 - CROP) + size * .06);
+      if (root.style.height !== h + 'px') { root.style.height = h + 'px'; }
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+      mk.width = w; mk.height = h;
+      m.font = FONT.replace('{s}', size);
+      var box = m.measureText(WORD), cap = cap0;
+      var x0 = (w - box.width) / 2, base = h + cap * CROP;
+      m.textBaseline = 'alphabetic';
+      m.fillStyle = '#000'; m.fillText(WORD, x0, base);
+      var all = m.getImageData(0, 0, w, h).data;
+      // accent mask: just the "p" (+ the little bar above it, like the logo)
+      m.clearRect(0, 0, w, h);
+      var px0 = x0 + m.measureText(PRE).width, pw = m.measureText(ACC).width;
+      m.fillText(ACC, px0, base);
+      var xh = m.measureText('x').actualBoundingBoxAscent || size * .52;
+      m.fillRect(px0 + pw * .1, base - xh - size * .09, pw * .22, size * .055);
+      var acc = m.getImageData(0, 0, w, h).data;
+      // the bar isn't in the white word, so merge it into coverage
+      var cols = Math.ceil(w / GAP), rows = Math.ceil(h / GAP), tmp = [];
+      for (var gy = 0; gy < rows; gy++) for (var gx = 0; gx < cols; gx++) {
+        var sum = 0, sa = 0;
+        for (var sy = 0; sy < 3; sy++) for (var sx = 0; sx < 3; sx++) {
+          var x = Math.min(w - 1, Math.floor(gx * GAP + (sx + .5) * GAP / 3)), y = Math.min(h - 1, Math.floor(gy * GAP + (sy + .5) * GAP / 3));
+          var i = (y * w + x) * 4 + 3; sum += Math.max(all[i], acc[i]); sa += acc[i];
+        }
+        var cov = sum / (9 * 255); if (cov < .06) continue;
+        var hx = gx * GAP + GAP / 2, hy = gy * GAP + GAP / 2;
+        tmp.push(hx, hy, 0, 0, hx, hy, Math.sqrt(Math.min(1, cov)) * GAP * .56, sa > sum * .5 ? 1 : 0);
+      }
+      dots = new Float32Array(tmp); count = tmp.length / 8; awake = true;
+    }
+
+    function draw(now) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      var r = reduce ? 0 : RADIUS, age = ring.t < 0 ? 1e9 : now - ring.t, rr = age * .9, moving = false;
+      for (var i = 0; i < count; i++) {
+        var j = i * 8, x = dots[j], y = dots[j + 1], vx = dots[j + 2], vy = dots[j + 3], hx = dots[j + 4], hy = dots[j + 5];
+        if (!reduce) {
+          if (age < 900) {
+            var dx = hx - ring.x, dy = hy - ring.y, d = Math.sqrt(dx * dx + dy * dy) + .001, band = 1 - Math.min(1, Math.abs(d - rr) / 26);
+            if (band > 0) { var f = band * 3.2 * (1 - age / 900); vx += dx / d * f; vy += dy / d * f; }
+          }
+          var ex = x - px, ey = y - py, d2 = ex * ex + ey * ey;
+          if (r > 0 && d2 < r * r) { var dd = Math.sqrt(d2) + .001, ff = (1 - dd / r) * 2.6; vx += ex / dd * ff; vy += ey / dd * ff; }
+          vx = (vx + (hx - x) * .05) * .84; vy = (vy + (hy - y) * .05) * .84; x += vx; y += vy;
+          if (Math.abs(vx) + Math.abs(vy) > .02 || Math.abs(x - hx) + Math.abs(y - hy) > .05) moving = true;
+          else { x = hx; y = hy; vx = 0; vy = 0; }
+          dots[j] = x; dots[j + 1] = y; dots[j + 2] = vx; dots[j + 3] = vy;
+        }
+        var base = dots[j + 7] ? BLUE : INK, k = Math.min(1, Math.hypot(x - hx, y - hy) / 28);
+        ctx.fillStyle = 'rgb(' + Math.round(base[0] + (WARM[0] - base[0]) * k) + ',' + Math.round(base[1] + (WARM[1] - base[1]) * k) + ',' + Math.round(base[2] + (WARM[2] - base[2]) * k) + ')';
+        ctx.beginPath(); ctx.arc(x, y, dots[j + 6], 0, 6.2832); ctx.fill();
+      }
+      awake = moving || age < 900 || px > -1e4;
+    }
+    function loop(now) { raf = 0; if (!visible) return; draw(now); if (awake) raf = requestAnimationFrame(loop); }
+    function wake() { awake = true; if (!raf && visible) raf = requestAnimationFrame(loop); }
+    function local(e) { var b = canvas.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; }
+
+    root.addEventListener('pointermove', function (e) { var p = local(e); px = p[0]; py = p[1]; wake(); });
+    root.addEventListener('pointerleave', function () { px = py = -1e5; wake(); });
+    root.addEventListener('pointerdown', function (e) { if (reduce) return; var p = local(e); ring = { x: p[0], y: p[1], t: performance.now() }; wake(); });
+    var lastW = 0; new ResizeObserver(function () { var nw = Math.round(root.getBoundingClientRect().width); if (nw === lastW) return; lastW = nw; layout(); wake(); }).observe(root);
+    new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) wake(); }).observe(root);
+    layout(); wake();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { layout(); wake(); });
+  })();
+</script>
+
+<script defer src="/js/site.js?v=10"></script>
 
 <!-- ── Cookie Consent Banner ─────────────────────── -->
 <div id="cookie-banner" style="

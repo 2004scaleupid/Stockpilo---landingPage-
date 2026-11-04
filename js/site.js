@@ -62,10 +62,13 @@
   (function() {
     const icons = document.querySelectorAll('#fi-section .fi-icon');
     if (!icons.length) return;
+    const fiSection = document.getElementById('fi-section');
 
     // Use window listener (same as React component's useEffect pattern)
     // so repulsion doesn't cut out when cursor grazes outside section bounds
     window.addEventListener('mousemove', e => {
+      // Logos heading for the app icon must not be shoved aside by the cursor.
+      if (fiSection.classList.contains('fi-converging')) return;
       icons.forEach(icon => {
         const rect  = icon.getBoundingClientRect();
         const cx    = rect.left + rect.width  / 2;
@@ -1472,7 +1475,7 @@ gl_FragColor=vec4(r,g,b,a);}`;
     });
 
     // ── Entrance: from beyond the edges, plays once with a springy overshoot
-    gsap.from(cards, {
+    const entrance = gsap.from(cards, {
       x: i => { const v = fromCentre(icons[i]); return v.x / (Math.hypot(v.x, v.y) || 1) * 640; },
       y: i => { const v = fromCentre(icons[i]); return v.y / (Math.hypot(v.x, v.y) || 1) * 640; },
       scale: 0.6,
@@ -1489,7 +1492,18 @@ gl_FragColor=vec4(r,g,b,a);}`;
     gsap.set(hubIcon, { opacity: 0, scale: 0.4 });
     gsap.set(reveal, { opacity: 0, y: 28, pointerEvents: 'none' });
 
+    let converging = false;
     const tl = gsap.timeline({
+      onUpdate() {
+        const on = tl.progress() > 0;
+        if (on !== converging) {
+          converging = on;
+          section.classList.toggle('fi-converging', on);
+          if (on) icons.forEach(icon => { icon.style.translate = ''; });
+        }
+        // Scrolled in fast: finish the fly-in quickly so the two moves don't overlap.
+        if (on && entrance.progress() < 1) entrance.timeScale(6);
+      },
       scrollTrigger: isMobile
         ? { trigger: section, start: 'top 45%', once: true }
         : {
