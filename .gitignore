@@ -14,3 +14,5 @@ skills-lock.json
 tools/archive/video-originals/
 .DS_Store
 !brand_assets/video/*.jpg
+*.dc.html
+naidis-why-switch.html
