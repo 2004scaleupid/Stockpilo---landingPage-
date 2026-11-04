@@ -2,14 +2,6 @@
 <html lang="et">
 <head>
   <meta charset="UTF-8">
-  <script>
-    // Returning app users: if this browser has opened the app from here before, go straight to it.
-    // Skipped with ?home, when arriving from the app or from another page of this site, and for first-time visitors / crawlers (no flag).
-    try {
-      if (localStorage.getItem('sp_app_user') === '1' && location.pathname === '/et/' && !/[?&]home\b/.test(location.search)
-          && !/stockpiloapp\.com/.test(document.referrer) && document.referrer.indexOf(location.origin) !== 0) location.replace('https://www.stockpiloapp.com/dashboard');
-    } catch (e) {}
-  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stockpilo — Investeeri targemalt. Tea, miks, enne kui ostad.</title>
   <meta name="description" content="Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: turuülevaade, selgitatud uudised, tulemused, USA Kongressi tehingud ja maailmasündmused.">
@@ -1811,7 +1803,7 @@
       <div class="lang-toggle" role="group" aria-label="Language / Keel">
         <a class="lang-opt" href="/" hreflang="en" lang="en" aria-label="In English">EN</a><span class="lang-opt is-on" aria-current="true">ET</span>
       </div>
-      <a href="https://www.stockpiloapp.com/dashboard" class="header-btn-outline" data-app-link>Logi sisse</a>
+      <a href="https://www.stockpiloapp.com/dashboard" class="header-btn-outline">Logi sisse</a>
       <a href="#" class="header-btn-solid" id="hero-cta-nav"><span class="btn-label">Alusta</span></a>
     </div>
 
@@ -1838,8 +1830,8 @@
       <a href="/faqs.html" class="mobile-nav-link">KKK</a>
       <a href="/" class="mobile-nav-link" hreflang="en" lang="en">In English</a>
       <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;padding:0 4px;">
-        <a href="https://www.stockpiloapp.com/dashboard" class="header-btn-outline" data-app-link style="width:100%;justify-content:center;">Logi sisse</a>
-        <a href="https://www.stockpiloapp.com/auth" class="header-btn-solid" data-app-link style="width:100%;justify-content:center;"><span class="btn-label">Alusta</span></a>
+        <a href="https://www.stockpiloapp.com/dashboard" class="header-btn-outline" style="width:100%;justify-content:center;">Logi sisse</a>
+        <a href="https://www.stockpiloapp.com/auth" class="header-btn-solid" style="width:100%;justify-content:center;"><span class="btn-label">Alusta</span></a>
       </div>
     </div>
   </div>
@@ -2531,7 +2523,7 @@
       <ul class="sb-checks">
         <li>Loobu igal ajal</li>
       </ul>
-      <a href="https://www.stockpiloapp.com/auth" data-app-link class="sb-cta">Alusta tasuta <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a href="https://www.stockpiloapp.com/auth" class="sb-cta">Alusta tasuta <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
 
     <!-- Stock page -->
