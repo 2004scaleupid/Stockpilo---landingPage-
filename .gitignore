@@ -17,3 +17,8 @@ tools/archive/video-originals/
 *.dc.html
 naidis-why-switch.html
 !brand_assets/logos/*.png
+
+# Not part of the site: Cloudflare Pages publishes the repo root, so tracked files become public
+CLAUDE.md
+serve.mjs
+tools/

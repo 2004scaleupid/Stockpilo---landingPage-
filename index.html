@@ -1106,6 +1106,8 @@
     }
 
     /* ── ElectricBorder ────────────────────────────── */
+    /* The canvas is wider than the card; clip it so phones do not get a wider layout. */
+    .plan-section { overflow-x: clip; }
     .eb-wrap {
       --eb-color: #1a0aa5;
       position: relative;
@@ -1304,8 +1306,6 @@
       #about-root > div:last-child { flex-direction: column !important; gap: 20px !important; }
 
       /* Features */
-      #features > div { grid-template-columns: 1fr !important; gap: 48px !important; }
-      #features .reveal:last-child { justify-self: unset !important; max-width: 100% !important; }
 
       /* Footer */
       .footer-links-grid { grid-template-columns: repeat(2, 1fr) !important; margin-top: 20px !important; }
@@ -1330,7 +1330,6 @@
       .about-btn { font-size: 13px !important; padding: 10px 18px !important; }
 
       /* Features card */
-      #features > div:last-child { padding: 80px 20px !important; }
     }
 
     @media (max-width: 480px) {
@@ -1808,7 +1807,7 @@
       <div class="gooey-nav-container" id="gooey-nav">
         <nav>
           <ul id="gooey-nav-ul">
-            <li><a href="#features">Features</a></li>
+            <li><a href="#why">Features</a></li>
             <li><a href="#pricing">Pricing</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="/blog.html">Blog</a></li>
@@ -1840,7 +1839,7 @@
   <div id="mobile-menu" style="display:none;position:fixed;inset:0;z-index:290;flex-direction:column;" aria-hidden="true">
     <div id="mobile-backdrop" style="position:absolute;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);"></div>
     <div style="position:relative;top:56px;margin:0 auto;width:100%;max-width:56rem;background:rgba(0,0,0,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.08);padding:12px 8px;">
-      <a href="#features" class="mobile-nav-link">Features</a>
+      <a href="#why" class="mobile-nav-link">Features</a>
       <a href="#pricing" class="mobile-nav-link">Pricing</a>
       <a href="#about" class="mobile-nav-link">About</a>
       <a href="/blog.html" class="mobile-nav-link">Blog</a>
@@ -1931,10 +1930,7 @@
 <style>
   .feat-grid { position:relative; z-index:1; max-width:1320px; margin:0 auto; padding:140px 24px;
     display:grid; grid-template-columns:minmax(280px,360px) 1fr; gap:64px; align-items:center; }
-  .feat-grid--video { grid-template-columns:1fr; gap:48px; max-width:1040px; }
-  .feat-video-head { display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center; }
   /* ── Stockpilo app mock: Geopolitical Events (real app UI, built in HTML) ── */
-  .sp-video-slot { display:flex; align-items:center; justify-content:center; width:100%; aspect-ratio:16 / 9; border:1px dashed rgba(255,255,255,.25); border-radius:20px; color:rgba(255,255,255,.6); font-size:14px; }
   .sp-stage { perspective:1800px; }
   .sp-app { --sp-line:#1f2024; --sp-mute:#8a8f98; --sp-dim:#5b606a; display:grid; grid-template-columns:62px 1fr;
     background:#060607; border:1px solid #232428; border-radius:22px; overflow:hidden; font-family:'Geist',sans-serif; color:#e8f0fe;
@@ -2145,29 +2141,6 @@
     .sp-tape-row, .sp-globe-img img, .sp-pin::after { animation:none; }
   }
 </style>
-<section id="features" data-inner style="position:relative;z-index:10;background:#000;overflow:visible;">
-  <!-- Top fade from hero -->
-  <div style="position:absolute;top:-60px;left:0;right:0;height:120px;background:linear-gradient(to bottom,#000 0%,transparent 100%);pointer-events:none;z-index:5;"></div>
-  <div class="feat-grid feat-grid--video">
-
-    <!-- Top: text -->
-    <div class="feat-video-head reveal">
-      <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);opacity:.8;">Features</div>
-      <h2 style="font-size:clamp(28px,4vw,44px);font-weight:700;line-height:1.1;letter-spacing:-0.025em;margin:0;">
-        <span class="shiny-text">See Stockpilo in action</span>
-      </h2>
-      <p style="font-size:16px;color:rgba(255,255,255,.5);line-height:1.75;margin:0;max-width:520px;">
-        Your stocks, the market and the news, all in one place. This short video shows how it works.
-      </p>
-    </div>
-
-    <!-- Below: placeholder for the ad video -->
-    <div class="sp-video-slot reveal">Reklaamvideo tuleb siia</div>
-
-  </div>
-</section>
-
-
 <!-- ── ABOUT / TIMELINE SECTION ──────────────────── -->
 <section id="about" style="position:relative;overflow:hidden;scroll-margin-top:80px;">
   <div id="about-stage" style="height:85vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:0 24px;box-sizing:border-box;">
@@ -3786,7 +3759,7 @@
         <div class="footer-anim" style="transition-delay:0.2s;">
           <h3 class="footer-section-label">Product</h3>
           <ul class="footer-link-list">
-            <li><a href="#features" class="footer-link" data-magnetic>Features</a></li>
+            <li><a href="#why" class="footer-link" data-magnetic>Features</a></li>
             <li><a href="#pricing" class="footer-link" data-magnetic>Pricing</a></li>
             <li><a href="#testimonials" class="footer-link" data-magnetic>Why Stockpilo</a></li>
             <li><a href="/" class="footer-link" data-magnetic>Integration</a></li>
@@ -3807,7 +3780,6 @@
           <h3 class="footer-section-label">Resources</h3>
           <ul class="footer-link-list">
             <li><a href="/blog.html" class="footer-link" data-magnetic>Blog</a></li>
-            <li><a href="/changelog" class="footer-link" data-magnetic>Changelog</a></li>
                         <li><a href="/help.html" class="footer-link" data-magnetic>Help</a></li>
           </ul>
         </div>
@@ -3942,7 +3914,7 @@
   })();
 </script>
 
-<script defer src="js/site.js?v=8"></script>
+<script defer src="js/site.js?v=9"></script>
 
 <!-- ── Cookie Consent Banner ─────────────────────── -->
 <div id="cookie-banner" style="

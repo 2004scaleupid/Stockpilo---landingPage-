@@ -8,10 +8,10 @@
     const scrollNext  = document.getElementById('scroll-next');
     const featSection = document.getElementById('features');
 
-    if (!heroContent || !featSection) return;
+    if (!heroContent) return;
 
     // Features starts 80px below natural position — slides up into place.
-    gsap.set(featSection, { y: 80 });
+    if (featSection) gsap.set(featSection, { y: 80 });
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -51,7 +51,7 @@
     // Starts at 0.28 into the timeline so it overlaps the hero exit.
     // back.out(1.5) makes features briefly overshoot y:0 (go ~12px too far)
     // before settling — baked into the scroll position map via the ease curve.
-    tl.to(featSection, {
+    if (featSection) tl.to(featSection, {
       y: 0,
       ease: 'back.out(1.5)',
       duration: 0.72,
@@ -154,13 +154,14 @@
     tabs.forEach(tab => tab.addEventListener('click', () => setActive(tab)));
 
     // Scroll-based active section tracking
-    const sectionMap = { 'features': 'features', 'pricing': 'pricing', 'about': 'about' };
+    // Section id -> nav tab, in page order: the last section above the fold wins.
+    const sectionMap = { 'about': 'about', 'why': 'features', 'pricing': 'pricing' };
     window.addEventListener('scroll', () => {
       const y = window.scrollY + 120;
       let hit = '';
-      Object.entries(sectionMap).forEach(([id]) => {
+      Object.entries(sectionMap).forEach(([id, tabName]) => {
         const el = document.getElementById(id);
-        if (el && el.offsetTop <= y) hit = id;
+        if (el && el.offsetTop <= y) hit = tabName;
       });
       tabs.forEach(tab => {
         const sec = tab.dataset.section;
