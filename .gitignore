@@ -16,3 +16,4 @@ tools/archive/video-originals/
 !brand_assets/video/*.jpg
 *.dc.html
 naidis-why-switch.html
+!brand_assets/logos/*.png
