@@ -2134,7 +2134,32 @@
     .sp-app, .sp-globe-img { transition:none; }
     .sp-tape-row, .sp-globe-img img, .sp-pin::after { animation:none; }
   }
+  /* "See Stockpilo in action": the promo video under the hero */
+  .feat-grid--video { grid-template-columns:1fr; gap:48px; max-width:1040px; }
+  .feat-video-head { display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center; }
+  .sp-promo { display:block; width:100%; aspect-ratio:16 / 9; height:auto; background:#000; border-radius:20px;
+    border:1px solid rgba(255,255,255,.08); box-shadow:0 40px 100px -30px rgba(0,0,0,.95), 0 0 90px -40px rgba(45,107,228,.45); }
 </style>
+<!-- ── PROMO VIDEO ──────────────────── -->
+<section id="features" data-inner style="position:relative;z-index:10;background:#000;overflow:visible;scroll-margin-top:80px;">
+  <!-- Top fade from hero -->
+  <div style="position:absolute;top:-60px;left:0;right:0;height:120px;background:linear-gradient(to bottom,#000 0%,transparent 100%);pointer-events:none;z-index:5;"></div>
+  <div class="feat-grid feat-grid--video">
+    <div class="feat-video-head reveal">
+      <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);opacity:.8;">Features</div>
+      <h2 style="font-size:clamp(28px,4vw,44px);font-weight:700;line-height:1.1;letter-spacing:-0.025em;margin:0;">
+        <span class="shiny-text">See Stockpilo in action</span>
+      </h2>
+      <p style="font-size:16px;color:rgba(255,255,255,.5);line-height:1.75;margin:0;max-width:520px;">
+        Your stocks, the market and the news, all in one place. This short video shows how it works.
+      </p>
+    </div>
+    <video class="sp-promo reveal" controls playsinline preload="metadata" poster="brand_assets/video/stockpilo-promo-poster.jpg" aria-label="Stockpilo promo video">
+      <source src="brand_assets/video/stockpilo-promo.mp4?v=1" type="video/mp4">
+    </video>
+  </div>
+</section>
+
 <!-- ── ABOUT / TIMELINE SECTION ──────────────────── -->
 <section id="about" style="position:relative;overflow:hidden;scroll-margin-top:80px;">
   <div id="about-stage" style="height:85vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:0 24px;box-sizing:border-box;">
