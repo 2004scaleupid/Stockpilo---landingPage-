@@ -1,0 +1,204 @@
+<!doctype html><html lang="et"><head><meta charset="utf-8">
+<title>Fassaadipesemine enne ja pärast – Scale Up</title>
+<meta name="robots" content="noindex"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name="description" content="Kuidas üks WordPressi leht sai uue välimuse, kiiruse ja Google'i seaded. 10 võrdlust enne ja pärast.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one reading column; each change is a full-width drag slider, labels in mono like a site inspector */
+:root{
+  --bg:#F3F4F1; --surface:#FFFFFF; --ink:#16181B; --muted:#5E635F; --line:#DCDFD9;
+  --after:#137A5B; --after-soft:#DDF0E8; --before:#8A5A1F; --before-soft:#F3E7D6;
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body:"Instrument Sans", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121413; --surface:#1B1E1C; --ink:#ECEEEA; --muted:#A3A8A3; --line:#2E3330;
+  --after:#4CC69C; --after-soft:#173328; --before:#E0A85C; --before-soft:#33271A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121413; --surface:#1B1E1C; --ink:#ECEEEA; --muted:#A3A8A3; --line:#2E3330;
+  --after:#4CC69C; --after-soft:#173328; --before:#E0A85C; --before-soft:#33271A; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+h1,h2,h3{font-family:var(--display);line-height:1.08;text-wrap:balance;margin:0}
+p{margin:0}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+a{color:inherit}
+a:focus-visible,input:focus-visible,button:focus-visible{outline:3px solid var(--after);outline-offset:3px}
+
+/* Hero */
+.hero{padding-block:56px 36px;display:grid;gap:22px}
+.hero .mono{color:var(--muted)}
+.hero h1{font-size:clamp(40px, 7.4vw, 80px);font-weight:800;letter-spacing:-.025em}
+.hero h1 em{font-style:normal;color:var(--after)}
+.lead{font-size:clamp(18px, 2.2vw, 21px);max-width:60ch;color:var(--muted)}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.fact{display:flex;align-items:baseline;gap:8px;padding:10px 16px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:15px}
+.fact b{font-family:var(--display);font-size:18px;font-variant-numeric:tabular-nums}
+.fact.hot{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* Comparisons */
+.list{display:grid;gap:64px;padding-block:28px 72px}
+.item{display:grid;gap:16px}
+.item-head{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:baseline}
+.num{font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;grid-row:span 2;padding-top:6px}
+.item-head h2{font-size:clamp(24px, 3.4vw, 32px);font-weight:700;letter-spacing:-.01em}
+.item-head p{color:var(--muted);max-width:62ch;min-width:0}
+
+.ba{position:relative;width:100%;max-width:100%;border-radius:14px;overflow:hidden;background:var(--surface);border:1px solid var(--line);box-shadow:0 30px 60px -40px rgba(0,0,0,.35);--p:50%;cursor:ew-resize;user-select:none;-webkit-user-select:none;touch-action:pan-y}
+.ba.phone{max-width:360px;margin-inline:auto;border-radius:28px;border-width:6px;border-color:var(--ink)}
+.ba img{display:block;width:100%;height:auto;pointer-events:none}
+.ba .before{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--p)) 0 0)}
+.ba .before img{height:100%;object-fit:cover}
+.ba .bar{position:absolute;top:0;bottom:0;left:var(--p);width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.25);pointer-events:none}
+.ba .knob{position:absolute;top:50%;left:var(--p);width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:#fff;color:#16181B;display:grid;place-items:center;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none;transition:transform .2s}
+.ba:hover .knob{transform:scale(1.08)}
+.ba .knob svg{width:22px;height:22px}
+.ba .tag{position:absolute;top:12px;padding:5px 10px;border-radius:6px;pointer-events:none}
+.ba .tag.l{left:12px;background:var(--before-soft);color:var(--before)}
+.ba .tag.r{right:12px;background:var(--after-soft);color:var(--after)}
+.ba input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;pointer-events:none;-webkit-appearance:none;appearance:none}
+.ba:has(input:focus-visible){outline:3px solid var(--after);outline-offset:4px}
+.toggle{display:flex;gap:8px;justify-content:center}
+.toggle button{font:600 14px/1 var(--body);padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.toggle button:hover{border-color:var(--ink)}
+
+/* Hidden work */
+.under{background:var(--ink);color:var(--bg)}
+.under .wrap{padding-block:72px}
+.under h2{font-size:clamp(30px, 4.6vw, 48px);font-weight:800;letter-spacing:-.02em;max-width:18ch}
+.under .sub{color:color-mix(in srgb, var(--bg) 70%, var(--ink));margin-top:12px;max-width:60ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:1px;margin-top:40px;background:color-mix(in srgb, var(--bg) 18%, var(--ink));border:1px solid color-mix(in srgb, var(--bg) 18%, var(--ink));border-radius:14px;overflow:hidden}
+.cell{background:var(--ink);padding:24px 22px;display:grid;gap:8px;align-content:start;min-width:0}
+.cell .mono{color:var(--after)}
+.cell h3{font-size:20px;font-weight:700}
+.cell p{font-size:15.5px;color:color-mix(in srgb, var(--bg) 72%, var(--ink))}
+.cell .big{font-family:var(--display);font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.cell .big s{opacity:.5;text-decoration-thickness:2px;font-weight:600}
+
+/* Offer */
+.offer .wrap{padding-block:72px 88px;display:grid;gap:36px}
+.offer-top{display:grid;gap:14px}
+.offer h2{font-size:clamp(34px, 5.6vw, 60px);font-weight:800;letter-spacing:-.025em}
+.offer h2 span{color:var(--after)}
+.offer .lead{color:var(--muted)}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:14px}
+.steps li{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:8px;align-content:start}
+.steps .mono{color:var(--after)}
+.steps h3{font-size:20px;font-weight:700}
+.steps p{color:var(--muted);font-size:15.5px}
+.cta{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;padding:26px 28px;border-radius:16px;background:var(--after-soft);border:1px solid color-mix(in srgb, var(--after) 35%, transparent)}
+.cta p{font-size:19px;font-weight:600;flex:1 1 320px;min-width:0}
+.cta a{font-weight:600;color:var(--after);text-underline-offset:4px}
+footer{border-top:1px solid var(--line)}
+footer .wrap{padding-block:22px 34px;color:var(--muted);font-size:14px}
+
+@media (max-width:560px){
+  body{font-size:16px}
+  .hero{padding-block:36px 24px}
+  .list{gap:52px}
+  .ba .tag{top:8px;font-size:11px}
+  .ba .tag.l{left:8px}.ba .tag.r{right:8px}
+  .ba .knob{width:38px;height:38px;margin:-19px 0 0 -19px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="wrap hero">
+  <span class="mono">Juhtum · fassaadipesemine.ee · november 2026</span>
+  <h1>Sama leht.<br><em>Uus välimus.</em></h1>
+  <p class="lead">Võtsime olemasoleva WordPressi lehe ja tegime selle korda: kujundus, telefonivaade, kiirus ja Google. Aadress, sisu ja haldus jäid samaks. Lohista pildil valget joont, et näha vana ja uut versiooni.</p>
+  <div class="facts">
+    <span class="fact"><b>11</b> nähtavat muudatust</span>
+    <span class="fact"><b>695&nbsp;→&nbsp;242&nbsp;KB</b> avapilt</span>
+    <span class="fact hot"><b>150&nbsp;€</b> maksad ainult siis, kui meeldib</span>
+  </div>
+</header>
+
+<main class="wrap list" id="list"></main>
+
+<section class="under">
+  <div class="wrap">
+    <h2>Mida pildilt ei näe</h2>
+    <p class="sub">Pool tööst on kapoti all. Klient ei märka seda otse, aga Google ja külastaja telefon märkavad.</p>
+    <div class="grid">
+      <div class="cell"><span class="mono">Kiirus</span><div class="big"><s>695 KB</s> 242 KB</div><p>Avapilt on kolm korda väiksem. Telefon saab omaette väiksema pildi ja see laeb esimesena.</p></div>
+      <div class="cell"><span class="mono">Kiirus</span><h3>Vahemälu parandatud</h3><p>Kiirendusplugin peitis avapildi ja laadis selle viimasena. Nüüd on avavaade kohe olemas.</p></div>
+      <div class="cell"><span class="mono">Google</span><h3>Pealkirjad ja kirjeldused</h3><p>Igal teenuselehel on oma pealkiri ja kirjeldus, mis ütleb, mida tehakse ja kus.</p></div>
+      <div class="cell"><span class="mono">Google</span><h3>Ettevõtte andmed</h3><p>Nimi, telefon, aadress, teenused ja sotsiaalmeedia on Google'ile masinloetaval kujul kirjas.</p></div>
+      <div class="cell"><span class="mono">Google</span><h3>Sisukaart puhtaks</h3><p>Tänuleht ja vana ümbersuunamine eemaldati Google'i nimekirjast. Piltidel on nüüd kirjeldused.</p></div>
+      <div class="cell"><span class="mono">Päringud</span><h3>Ükski päring ei kao</h3><p>Vorm on läbi testitud. Iga päring salvestub nüüd ka lehe haldusesse koos piltidega, isegi kui e-kiri ei jõua kohale.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="offer">
+  <div class="wrap">
+    <div class="offer-top">
+      <span class="mono" style="color:var(--muted)">Pakkumine sinu lehele</span>
+      <h2>Sinu leht samamoodi. <span>150 €</span>, ja ainult siis, kui meeldib.</h2>
+      <p class="lead">Teeme muudatused otse sinu päris lehel, mitte piltidel. Enne tööd teeme varukoopia, nii et vana lehe saab alati tagasi. Sobib WordPress, Wix, Shopify, Squarespace, Webflow ja muud lehed.</p>
+    </div>
+    <ol class="steps">
+      <li><span class="mono">Samm 1</span><h3>Annad ligipääsu</h3><p>Ütled „jah“ ja lisad meid oma lehe haldusesse eraldi kasutajana. Sinu parooli me ei küsi.</p></li>
+      <li><span class="mono">Samm 2</span><h3>Varukoopia ja töö</h3><p>Teeme lehest täieliku varukoopia ja siis värskenduse otse sinu lehel: kujundus, telefonivaade, kiirus ja Google.</p></li>
+      <li><span class="mono">Samm 3</span><h3>Sina otsustad</h3><p>Vaatad oma päris lehte. Meeldib, maksad 150 €. Ei meeldi, taastame varukoopia ja sa ei maksa midagi.</p></li>
+    </ol>
+    <div class="cta">
+      <p>Vasta meie e-kirjale sõnaga „jah“. Saadame lühikese juhendi, kuidas ligipääs anda, ja alustame.</p>
+      <a href="https://fassaadipesemine.ee" target="_blank" rel="noopener">Vaata valmis lehte →</a>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap">Pildid on tehtud samast lehest enne ja pärast värskendust. Näidisleht: fassaadipesemine.ee</div></footer>
+
+<script>
+(function(){
+  var items=[
+    ['01','Avaleht','Pealkiri on pildi peal loetav, Google\'i hinnang on kohe näha, menüü on uus ja nupp ütleb täpselt, mida teha.',800,556],
+    ['02','Miks valida meid','Tavalised tekstikastid said ikoonid, numbrid ja liikumise hiirega üle minnes.',800,589],
+    ['03','Tehtud tööde galerii','Pooltühi ja katkine galerii sai ühtlaseks. Uus galerii liigub ise ja seda saab lohistada.',800,556],
+    ['04','Statistika ja omanik','Numbrid ja omaniku tutvustus said selge paigutuse. Pikk tekst ei aja enam üle ääre.',800,589],
+    ['05','Klientide arvustused','11 Google\'i arvustust ühes kohas. Kirjavead parandatud, pikad tekstid lühemaks.',800,589],
+    ['06','Partnerid','Logod ühtlaseks reaks, et need näeksid välja nagu usaldus, mitte nagu juhuslikud pildid.',800,589],
+    ['07','Soovid pakkumist?','Pakkumise kutse sai firma kaubiku, mis sõidab ekraanile, kui külastaja sinna jõuab.',800,589],
+    ['08','Teenuselehe avavaade','Pealkiri ütleb nüüd, mida tehakse ja kus. Tume kate teeb teksti pildil loetavaks.',800,558],
+    ['09','Tekst pildi peal','Tekst oli pildi taga peidus. Nüüd on taustal kate ja tekst on valge.',800,558],
+    ['11','Jalus','Hall tekstirida sai päris jaluseks: logo, teenused, kontaktid, ettevõtte andmed, sotsiaalmeedia ja päringunupp ühes kohas.',800,576],
+    ['10','Telefonivaade','Telefonis on numbrid 2×2 ruudustikus ja all on kiirriba helistamiseks ja päringuks.',750,1520,'phone']
+  ];
+  var arrows='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg>';
+  var list=document.getElementById('list');
+  items.forEach(function(it,i){
+    var n=it[0],lazy=i>1?' loading="lazy"':'';
+    var el=document.createElement('article');el.className='item';
+    el.innerHTML=
+      '<div class="item-head"><span class="num">'+String(i+1).padStart(2,'0')+'/'+items.length+'</span><h2>'+it[1]+'</h2><p>'+it[2]+'</p></div>'+
+      '<div class="ba'+(it[5]?' '+it[5]:'')+'">'+
+        '<img src="img/'+n+'-parast.jpg" width="'+it[3]+'" height="'+it[4]+'" alt="'+it[1]+' pärast värskendust"'+lazy+'>'+
+        '<div class="before"><img src="img/'+n+'-enne.jpg" width="'+it[3]+'" height="'+it[4]+'" alt="'+it[1]+' enne värskendust"'+lazy+'></div>'+
+        '<span class="bar"></span><span class="knob">'+arrows+'</span>'+
+        '<span class="tag l mono">Enne</span><span class="tag r mono">Pärast</span>'+
+        '<input type="range" min="0" max="100" value="50" step="0.5" id="ba-'+n+'" aria-label="'+it[1]+': liiguta vasakule, et näha uut, paremale, et näha vana">'+
+      '</div>'+
+      '<div class="toggle"><button type="button" data-v="100">Enne</button><button type="button" data-v="50">Pooleks</button><button type="button" data-v="0">Pärast</button></div>';
+    list.appendChild(el);
+    var ba=el.querySelector('.ba'),r=el.querySelector('input');
+    function set(v){ba.style.setProperty('--p',v+'%');r.value=v;}
+    r.addEventListener('input',function(){set(r.value);});
+    var down=false;
+    function at(e){var b=ba.getBoundingClientRect();set(Math.max(0,Math.min(100,(e.clientX-b.left)/b.width*100)).toFixed(1));}
+    ba.addEventListener('pointerdown',function(e){down=true;try{ba.setPointerCapture(e.pointerId);}catch(x){}at(e);});
+    ba.addEventListener('pointermove',function(e){if(down)at(e);});
+    ['pointerup','pointercancel','lostpointercapture'].forEach(function(t){ba.addEventListener(t,function(){down=false;});});
+    [].forEach.call(el.querySelectorAll('.toggle button'),function(b){b.addEventListener('click',function(){set(b.getAttribute('data-v'));});});
+  });
+})();
+</script>
+
+</body></html>
