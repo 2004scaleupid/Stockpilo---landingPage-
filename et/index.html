@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stockpilo — Investeeri targemalt. Tea, miks, enne kui ostad.</title>
+  <title>Stockpilo — Näe igal hommikul, mis su aktsiatega juhtus ja mis on tulemas.</title>
   <meta name="description" content="Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: turuülevaade, selgitatud uudised, tulemused, USA Kongressi tehingud ja maailmasündmused.">
   <link rel="canonical" href="https://stockpilo.com/et/">
   <link rel="alternate" hreflang="en" href="https://stockpilo.com/">
@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" href="/brand_assets/apple-touch-icon.png">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Stockpilo">
-  <meta property="og:title" content="Stockpilo — Investeeri targemalt. Tea, miks, enne kui ostad.">
+  <meta property="og:title" content="Stockpilo — Näe igal hommikul, mis su aktsiatega juhtus ja mis on tulemas.">
   <meta property="og:description" content="Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: turuülevaade, selgitatud uudised, tulemused, USA Kongressi tehingud ja maailmasündmused.">
   <meta property="og:url" content="https://stockpilo.com/et/">
   <meta property="og:locale" content="et_EE">
@@ -22,7 +22,7 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Stockpilo — Investeeri targemalt. Tea, miks, enne kui ostad.">
+  <meta name="twitter:title" content="Stockpilo — Näe igal hommikul, mis su aktsiatega juhtus ja mis on tulemas.">
   <meta name="twitter:description" content="Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: turuülevaade, selgitatud uudised, tulemused, USA Kongressi tehingud ja maailmasündmused.">
   <meta name="twitter:image" content="https://stockpilo.com/brand_assets/og-image.jpg">
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://stockpilo.com/#org", "name": "Stockpilo", "url": "https://stockpilo.com/", "logo": "https://stockpilo.com/brand_assets/apple-touch-icon.png"}, {"@type": "WebSite", "@id": "https://stockpilo.com/#website", "url": "https://stockpilo.com/", "name": "Stockpilo", "publisher": {"@id": "https://stockpilo.com/#org"}}, {"@type": "SoftwareApplication", "name": "Stockpilo", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "url": "https://www.stockpiloapp.com", "description": "Stockpilo on AI-põhine aktsiaturu töölaud jaeinvestoritele: turuülevaade, selgitatud uudised, tulemused, USA Kongressi tehingud ja maailmasündmused.", "publisher": {"@id": "https://stockpilo.com/#org"}, "offers": [{"@type": "Offer", "name": "Pro", "price": "14.99", "priceCurrency": "EUR", "description": "9,99 €/kuu esimesed 3 kuud, seejärel 14,99 €/kuu"}]}]}</script>
@@ -1877,9 +1877,8 @@
     <div id="hero-content" style="display:flex;flex-direction:column;gap:22px;align-items:center;text-align:center;">
 
       <!-- H1 -->
-      <h1 class="hero3-h1 anim-up d1" aria-label="Investeeri targemalt. Tea, miks, enne kui ostad." style="margin:0;">
-        Investeeri <span class="hero-word" aria-live="polite">targemalt</span>.<br>
-        Tea, <span style="color:#2d6be4;">miks</span>, enne kui ostad.
+      <h1 class="hero3-h1 anim-up d1" style="margin:0;">
+        Näe igal hommikul, mis su aktsiatega juhtus ja mis on tulemas.
       </h1>
 
       <!-- Subtext -->
@@ -2126,7 +2125,32 @@
     .sp-app, .sp-globe-img { transition:none; }
     .sp-tape-row, .sp-globe-img img, .sp-pin::after { animation:none; }
   }
+  /* "See Stockpilo in action": the promo video under the hero */
+  .feat-grid--video { grid-template-columns:1fr; gap:48px; max-width:1040px; }
+  .feat-video-head { display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center; }
+  .sp-promo { display:block; width:100%; aspect-ratio:16 / 9; height:auto; background:#000; border-radius:20px;
+    border:1px solid rgba(255,255,255,.08); box-shadow:0 40px 100px -30px rgba(0,0,0,.95), 0 0 90px -40px rgba(45,107,228,.45); }
 </style>
+<!-- ── PROMO VIDEO ──────────────────── -->
+<section id="features" data-inner style="position:relative;z-index:10;background:#000;overflow:visible;scroll-margin-top:80px;">
+  <!-- Top fade from hero -->
+  <div style="position:absolute;top:-60px;left:0;right:0;height:120px;background:linear-gradient(to bottom,#000 0%,transparent 100%);pointer-events:none;z-index:5;"></div>
+  <div class="feat-grid feat-grid--video">
+    <div class="feat-video-head reveal">
+      <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);opacity:.8;">Funktsioonid</div>
+      <h2 style="font-size:clamp(28px,4vw,44px);font-weight:700;line-height:1.1;letter-spacing:-0.025em;margin:0;">
+        <span class="shiny-text">Vaata, kuidas Stockpilo töötab</span>
+      </h2>
+      <p style="font-size:16px;color:rgba(255,255,255,.5);line-height:1.75;margin:0;max-width:520px;">
+        Sinu aktsiad, turg ja uudised ühes kohas. See lühike video näitab, kuidas see käib.
+      </p>
+    </div>
+    <video class="sp-promo reveal" controls playsinline preload="metadata" poster="/brand_assets/video/stockpilo-promo-poster.jpg" aria-label="Stockpilo tutvustusvideo">
+      <source src="/brand_assets/video/stockpilo-promo.mp4?v=1" type="video/mp4">
+    </video>
+  </div>
+</section>
+
 <!-- ── ABOUT / TIMELINE SECTION ──────────────────── -->
 <section id="about" style="position:relative;overflow:hidden;scroll-margin-top:80px;">
   <div id="about-stage" style="height:85vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:0 24px;box-sizing:border-box;">
@@ -2359,7 +2383,7 @@
 
         <article class="why-block" data-block="0">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/brief.mp4" poster="/brand_assets/video/brief.jpg" width="1280" height="904" muted loop playsinline preload="metadata" aria-label="Pilo päeva kokkuvõte: sinu jälgimisnimekiri ja S&amp;P 500 eelmisel kauplemispäeval, sektorite liikumised ja päeva taust"></video></div>
+          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/brief.mp4?v=60" poster="/brand_assets/video/brief.jpg" width="1280" height="904" muted loop playsinline preload="metadata" aria-label="Pilo päeva kokkuvõte: sinu jälgimisnimekiri ja S&amp;P 500 eelmisel kauplemispäeval, sektorite liikumised ja päeva taust"></video></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">01</span>
@@ -2375,7 +2399,7 @@
 
         <article class="why-block" data-block="1">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/news.mp4" poster="/brand_assets/video/news.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Uudistevoog peauudise ja jälgimisnimekirja pealkirjadega, märgitud tickeri ja hinnangulise mõjuga"></video></div>
+          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/news.mp4?v=60" poster="/brand_assets/video/news.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Uudistevoog peauudise ja jälgimisnimekirja pealkirjadega, märgitud tickeri ja hinnangulise mõjuga"></video></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">02</span>
@@ -2390,7 +2414,7 @@
 
         <article class="why-block" data-block="2">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/congress.mp4" poster="/brand_assets/video/congress.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Kongressi viimased avalikustamised: liige, vara, tehingu tüüp, summavahemik ja kuupäevad"></video></div>
+          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/congress.mp4?v=60" poster="/brand_assets/video/congress.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Kongressi viimased avalikustamised: liige, vara, tehingu tüüp, summavahemik ja kuupäevad"></video></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">03</span>
@@ -2406,11 +2430,11 @@
 
         <article class="why-block" data-block="3">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/geo.mp4" poster="/brand_assets/video/geo.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Geopoliitiliste sündmuste gloobus kolme suurima mõjuga sündmusega"></video></div>
+          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/geo.mp4?v=60" poster="/brand_assets/video/geo.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Geopoliitiliste sündmuste gloobus kolme suurima mõjuga sündmusega"></video></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">04</span>
-            <h3 class="why-h3">Maailma&shy;sündmused reaalajas gloobusel</h3>
+            <h3 class="why-h3">Maailma&shy;sündmused gloobusel</h3>
             <p class="why-desc">Turgu mõjutavad maailmasündmused 3D-gloobusel, kolm olulisemat mõju järgi järjestatud.</p>
             <ul class="why-list">
               <li>Iga sündmuse juures mõju tase, aeg ja allikas</li>
@@ -2421,7 +2445,7 @@
 
         <article class="why-block" data-block="4">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/earnings.mp4" poster="/brand_assets/video/earnings.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Tulemuste kalender ettevõtete tulemuste ja majandusraportitega, nagu CPI, PMI ja tööturu raport"></video></div>
+          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/earnings.mp4?v=60" poster="/brand_assets/video/earnings.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Tulemuste kalender ettevõtete tulemuste ja majandusraportitega, nagu CPI, PMI ja tööturu raport"></video></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">05</span>
@@ -2436,7 +2460,7 @@
 
         <article class="why-block" data-block="5">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/risk.mp4" poster="/brand_assets/video/risk.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Mis võib turge liigutada: geopoliitiliste ja makrosündmuste riskikaardid inflatsioonigraafikute kohal"></video></div>
+          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/risk.mp4?v=60" poster="/brand_assets/video/risk.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Mis võib turge liigutada: geopoliitiliste ja makrosündmuste riskikaardid inflatsioonigraafikute kohal"></video></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">06</span>
@@ -2451,7 +2475,7 @@
 
         <article class="why-block" data-block="6">
           <div class="why-visual"><div class="why-panel"><div class="why-bg"></div>
-          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/snapshot.mp4" poster="/brand_assets/video/snapshot.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Turu ülevaade: nädala suurim liikumine, indeksite ja intresside kaardid kolme kuu ajalooga"></video></div>
+          <div class="csc why-shot"><video class="why-video" src="/brand_assets/video/snapshot.mp4?v=60" poster="/brand_assets/video/snapshot.jpg" width="1280" height="904" muted loop playsinline preload="none" aria-label="Turu ülevaade: nädala suurim liikumine, indeksite ja intresside kaardid kolme kuu ajalooga"></video></div>
           </div></div>
           <div class="why-text">
             <span class="why-num">07</span>
@@ -2504,7 +2528,7 @@
     <!-- Secondary: biggest movers and why -->
     <div class="sb-card sb-wide sb-movers" data-glow="sky">
       <div class="nx-head">
-        <p class="mv-lab">Eilsed suurimad liikujad sinu jälgimisnimekirjas <span>· vii kursor logo kohale, et näha põhjust</span></p>
+        <p class="mv-lab">Eilsed suurimad liikujad sinu jälgimisnimekirjas <span>· vii kursor logo kohale, et näha, mida uudised ütlevad</span></p>
         <span class="nx-tag">Näide</span>
       </div>
       <div class="mv-body">
@@ -2619,7 +2643,7 @@
     <!-- Top gainers -->
     <div class="sb-card sb-gainer" data-glow="green">
       <div class="nx-head">
-        <p class="sb-lab">Tea, miks see liikus</p>
+        <p class="sb-lab">Liikumised ja uudised</p>
         <span class="nx-tag">Näide</span>
       </div>
       <div class="gn-head">
@@ -3179,7 +3203,7 @@
 <script>
 (function () {
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var T = {"locale": "et-EE", "sectors": {"technology": "Tehnoloogia", "comm": "Kommunikatsioon", "other": "Tarbijad ja muu"}, "gainers": [{"mark": "R", "bg": "#e8a13a", "fg": "#111", "tk": "RIOT", "lo": 11, "hi": 21, "yd": 1, "yl": [20, 17.5, 15, 12.5], "closes": [19.7, 19.2, 18.7, 17.3, 17.0, 16.9, 16.6, 16.0, 15.4, 14.8, 14.6, 14.5, 14.8, 14.4, 14.8, 14.6, 13.9, 13.5, 13.9, 14.5, 14.4, 13.9, 12.8, 11.84, 14.02], "pos": 13.4, "volx": "2,1× keskm.", "name": "Riot Platforms · Finantsteenused", "price": "$14,02", "chg": "+18,41%", "why": "Riot Platforms tõusis täna 18,4%, samal ajal kui S&P 500 tõusis 0,3%, nii et liikumine oli peamiselt ettevõttepõhine ja umbes viis korda suurem selle aktsia tavalisest päevast. Panga- ja finantsaktsiad langesid täna kokku 0,6%. Ettevõte avaldas kolmapäeval kvartalitulemused. Täpne põhjus pole kinnitatud.", "mc": "$5,26B", "vol": "39,7M", "rev": "$647,4M", "prof": "−$663,2M", "low": "$11,50", "high": "$30,32", "move": "+18,4%", "xl": ["5", "14", "<b>Nov</b>"]}, {"mark": "C", "bg": "#eef2f7", "fg": "#2d5f9a", "tk": "CRML", "lo": 5.5, "hi": 10, "yd": 2, "yl": [8.41, 7.55, 6.69, 5.84], "closes": [6.6, 6.7, 6.65, 6.75, 6.7, 7.2, 7.25, 7.2, 7.0, 6.9, 6.85, 6.7, 6.75, 9.0, 9.2, 9.1, 8.9, 9.33], "pos": 15.6, "volx": "8,5× keskm.", "name": "Critical Metals Corp. · Toorained", "price": "$9,33", "chg": "+38,63%", "why": "Critical Metals Corp. tõusis järsult pärast uudiseid, mis sidusid Gröönimaa aktsiaid hiljutise julgeolekulepinguga ja tõstsid ka teisi seotud aktsiaid. See aitab selgitada CRML-i hinna tänast järsku tõusu.", "mc": "$1,37B", "vol": "58,0M", "rev": "$560,6K", "prof": "−$51,9M", "low": "$5,12", "high": "$32,15", "move": "+38,6%", "xl": ["T", "K", "N", "R", "E"]}]};
+  var T = {"locale": "et-EE", "sectors": {"technology": "Tehnoloogia", "comm": "Kommunikatsioon", "other": "Tarbijad ja muu"}, "gainers": [{"mark": "R", "bg": "#e8a13a", "fg": "#111", "tk": "RIOT", "lo": 11, "hi": 21, "yd": 1, "yl": [20, 17.5, 15, 12.5], "closes": [19.7, 19.2, 18.7, 17.3, 17.0, 16.9, 16.6, 16.0, 15.4, 14.8, 14.6, 14.5, 14.8, 14.4, 14.8, 14.6, 13.9, 13.5, 13.9, 14.5, 14.4, 13.9, 12.8, 11.84, 14.02], "pos": 13.4, "volx": "2,1× keskm.", "name": "Riot Platforms · Finantsteenused", "price": "$14,02", "chg": "+18,41%", "why": "Riot Platforms tõusis täna 18,4%, samal ajal kui S&P 500 tõusis 0,3% – umbes viis korda rohkem kui selle aktsia tavaline päev. Panga- ja finantsaktsiad langesid täna kokku 0,6%. Ettevõte avaldas kolmapäeval kvartalitulemused. Ükski allikas põhjust ei nimeta.", "mc": "$5,26B", "vol": "39,7M", "rev": "$647,4M", "prof": "−$663,2M", "low": "$11,50", "high": "$30,32", "move": "+18,4%", "xl": ["5", "14", "<b>Nov</b>"]}, {"mark": "C", "bg": "#eef2f7", "fg": "#2d5f9a", "tk": "CRML", "lo": 5.5, "hi": 10, "yd": 2, "yl": [8.41, 7.55, 6.69, 5.84], "closes": [6.6, 6.7, 6.65, 6.75, 6.7, 7.2, 7.25, 7.2, 7.0, 6.9, 6.85, 6.7, 6.75, 9.0, 9.2, 9.1, 8.9, 9.33], "pos": 15.6, "volx": "8,5× keskm.", "name": "Critical Metals Corp. · Toorained", "price": "$9,33", "chg": "+38,63%", "why": "Critical Metals Corp. tõusis täna 38,6%. Samal päeval: uudised sidusid Gröönimaa aktsiaid hiljutise julgeolekulepinguga ja ka seotud aktsiad tõusid.", "mc": "$1,37B", "vol": "58,0M", "rev": "$560,6K", "prof": "−$51,9M", "low": "$5,12", "high": "$32,15", "move": "+38,6%", "xl": ["T", "K", "N", "R", "E"]}]};
 
   /* Cursor glow on every card: one listener, written once per frame */
   var grid = document.querySelector('.sb-grid');
@@ -3330,7 +3354,7 @@
 <script>
 (function () {
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var M = [{"k": "ORCL", "g": "+5,9%", "u": true, "x": "Oracle teatas 20 miljardi dollari suuruse uute aktsiate ja võlakirjade emissiooni hinnast, et rahastada tehisintellekti andmekeskusi. Eelmisel kauplemispäeval põhjustas sama uudis järsu languse ja aktsia jõudis madalaimale tasemele 115 dollarit."}, {"k": "AAPL", "g": "−1,9%", "u": false, "x": "Apple ootab, et tema makstavad mäluhinnad tõusevad ka järgmisel aastal."}, {"k": "PLTR", "g": "−1,65%", "u": false, "x": "Palantir saavutas olulise pöördepunkti: kommertstulu ületas kolmandas kvartalis esimest korda valitsustulu."}, {"k": "AMZN", "g": "+2,06%", "u": true, "x": "Amazoni dokument näitas, et umbes 95 töökoha kaotamine Washingtoni osariigis on osa varem teatatud koondamistest jaekaubanduses."}];
+  var M = [{"k": "ORCL", "g": "+5,9%", "u": true, "x": "Tõusis 5,9% päeval, mil Oracle määras 20 miljardi dollari suuruse uute aktsiate ja võlakirjade emissiooni hinna tehisintellekti andmekeskuste rahastamiseks. Eelmisel kauplemispäeval langes aktsia madalaimale tasemele 115 dollarit."}, {"k": "AAPL", "g": "−1,9%", "u": false, "x": "Langes 1,9% päeval, mil Apple teatas, et ootab oma mäluhindade tõusu jätkumist ka järgmisel aastal."}, {"k": "PLTR", "g": "−1,65%", "u": false, "x": "Langes 1,65% päeval, mil Palantir teatas, et kommertstulu ületas kolmandas kvartalis esimest korda valitsustulu."}, {"k": "AMZN", "g": "+2,06%", "u": true, "x": "Tõusis 2,06% päeval, mil Amazoni dokument näitas umbes 95 töökoha kaotamist Washingtoni osariigis – osa varem teatatud jaekaubanduse koondamistest."}];
   /* Each stock travels along its ring: [ticker background, ring radius in px, start angle] */
   var RING = { ORCL: ['#fff', 61.6, 90], AAPL: ['#fff', 61.6, 270], PLTR: ['#fff', 100.3, 180], AMZN: ['#111', 100.3, 0] };
   var CX = 114, CY = 109.4, SPEED = { 61.6: 11, 100.3: 7 }; /* degrees per second */
@@ -3394,7 +3418,7 @@
 </script>
 <script>
 (function () {
-  var L = {"dec": ",", "logos": ["AAPL", "ABBV", "AMZN", "AVGO", "DIS", "GOOGL", "LLY", "META", "MSFT", "NVDA", "ORCL", "PLTR", "SHOP", "SPCX", "TGT", "TSLA", "V", "XOM"], "up_week": "Nädalaga tõusnud", "of100": "100-st", "top100": "100 suurimat USA aktsiat", "top10": "Nädala top 10", "d7": "7 päeva muutus", "days7": "7 päeva", "close": "Sulgemine 3. nov", "posts": [{"n": "Sam Badawi", "h": "@Sam_Badawi", "t": "3 h", "i": "SB", "c": "#2b4a78", "x": "NVIDIA $NVDA says Chinese clients will receive just 1% of the $70B of RTX chips they ordered, which works out to about $700M, according to Bloomberg."}, {"n": "Caktus Jxck", "h": "@CaktusJxck", "t": "3 h", "i": "CJ", "c": "#3e5a3c", "x": "Chinese AI companies have reportedly ordered 6 million Nvidia ($NVDA) RTX Pro 5500 chips worth approximately $70B but expect to receive only about 1% of that volume over the next four months because of severe production shortages, according to the supplied Bloomberg summary."}], "news": [{"k": "PLTR", "g": "−1,65%", "u": false, "t": "Eile · 19 h tagasi", "x": "Palantir Technologies saavutas olulise pöördepunkti: kommertstulu ületas kolmandas kvartalis esimest korda valitsustulu."}, {"k": "GOOGL", "g": "+0,37%", "u": true, "t": "Täna · 13 h tagasi", "x": "Alphabeti aktsia langes pärast kolmanda kvartali tulemusi järsult: otsingutulu <b>63,4 miljardit dollarit</b> jäi analüütikute ootustele alla ja vaba rahavoog oli <b>9,1 miljardit dollarit</b> miinuses, palju rohkem kui oodatud <b>2,7 miljardi dollari</b> suurune langus."}, {"k": "AAPL", "g": "−1,90%", "u": false, "t": "Eile · 14 h tagasi", "x": "Apple ootab, et tema makstavad mäluhinnad tõusevad ka järgmisel aastal."}]};
+  var L = {"dec": ",", "logos": ["AAPL", "ABBV", "AMZN", "AVGO", "DIS", "GOOGL", "LLY", "META", "MSFT", "NVDA", "ORCL", "PLTR", "SHOP", "SPCX", "TGT", "TSLA", "V", "XOM"], "up_week": "Nädalaga tõusnud", "of100": "100-st", "top100": "100 suurimat USA aktsiat", "top10": "Nädala top 10", "d7": "7 päeva muutus", "days7": "7 päeva", "close": "Sulgemine 3. nov", "posts": [{"n": "Sam Badawi", "h": "@Sam_Badawi", "t": "3 h", "i": "SB", "c": "#2b4a78", "x": "NVIDIA $NVDA says Chinese clients will receive just 1% of the $70B of RTX chips they ordered, which works out to about $700M, according to Bloomberg."}, {"n": "Caktus Jxck", "h": "@CaktusJxck", "t": "3 h", "i": "CJ", "c": "#3e5a3c", "x": "Chinese AI companies have reportedly ordered 6 million Nvidia ($NVDA) RTX Pro 5500 chips worth approximately $70B but expect to receive only about 1% of that volume over the next four months because of severe production shortages, according to the supplied Bloomberg summary."}], "news": [{"k": "PLTR", "g": "−1,65%", "u": false, "t": "Eile · 19 h tagasi", "x": "Langes 1,65% päeval, mil Palantir teatas, et kommertstulu ületas kolmandas kvartalis esimest korda valitsustulu."}, {"k": "GOOGL", "g": "+0,37%", "u": true, "t": "Täna · 13 h tagasi", "x": "Täna +0,37%. Alphabeti kolmanda kvartali aruanne: otsingutulu <b>63,4 miljardit dollarit</b> jäi analüütikute ootustele alla ja vaba rahavoog oli <b>−9,1 miljardit dollarit</b>, oodatud <b>−2,7 miljardi dollari</b> asemel."}, {"k": "AAPL", "g": "−1,90%", "u": false, "t": "Eile · 14 h tagasi", "x": "Langes 1,9% päeval, mil Apple teatas, et ootab oma mäluhindade tõusu jätkumist ka järgmisel aastal."}]};
   function $(id) { return document.getElementById(id); }
   function logo(t, bg, fg, cls) {
     if (L.logos.indexOf(t) >= 0) return '<img class="sb-lg' + (cls || '') + '" src="/brand_assets/logos/' + t + '.png" alt="" width="32" height="32" loading="lazy" decoding="async">';
@@ -3627,7 +3651,7 @@
     </div>
     <div class="fi-reveal">
       <p style="font-size:18px;color:rgba(255,255,255,.55);max-width:520px;margin:0 auto 40px;line-height:1.72;font-family:'Geist',sans-serif;">
-        Stockpilo toob kõik kokku — reaalajas turuandmed, AI-põhine analüüs ja portfelli jälgimine ühes kohas.
+        Stockpilo toob kõik kokku — päeva lõpu turuandmed, AI-põhine analüüs ja portfelli jälgimine ühes kohas.
       </p>
       <a href="#" id="btn-trial-fi" class="fi-btn" data-magnetic>7 päeva tasuta</a>
     </div>

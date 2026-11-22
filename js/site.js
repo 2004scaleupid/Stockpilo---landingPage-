@@ -433,7 +433,7 @@
     }, { once: true });
   }
 
-  setInterval(cycleHeroWord, 2200);
+  if (heroWordEl) setInterval(cycleHeroWord, 2200);  // the hero has no rotating word since 2026-11-13
 
   // ── CTA redirect ────────────────────────────────────
   (function() {
