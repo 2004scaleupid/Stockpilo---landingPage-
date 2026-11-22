@@ -1369,6 +1369,12 @@
       margin-top: 16px;
       line-height: 1.6;
     }
+    .footer-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .footer-badges a { display: inline-block; line-height: 0; opacity: .85; border-radius: 6px; transition: opacity .2s ease; }
+    .footer-badges a:hover, .footer-badges a:focus-visible { opacity: 1; }
+    .footer-badges a:focus-visible { outline: 2px solid var(--accent, #2d6be4); outline-offset: 2px; }
+    .footer-badges img { display: block; width: 120px; height: auto; }
+    @media (min-width: 768px) { .footer-badges img { width: 150px; } }
     .footer-links-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -3672,6 +3678,11 @@
         </a>
         <p class="footer-tagline">© 2026 Stockpilo. Kõik õigused kaitstud.</p>
         <p class="footer-tagline" style="margin-top:6px;opacity:.7;">Turuandmed on ainult informatiivsed. Ei ole investeerimisnõustamine.</p>
+        <div class="footer-badges">
+          <a href="https://saascity.io" target="_blank" rel="noopener"><img src="https://saascity.io/badges/featured-dark.svg" alt="Featured on SaaSCity" width="150" height="54" loading="lazy"></a>
+          <a href="https://fazier.com" target="_blank" rel="noopener"><img src="https://fazier.com/api/v1/public/badges/launch_badges.svg?badge_type=launched&theme=dark" alt="Launched on Fazier" width="150" height="54" loading="lazy"></a>
+          <a href="https://openhunts.com" target="_blank" rel="noopener"><img src="https://cdn.openhunts.com/badges/club.webp" alt="Featured on OpenHunts" width="150" height="54" loading="lazy"></a>
+        </div>
       </div>
 
       <!-- Links columns -->
